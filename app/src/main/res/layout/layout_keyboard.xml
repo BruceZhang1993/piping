@@ -81,6 +81,8 @@
     <LinearLayout 
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
 	    android:layout_marginBottom="6dp"
         >
         
@@ -149,17 +151,11 @@
     <LinearLayout 
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
 	    android:layout_marginBottom="6dp"
         >
-        
-        <TextView
-            style="@style/keyboard"
-            android:background="@color/transparent"
-            android:text="w"
-            android:textColor="@color/transparent"
-            android:layout_weight="1"
-            />
-        
+
         <Button 
             style="@style/keyboard"
             android:tag="a"  
@@ -214,14 +210,6 @@
 		    android:text="L"
             />
         
-        <TextView
-            style="@style/keyboard"
-            android:text="w"
-            android:background="@color/transparent"
-            android:textColor="@color/transparent"
-            android:layout_weight="1"
-            />
-        
     </LinearLayout>
     
     <LinearLayout 
@@ -234,7 +222,7 @@
             style="@style/keyboard"
             android:tag="shift"   
 		    android:src="@drawable/key_shift_white"
-		    android:layout_weight="2"
+            android:layout_weight="2"
             />  
          
         <Button 
@@ -283,7 +271,7 @@
             style="@style/keyboard"
             android:tag="backspace"   
 		    android:src="@drawable/key_backspace_white"
-		    android:layout_weight="2"
+            android:layout_weight="2"
             />
          
     </LinearLayout>
@@ -292,16 +280,10 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginBottom="6dp"
+        android:paddingLeft="36dp"
+        android:paddingRight="36dp"
         >
-        
-        <TextView
-            style="@style/keyboard"
-            android:background="@color/transparent"
-            android:text="w"
-            android:textColor="@color/transparent"
-            android:layout_weight="2"
-            />
-        
+
         <Button 
             style="@style/keyboard"
             android:tag="#"  
@@ -310,9 +292,9 @@
         
         <Button 
             style="@style/keyboard"
-            android:layout_weight="8"
             android:tag="space"  
-		    android:text="space" 
+		    android:text="space"
+            android:layout_weight="5"
             />
         
         <Button 
@@ -321,19 +303,12 @@
 		    android:text="." 
             />
         
-        <ImageButton  
+        <ImageButton
             style="@style/keyboard"
             android:tag="enter"   
 		    android:src="@drawable/key_enter_white"
+            android:layout_weight="2"
             />
-         
-        <TextView
-            style="@style/keyboard"
-            android:text="w"
-            android:background="@color/transparent"
-            android:textColor="@color/transparent"
-            android:layout_weight="1"
-            />
-        
+
 	</LinearLayout>
 </LinearLayout>

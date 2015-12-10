@@ -12,12 +12,17 @@ public class FrequentMap{
 
     private HashMap<String, Item> mMap = new HashMap<>();
 
+    public FrequentMap(){
+        mMap = getFrequentMap(10);
+    }
+
     public HashMap<String, Item> getFrequentMap(int limit){
+        HashMap<String, Item> map = new HashMap<>();
         List<Item> list = new Select().all().from(Item.class).limit(limit).execute();
         for (Item item : list){
-            mMap.put(item.key, item);
+            map.put(item.key, item);
         }
-        return mMap;
+        return map;
     }
 
     /**
