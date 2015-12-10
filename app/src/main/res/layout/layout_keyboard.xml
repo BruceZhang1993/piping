@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bcg_keyboard"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:orientation="vertical" >
+    
+    <!--  
+    <LinearLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="6dp"
+        >
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="1"
+		    android:text="1"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="2"
+		    android:text="2"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="3"
+		    android:text="3"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="4"
+		    android:text="4"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="5"
+		    android:text="5"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="6"
+		    android:text="6"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="7"
+		    android:text="7"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="8"
+		    android:text="8"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="9"
+		    android:text="9"
+            />
+         
+        <Button 
+            style="@style/keyboard"
+            android:tag="0"
+		    android:text="0"
+            />
+        
+    </LinearLayout> -->
+
+    <LinearLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="6dp"
+        >
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="q"
+		    android:text="Q"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="w"
+		    android:text="W"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="e"
+		    android:text="E"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="r"
+		    android:text="R"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="t"
+		    android:text="T"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="y"
+		    android:text="Y"
+            /> 
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="u"
+		    android:text="U"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="i"
+		    android:text=" I "
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="o"
+		    android:text="O"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="p"  
+		    android:text="P"
+            />
+        
+    </LinearLayout>
+    
+    <LinearLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="6dp"
+        >
+        
+        <TextView
+            style="@style/keyboard"
+            android:background="@color/transparent"
+            android:text="w"
+            android:textColor="@color/transparent"
+            android:layout_weight="1"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="a"  
+		    android:text="A"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="s"  
+		    android:text="S"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="d"  
+		    android:text="D"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="f"  
+		    android:text="F"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="g"  
+		    android:text="G"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="h"  
+		    android:text="H"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="j"  
+		    android:text="J"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="k"  
+		    android:text="K"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="l"  
+		    android:text="L"
+            />
+        
+        <TextView
+            style="@style/keyboard"
+            android:text="w"
+            android:background="@color/transparent"
+            android:textColor="@color/transparent"
+            android:layout_weight="1"
+            />
+        
+    </LinearLayout>
+    
+    <LinearLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="6dp"
+        >
+        
+        <ImageButton  
+            style="@style/keyboard"
+            android:tag="shift"   
+		    android:src="@drawable/key_shift_white"
+		    android:layout_weight="2"
+            />  
+         
+        <Button 
+            style="@style/keyboard"
+            android:tag="z"  
+		    android:text="Z"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="x"  
+		    android:text="X"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="c"  
+		    android:text="C"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="v"  
+		    android:text="V"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="b"  
+		    android:text="B"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="n"  
+		    android:text="N"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="m"  
+		    android:text="M" 
+            />
+        
+        <ImageButton  
+            style="@style/keyboard"
+            android:tag="backspace"   
+		    android:src="@drawable/key_backspace_white"
+		    android:layout_weight="2"
+            />
+         
+    </LinearLayout>
+    
+    <LinearLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="6dp"
+        >
+        
+        <TextView
+            style="@style/keyboard"
+            android:background="@color/transparent"
+            android:text="w"
+            android:textColor="@color/transparent"
+            android:layout_weight="2"
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="#"  
+		    android:text="#" 
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:layout_weight="8"
+            android:tag="space"  
+		    android:text="space" 
+            />
+        
+        <Button 
+            style="@style/keyboard"
+            android:tag="."  
+		    android:text="." 
+            />
+        
+        <ImageButton  
+            style="@style/keyboard"
+            android:tag="enter"   
+		    android:src="@drawable/key_enter_white"
+            />
+         
+        <TextView
+            style="@style/keyboard"
+            android:text="w"
+            android:background="@color/transparent"
+            android:textColor="@color/transparent"
+            android:layout_weight="1"
+            />
+        
+	</LinearLayout>
+</LinearLayout>

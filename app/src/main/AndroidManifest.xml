@@ -1,0 +1,22 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="shinado.indi.vender">
+
+    <application
+        android:name="csu.org.dependency.volley.DefaultApplication"
+        android:allowBackup="true" android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher" android:theme="@style/AppTheme">
+
+        <meta-data android:name="AA_DB_NAME" android:value="vender.db" />
+        <meta-data android:name="AA_DB_VERSION" android:value="1" />
+
+        <activity
+            android:theme="@style/AppTheme"
+            android:name=".base.BaseLauncher"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,38 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    tools:context="com.shinado.yi.desk.test.MainActivity" >
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:padding="2dp"
+        android:layout_above="@+id/keyboard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:textStyle="bold"
+            android:paddingBottom="10dp"
+            android:id="@+id/displayText"
+            android:textSize="15dp"
+            android:textColor="#44d804"
+            android:shadowDx="0.5"
+            android:shadowDy="0.5"
+            android:shadowRadius="2.8"
+            android:shadowColor="#ff83f352"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello world" />
+
+    </ScrollView>
+
+    <include
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/keyboard"
+        android:layout_alignParentBottom="true"
+        layout="@layout/layout_keyboard"/>
+
+</RelativeLayout>
