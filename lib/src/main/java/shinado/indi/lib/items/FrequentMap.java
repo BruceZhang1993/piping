@@ -18,7 +18,7 @@ public class FrequentMap{
 
     public HashMap<String, Item> getFrequentMap(int limit){
         HashMap<String, Item> map = new HashMap<>();
-        List<Item> list = new Select().all().from(Item.class).limit(limit).execute();
+        List<Item> list = new Select().all().from(Item.class).execute();
         for (Item item : list){
             map.put(item.key, item);
         }
@@ -33,7 +33,9 @@ public class FrequentMap{
     public boolean addFrequency(String key){
         Item val = mMap.get(key);
         if (val == null){
-            new Item(key, 1).save();
+            Item item = new Item(key, 1);
+            mMap.put(key, item);
+            item.save();
             return false;
         }else{
             val.launchedTimes++;
@@ -57,17 +59,19 @@ public class FrequentMap{
     @Table(name = "Tfrequent")
     public class Item extends Model{
 
-        public Item(){}
+        public Item(){
+            super();
+        }
 
         public Item(String key, int val){
             this.key = key;
             this.launchedTimes = val;
         }
 
-        @Column(name = "Ckey")
+        @Column(name = "ColKey")
         public String key;
 
-        @Column(name = "ClaunchedTime")
+        @Column(name = "ColValue")
         public int launchedTimes;
 
     }

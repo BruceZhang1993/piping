@@ -18,7 +18,6 @@ public abstract class BaseVender {
     protected int id;
     protected Context context;
     protected TreeSet<VenderItem> frequentItems = new TreeSet<>();
-    protected ArrayList<VenderItem> allItems = new ArrayList<>();
     protected OnResultChangedListener mOnResultChangedListener;
     protected SearchHelper mSearchHelper;
     protected FrequentMap mFrequentMap;
@@ -38,17 +37,11 @@ public abstract class BaseVender {
         frequentItems.remove(vo);
     }
 
-    public void addFrequency(VenderItem vo){
-        String value = vo.getValue();
-        int idx = allItems.indexOf(vo);
-        if(idx >= 0 && idx < allItems.size()){
-            VenderItem item = allItems.get(idx);
-            item.addFrequency();
-            boolean bExist = mFrequentMap.addFrequency(value);
-            if(!bExist){
-                frequentItems.add(item);
-            }
-
+    public void addFrequency(VenderItem item){
+        item.addFrequency();
+        boolean bExist = mFrequentMap.addFrequency(item.getValue());
+        if(!bExist){
+            frequentItems.add(item);
         }
     }
 
@@ -56,13 +49,14 @@ public abstract class BaseVender {
      * fire when input text is changed
      * used by a TextWatcher
      *
-     * @param key the text input
+     * @param prev the previous result before entering ".", for action vender only
+     * @param key  the text input
      * @param length count-before
      *               which means when
      *               length > 0 input
      *               length < 0 delete
      */
-    public abstract void search(String key, int length);
+    public abstract void search(VenderItem prev, String key, int length);
 
     /**
      * fulfill result with frequency
@@ -88,6 +82,8 @@ public abstract class BaseVender {
         for(int i=0; i<name.length; i++){
             String str = name[i];
             char c = str.charAt(0);
+            //key start with the first character of name
+            //e.g. ["face", "book"], "boo" => true
             if(key.startsWith(c+"")){
                 if(contains(name, key, i, true)){
                     return true;

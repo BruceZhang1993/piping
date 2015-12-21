@@ -286,8 +286,8 @@
 
         <Button 
             style="@style/keyboard"
-            android:tag="#"  
-		    android:text="#" 
+            android:tag="-"
+		    android:text="-"
             />
         
         <Button 

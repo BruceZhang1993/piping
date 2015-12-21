@@ -47,8 +47,10 @@ public abstract class ActionVender extends BaseVender {
     //rule:
     //[key].[instruction] [-option]...
     @Override
-    public void search(String key, int length) {
+    public void search(VenderItem prev, String key, int length) {
         VenderItem result = getResult();
+        result.setSuccessor(prev);
+        result.setType(VenderItem.TYPE_ACTION);
         if (!key.contains(".")){
             result.setValue(key);
         }else{
@@ -63,16 +65,21 @@ public abstract class ActionVender extends BaseVender {
             String[] split = key.split(" ", 2);
             //the key to the action
             //e.g. dic.ins => "ins"
+            //e.g. dic.    => ""
             String sKey = split[0].substring(indexOfDot+1);
 
-            if (contains(result.getName(), sKey)){
-                //e.g. dic.ins -ls => "dic -ls"
-                if (split.length > 1){
-                    value += " " + split[1];
-                }
+            if (sKey.length() == 0){
                 result.setValue(value);
-            }else{
-                result = null;
+            }else {
+                if (contains(result.getName(), sKey)){
+                    //e.g. dic.ins -ls => "dic -ls"
+                    if (split.length > 1){
+                        value += " " + split[1];
+                    }
+                    result.setValue(value);
+                }else{
+                    result = null;
+                }
             }
         }
         notify(result);

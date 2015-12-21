@@ -31,8 +31,8 @@ public class AppVender extends SearchVender {
 			addFrequency(rs);
 		} catch (Exception e) {
 			//if there is any trouble, remove it
-			allItems.remove(rs);
 			removeFrequency(rs);
+			removeItemInMap(rs);
 		}
 	    return 2;
 	}
@@ -44,11 +44,9 @@ public class AppVender extends SearchVender {
 			public void onAppChange(int flag, VenderItem vo) {
 				System.out.println("appChange:search:"+flag+","+vo.getValue());
 				if(flag == AppManager.OnAppChangeListener.FLAG_ADD){
-					allItems.add(0, vo);
 					putItemInMap(vo);
 					addFrequency(vo);
 				}else if(flag == AppManager.OnAppChangeListener.FLAG_REMOVE){
-					allItems.remove(vo);
 					removeItemInMap(vo);
 					removeFrequency(vo);
 				}
@@ -57,7 +55,6 @@ public class AppVender extends SearchVender {
 		for(int i=0 ;i<appManager.getAppCount(); i++){
 			VenderItem vo = appManager.getResult(i);
 			fulfillResult(vo);
-			allItems.add(vo);
 			putItemInMap(vo);
 		}
 		resultStack.push(frequentItems);

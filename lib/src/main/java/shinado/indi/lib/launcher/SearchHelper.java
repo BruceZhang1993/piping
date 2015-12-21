@@ -20,6 +20,7 @@ import shinado.indi.lib.items.BaseVender;
 import shinado.indi.lib.items.Vender;
 import shinado.indi.lib.items.VenderFactory;
 import shinado.indi.lib.items.VenderItem;
+import shinado.indi.lib.items.action.CopyVender;
 import shinado.indi.lib.items.action.InstallVender;
 import shinado.indi.lib.items.search.AppVender;
 import shinado.indi.lib.items.search.ContactVender;
@@ -45,6 +46,8 @@ public class SearchHelper {
 	private int mFunctionSize;
 
 	protected Hashtable<Integer, BaseVender> functionMap;
+
+	private VenderItem mPrevisouItem = null;
 
 	public SearchHelper(Context context, Searchable searchable){
 		this.searchable = searchable;
@@ -97,10 +100,15 @@ public class SearchHelper {
 		functionMap.put(BaseVender.TYPE_CONTACT, contactFunction);
 		contactFunction.setOnResultChangedListener(mOnResultChangedListener);
 
-		InstallVender dicFunction = new InstallVender();
-		dicFunction.init(context, this, VenderItem.BUILD_IN_ID_INSTALL);
-		functionMap.put(VenderItem.BUILD_IN_ID_INSTALL, dicFunction);
-		dicFunction.setOnResultChangedListener(mOnResultChangedListener);
+		InstallVender insFunction = new InstallVender();
+		insFunction.init(context, this, VenderItem.BUILD_IN_ID_INSTALL);
+		functionMap.put(VenderItem.BUILD_IN_ID_INSTALL, insFunction);
+		insFunction.setOnResultChangedListener(mOnResultChangedListener);
+
+		CopyVender cpFunction = new CopyVender();
+		cpFunction.init(context, this, VenderItem.BUILD_IN_ID_COPY);
+		functionMap.put(VenderItem.BUILD_IN_ID_COPY, cpFunction);
+		cpFunction.setOnResultChangedListener(mOnResultChangedListener);
 	}
 
 	private BaseVender.OnResultChangedListener mOnResultChangedListener = new BaseVender.OnResultChangedListener(){
@@ -144,9 +152,15 @@ public class SearchHelper {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				if (s.toString().endsWith(".")){
+					if(result_set.size() > 0){
+						mPrevisouItem = (VenderItem) result_set.toArray()[0];
+					}
+				}
 				input_search.setSelection(count);
 				result_set.clear();
-				doSearch(s.toString(), count - before);
+				Log.d("IFC", "onTextChanged");
+				doSearch(mPrevisouItem, s.toString(), count - before);
 			}
 
 			@Override
@@ -201,9 +215,9 @@ public class SearchHelper {
 		searchable.onNotified(result_set);
 	}
 
-	private void doSearch(String key, int length){
+	private void doSearch(VenderItem prev, String key, int length){
 		for(BaseVender fuc:functionMap.values()){
-			fuc.search(key, length);
+			fuc.search(prev, key, length);
 		}
 	}
 

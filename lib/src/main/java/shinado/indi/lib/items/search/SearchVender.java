@@ -5,6 +5,7 @@ import android.os.Message;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.TreeSet;
@@ -17,16 +18,17 @@ import shinado.indi.lib.items.VenderItem;
  */
 public abstract class SearchVender extends BaseVender {
 
-    protected HashMap<String, TreeSet<VenderItem>> allItemMap = new HashMap<>();
+    protected HashMap<String, ArrayList<VenderItem>> allItemMap = new HashMap<>();
     protected Stack<TreeSet<VenderItem>> resultStack =
-            new Stack<TreeSet<VenderItem>>();
+            new Stack<>();
     private FunctionHandler mHandler;
 
     public SearchVender() {
         mHandler = new FunctionHandler(this);
     }
 
-    public void search(String key, int length) {
+    @Override
+    public void search(VenderItem prev, String key, int length) {
         Log.d("IFC", "start searching");
         if(length > 0){
             push(forwardSearch(key), length);
@@ -38,11 +40,30 @@ public abstract class SearchVender extends BaseVender {
         Log.d("IFC", "end searching");
     }
 
+    private TreeSet<VenderItem> getVenderSet(String key){
+        TreeSet<VenderItem> set = new TreeSet<>();
+        ArrayList<VenderItem> list = allItemMap.get(key);
+
+        for (VenderItem item : list){
+            int i=0;
+            for (String name : item.getName()){
+                if (name.startsWith(key)){
+                    item.setKeyIndex(i);
+                    break;
+                }
+                i++;
+            }
+            item.setKeyIndex(i);
+            set.add(item);
+        }
+        return set;
+    }
+
     protected TreeSet<VenderItem> forwardSearch(String key){
-        TreeSet<VenderItem> some = new TreeSet<VenderItem>();
+        TreeSet<VenderItem> some = new TreeSet<>();
         if(key.length() == 1){
             if(!key.equals(".")){
-                some.addAll(allItemMap.get(key));
+                some = getVenderSet(key);
             }
         }else{
             if(!resultStack.empty()){
@@ -65,27 +86,29 @@ public abstract class SearchVender extends BaseVender {
         for (String n:name){
             for (int i=0; i<n.length(); i++){
                 String c = n.charAt(i)+"";
-                TreeSet<VenderItem> set = allItemMap.get(c);
-                if (set == null){
+                ArrayList<VenderItem> list = allItemMap.get(c);
+                if (list == null){
                     continue;
                 }
-                set.remove(vo);
+                list.remove(vo);
             }
         }
     }
 
+    /**
+     * ["face", "book"] = > ["f" -> "face", "b" -> "book"]
+     */
     protected void putItemInMap(VenderItem vo){
+        vo.setType(VenderItem.TYPE_SEARCH);
         String[] name = vo.getName();
         for (String n:name){
-            for (int i=0; i<n.length(); i++){
-                String c = n.charAt(i)+"";
-                TreeSet<VenderItem> set = allItemMap.get(c);
-                if (set == null){
-                    set = new TreeSet<VenderItem>();
-                    allItemMap.put(c, set);
-                }
-                set.add(vo);
+            String c = n.charAt(0)+"";
+            ArrayList<VenderItem> list = allItemMap.get(c);
+            if (list == null){
+                list = new ArrayList<>();
+                allItemMap.put(c, list);
             }
+            list.add(vo);
         }
     }
 
@@ -105,17 +128,17 @@ public abstract class SearchVender extends BaseVender {
             if(msg.what > 0){
                 TreeSet<VenderItem> some = (TreeSet<VenderItem>) msg.obj;
                 result = some;
-                ifc.resultStack.push(some);
+                ifc.doPush(some);
             }else if(msg.what < 0){
                 for(int i=msg.what; i<0; i++){
-                    ifc.resultStack.pop();
+                    ifc.doPop();
                 }
                 if(!ifc.resultStack.empty()){
-                    result = ifc.resultStack.peek();
+                    result = ifc.doPeek();
                 }
             }else{
                 if(!ifc.resultStack.empty()){
-                    result = ifc.resultStack.peek();
+                    result = ifc.doPeek();
                 }
             }
             if(ifc.mOnResultChangedListener != null){
@@ -131,6 +154,18 @@ public abstract class SearchVender extends BaseVender {
         msg.what = length;
         msg.obj = some;
         mHandler.sendMessage(msg);
+    }
+
+    protected void doPush(TreeSet<VenderItem> some){
+        resultStack.push(some);
+    }
+
+    protected TreeSet<VenderItem> doPeek(){
+        return resultStack.peek();
+    }
+
+    protected TreeSet<VenderItem> doPop(){
+        return resultStack.pop();
     }
 
     protected void pop(int length){

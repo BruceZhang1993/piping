@@ -46,6 +46,19 @@ public class VenderItem implements Cloneable, Comparable<VenderItem>{
 	public static final int BUILD_IN_ID_APP = 1;
 	public static final int BUILD_IN_ID_CONTACT = 2;
 	public static final int BUILD_IN_ID_INSTALL = 3;
+	public static final int BUILD_IN_ID_COPY = 4;
+
+	/**
+	 * the key to be searched
+	 */
+	private int keyIndex;
+
+	private int type;
+	public static final int TYPE_SEARCH = 100;
+	public static final int TYPE_ACTION = 1;
+
+
+	private VenderItem successor;
 
 	public VenderItem(){
 		
@@ -69,17 +82,7 @@ public class VenderItem implements Cloneable, Comparable<VenderItem>{
 		String[] name = translator.getName(displayName);
 		setName(name);
 	}
-	
-	@Override
-	public boolean equals(Object obj){
-		if(obj instanceof VenderItem){
-			if(((VenderItem)obj).getDisplayName().equals(displayName)){
-				return true;
-			}
-		}
-		return false;
-	}
-	
+
 	@Override
 	public VenderItem clone(){
 		VenderItem vo = new VenderItem(name, value, id, displayName);
@@ -95,6 +98,12 @@ public class VenderItem implements Cloneable, Comparable<VenderItem>{
 		this.displayName = displayName;
 	}
 
+	public VenderItem getSuccessor() {
+		return successor;
+	}
+	public void setSuccessor(VenderItem successor) {
+		this.successor = successor;
+	}
 	public String[] getName() {
 		return name;
 	}
@@ -119,6 +128,15 @@ public class VenderItem implements Cloneable, Comparable<VenderItem>{
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
+	public void setKeyIndex(int keyIndex){
+		this.keyIndex = keyIndex;
+	}
+	public void setType(int type){
+		if (type != TYPE_ACTION && type != TYPE_SEARCH){
+			return;
+		}
+		this.type = type;
+	}
 
 	public int getFreq() {
 		return freq;
@@ -130,20 +148,35 @@ public class VenderItem implements Cloneable, Comparable<VenderItem>{
 
 	@Override
 	public int compareTo(VenderItem another) {
-		int compare = another.getDisplayName().compareTo(displayName);
-		//if they are different
-		if(compare != 0){
-			int c = another.getFreq() - freq;
-			/*
-			 * when two items have different frequency
-			 */
-			if(c != 0){
-				compare = c;
+		//search always ahead of action
+		int compare = another.type - type;
+		//same type
+		if (compare == 0){
+			compare = keyIndex - another.keyIndex;
+
+			//same key index
+			if (compare == 0){
+				compare = another.getFreq() - freq;
+				//same frequency
+				if (compare == 0){
+					compare = another.getDisplayName().compareTo(displayName);
+				}
 			}
 		}
+
 		return compare;
 	}
-	
+
+	@Override
+	public boolean equals(Object obj){
+		if(obj instanceof VenderItem){
+			if(((VenderItem)obj).getDisplayName().equals(displayName)){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void addFrequency(){
 		++freq;
 	}

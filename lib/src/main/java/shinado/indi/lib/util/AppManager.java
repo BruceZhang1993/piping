@@ -51,13 +51,8 @@ public class AppManager {
 		List<ResolveInfo> list = pm.queryIntentActivities(mainIntent, 0);
 		for(int i=0; i<list.size(); i++){
 			ResolveInfo app = list.get(i);
-			if(app.activityInfo.packageName.equals("com.shinado.yi.desk")){
-				activityNames.add(0, app.activityInfo.name);
-				resolveInfo.add(0, app);
-			}else{
-				activityNames.add(app.activityInfo.name);
-				resolveInfo.add(app);
-			}
+			activityNames.add(app.activityInfo.name);
+			resolveInfo.add(app);
 		}
     }
 
@@ -67,7 +62,6 @@ public class AppManager {
 	public String getAppName(int index){
 		ResolveInfo info = resolveInfo.get(index);
 		if(info != null){
-			System.out.println(index+"name:"+info.loadLabel(pm).toString());
 			return info.loadLabel(pm).toString();
 		}else{
 			return "";

@@ -47,7 +47,6 @@ public class ContactVender extends SearchVender {
 			fulfillResult(vo);
 			vo.getName();
 			putItemInMap(vo);
-			allItems.add(vo);
 		}
 		resultStack.push(frequentItems);
 	}
