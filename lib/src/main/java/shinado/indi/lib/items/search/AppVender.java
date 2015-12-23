@@ -3,6 +3,7 @@ package shinado.indi.lib.items.search;
 import android.content.Context;
 
 import shinado.indi.lib.items.VenderItem;
+import shinado.indi.lib.items.search.translator.AbsTranslator;
 import shinado.indi.lib.launcher.SearchHelper;
 import shinado.indi.lib.util.AppManager;
 
@@ -11,11 +12,19 @@ public class AppVender extends SearchVender {
 
 	private AppManager appManager;
 
-	@Override
-	public void init(Context context, SearchHelper s, int type) {
-		super.init(context, s, type);
-		//TODO takes a lot of time
-		refreshAppMessage();
+	public void load(final AbsTranslator translator){
+		new Thread() {
+			public void run() {
+				while (!translator.ready()) {
+					try {
+						sleep(200);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				refreshAppMessage(translator);
+			}
+		}.start();
 	}
 
 	@Override
@@ -37,8 +46,8 @@ public class AppVender extends SearchVender {
 	    return 2;
 	}
 
-	private void refreshAppMessage(){
-		appManager = AppManager.getAppManager(context);
+	private void refreshAppMessage(AbsTranslator translator){
+		appManager = AppManager.getAppManager(context, translator);
 		appManager.addOnAppChangeListener(new AppManager.OnAppChangeListener() {
 			@Override
 			public void onAppChange(int flag, VenderItem vo) {
@@ -57,6 +66,7 @@ public class AppVender extends SearchVender {
 			fulfillResult(vo);
 			putItemInMap(vo);
 		}
+		appManager.destroy();
 		resultStack.push(frequentItems);
 	}
 

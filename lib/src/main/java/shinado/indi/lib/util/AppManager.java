@@ -15,15 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import shinado.indi.lib.items.VenderItem;
+import shinado.indi.lib.items.search.translator.AbsTranslator;
 
 public class AppManager {
 
-	public static AppManager getAppManager(Context context){
+	private AbsTranslator mTranslator;
+	private static final String TAG = "App@Manager";
+	public static AppManager getAppManager(Context context, AbsTranslator translator){
 		if(appManager == null){
-			Log.v("AppManagering", "get null");
-			appManager = new AppManager(context);
-		}else{
-			Log.v("AppManagering", "get not null");
+			appManager = new AppManager(context, translator);
 		}
 		return appManager;
 	}
@@ -39,21 +39,29 @@ public class AppManager {
 	public static final String ACTION_DESTROY_OR_CREATE = "com.shinado.doc";
 	public static final String ACTION_LONG_TOUCH = "com.shinado.long_touch";
 	
-	private AppManager(Context context){
+	private AppManager(Context context, AbsTranslator translator){
+		this.mTranslator = translator;
 		this.context = context;
 		pm = context.getPackageManager();
 		loadApps();
 	}
 
 	private void loadApps(){
+		Log.d(TAG, "start loading apps");
 		Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
 		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 		List<ResolveInfo> list = pm.queryIntentActivities(mainIntent, 0);
 		for(int i=0; i<list.size(); i++){
 			ResolveInfo app = list.get(i);
+			if (app.resolvePackageName != null){
+				if (app.resolvePackageName.equals(context.getPackageName())){
+					continue;
+				}
+			}
 			activityNames.add(app.activityInfo.name);
 			resolveInfo.add(app);
 		}
+		Log.d(TAG, "end loading apps");
     }
 
 	public int getAppCount(){
@@ -146,7 +154,7 @@ public class AppManager {
 	    
 	public VenderItem getResult(String value){
 		String label = appManager.getAppName(value);
-		return new VenderItem(context, value, label, VenderItem.BUILD_IN_ID_APP);
+		return new VenderItem(value, label, mTranslator.getName(label), VenderItem.BUILD_IN_ID_APP);
 	}
 	    
 	public void onUninstall(String name){
@@ -196,6 +204,7 @@ public class AppManager {
 	}
 
 	public void destroy() {
+		mTranslator.destroy();
 		appManager = null;
 	}
 

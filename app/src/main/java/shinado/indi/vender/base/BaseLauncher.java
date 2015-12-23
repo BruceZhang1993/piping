@@ -54,20 +54,20 @@ public class BaseLauncher extends BaseLauncherView implements Searchable {
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 
+		Log.d(TAG, "start");
 		if (Build.VERSION.SDK_INT >= 16){
 			getWindow().getDecorView().setSystemUiVisibility(
 					View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 					| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-		}else{
-
 		}
 
-		that.setContentView(R.layout.layout_base_launcher);
+		this.setContentView(R.layout.layout_base_launcher);
 
 		mHandler = new OutputHandler(this);
 		initViews();
 
 		addSearchable(this);
+		Log.d(TAG, "end");
 	}
 
 	@Override
@@ -92,9 +92,9 @@ public class BaseLauncher extends BaseLauncherView implements Searchable {
 	}
 
 	private void initViews(){
-		scrollView = (ScrollView) that.findViewById(R.id.scrollView);
-		keyboard = that.findViewById(R.id.keyboard);
-		showView = (TextView) that.findViewById(R.id.displayText);
+		scrollView = (ScrollView) this.findViewById(R.id.scrollView);
+		keyboard = this.findViewById(R.id.keyboard);
+		showView = (TextView) this.findViewById(R.id.displayText);
 		initSearchWidget();
 		startTicking();
 	}
@@ -158,7 +158,7 @@ public class BaseLauncher extends BaseLauncherView implements Searchable {
 	}
 
 	private void initSearchWidget(){
-		input_search = new EditText(that, null);
+		input_search = new EditText(this, null);
 	}
 
 	private void hideKeyboard(){
@@ -181,10 +181,6 @@ public class BaseLauncher extends BaseLauncherView implements Searchable {
 	@Override
 	public EditText shapSearchInput() {
 		return input_search;
-	}
-
-	@Override
-	public void onLock(WindowManager wm) {
 	}
 
 	@Override

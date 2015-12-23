@@ -73,13 +73,11 @@ public class VenderItem implements Cloneable, Comparable<VenderItem>{
 		this.id = id;
 	}
 
-	public VenderItem(Context context, String value, String displayName, int id){
-		AbsTranslator translator = TranslatorFactory.getTranslator(context);
+	public VenderItem(String value, String displayName, String[] name, int id){
 
 		this.value = value;
 		this.id = id;
 		setDisplayName(displayName);
-		String[] name = translator.getName(displayName);
 		setName(name);
 	}
 

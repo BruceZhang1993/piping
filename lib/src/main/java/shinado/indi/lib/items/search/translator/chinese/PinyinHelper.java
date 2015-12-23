@@ -23,17 +23,7 @@ public class PinyinHelper {
 	private final String ALL_UNMARKED_VOWEL = "aeiouv";
 	private final String ALL_MARKED_VOWEL = "āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ"; // 所有带声调的拼音字母
 
-	private static PinyinHelper instance;
-
-	public static PinyinHelper getInstance(Context context){
-		if (instance == null){
-			instance = new PinyinHelper(context);
-		}
-		return instance;
-	}
-
-	//TODO takes a lot of time
-	private PinyinHelper(Context context){
+	public PinyinHelper(Context context){
 		PINYIN_TABLE = PinyinResource.getPinyinTable(context);
 		MUTIL_PINYIN_TABLE = PinyinResource.getMutilPintinTable(context);
 		CHINESE_TABLE = PinyinResource.getChineseTable(context);
@@ -401,5 +391,11 @@ public class PinyinHelper {
 	public boolean isChinese(char c) {
 		String regex = "[\\u4e00-\\u9fa5]";
 		return String.valueOf(c).matches(regex);
+	}
+
+	public void destroy(){
+		CHINESE_TABLE = null;
+		MUTIL_PINYIN_TABLE = null;
+		PINYIN_TABLE = null;
 	}
 }

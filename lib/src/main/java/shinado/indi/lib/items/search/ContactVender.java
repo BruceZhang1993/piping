@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 
 import shinado.indi.lib.items.VenderItem;
+import shinado.indi.lib.items.search.translator.AbsTranslator;
 import shinado.indi.lib.launcher.SearchHelper;
 import shinado.indi.lib.launcher.Searchable;
 import shinado.indi.lib.util.ContactManager;
@@ -14,19 +15,29 @@ public class ContactVender extends SearchVender {
 
 	private ContactManager contactManager;
 
-	@Override
-	public void init(Context context, SearchHelper s, int type) {
-		super.init(context, s, type);
-		contactManager = ContactManager.getContactManager(context);
-		contactManager.addOnContactChangeListener(new ContactManager.OnContactChangeListener() {
-			@Override
-			public void onContactChange() {
+	public void load(final AbsTranslator translator){
+		new Thread() {
+			public void run() {
+				while (!translator.ready()) {
+					try {
+						sleep(200);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				contactManager = ContactManager.getContactManager(context, translator);
+				contactManager.addOnContactChangeListener(new ContactManager.OnContactChangeListener() {
+					@Override
+					public void onContactChange() {
+						refreshContacts();
+					}
+				});
 				refreshContacts();
 			}
-		});
-		//TODO takes a lot of time
-		refreshContacts();
+		}.start();
+
 	}
+
 
 	@Override
 	public int function(VenderItem rs) {
@@ -48,6 +59,7 @@ public class ContactVender extends SearchVender {
 			vo.getName();
 			putItemInMap(vo);
 		}
+		contactManager.destroy();
 		resultStack.push(frequentItems);
 	}
 

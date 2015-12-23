@@ -24,6 +24,8 @@ import shinado.indi.lib.items.action.CopyVender;
 import shinado.indi.lib.items.action.InstallVender;
 import shinado.indi.lib.items.search.AppVender;
 import shinado.indi.lib.items.search.ContactVender;
+import shinado.indi.lib.items.search.translator.AbsTranslator;
+import shinado.indi.lib.items.search.translator.TranslatorFactory;
 import shinado.indi.vender.lib.BuildConfig;
 
 
@@ -50,6 +52,7 @@ public class SearchHelper {
 	private VenderItem mPrevisouItem = null;
 
 	public SearchHelper(Context context, Searchable searchable){
+		Log.d(TAG, "start");
 		this.searchable = searchable;
 
 		functionMap = new Hashtable<>();
@@ -60,6 +63,7 @@ public class SearchHelper {
 		mFunctionSize = functions.size();
 
 		initSearchView();
+		Log.d(TAG, "end");
 	}
 
 	public void addNewVender(Context context, Vender v){
@@ -90,13 +94,17 @@ public class SearchHelper {
 	}
 
 	private void loadLocalFunctions(Context context){
-		BaseVender appFunction = new AppVender();
+		AbsTranslator translator = TranslatorFactory.getTranslator(context, 2);
+
+		AppVender appFunction = new AppVender();
 		appFunction.init(context, this, BaseVender.TYPE_APP);
 		appFunction.setOnResultChangedListener(mOnResultChangedListener);
+		appFunction.load(translator);
 		functionMap.put(BaseVender.TYPE_APP, appFunction);
 
-		BaseVender contactFunction = new ContactVender();
+		ContactVender contactFunction = new ContactVender();
 		contactFunction.init(context, this, BaseVender.TYPE_CONTACT);
+		contactFunction.load(translator);
 		functionMap.put(BaseVender.TYPE_CONTACT, contactFunction);
 		contactFunction.setOnResultChangedListener(mOnResultChangedListener);
 
@@ -117,7 +125,6 @@ public class SearchHelper {
 
 		@Override
 		public void onResultChange(TreeSet<VenderItem> list, boolean flag) {
-			Log.d("IFC", "onResultChange, size" + resultCount);
 			if (list != null){
 				result_set.addAll(list);
 			}
@@ -159,7 +166,6 @@ public class SearchHelper {
 				}
 				input_search.setSelection(count);
 				result_set.clear();
-				Log.d("IFC", "onTextChanged");
 				doSearch(mPrevisouItem, s.toString(), count - before);
 			}
 

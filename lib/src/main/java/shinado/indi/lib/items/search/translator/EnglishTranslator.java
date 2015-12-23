@@ -18,6 +18,16 @@ public class EnglishTranslator extends AbsTranslator {
         return splitEnglish(name);
     }
 
+    @Override
+    public void destroy() {
+
+    }
+
+    @Override
+    public boolean ready() {
+        return true;
+    }
+
     //all English
     //Kakao Talk -> {kakao, talk}
     //KakaoTalk  -> {kakao, talk}

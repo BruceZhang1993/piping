@@ -6,7 +6,12 @@ import android.content.Context;
 
 public class TranslatorFactory {
 
-    public static AbsTranslator getTranslator(Context context){
+    /**
+     *
+     * @param count the count of usage
+     * @return
+     */
+    public static AbsTranslator getTranslator(Context context, int count){
         if (context == null){
             //for test
             return new EnglishTranslator(null);
@@ -15,7 +20,7 @@ public class TranslatorFactory {
 //        Locale current = context.getResources().getConfiguration().locale;
 //        String displayLanguage = current.getDisplayLanguage();
 //        if (displayLanguage.equals(Locale.CHINESE.getDisplayLanguage())){
-            return new ChineseTranslator(context);
+            return new ChineseTranslator(context, count);
 //        }
 //        return new EnglishTranslator(context);
         }

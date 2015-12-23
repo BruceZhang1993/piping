@@ -21,5 +21,6 @@ public abstract class AbsTranslator {
      * @return
      */
     public abstract String[] getName(String name);
-
+    public abstract void destroy();
+    public abstract boolean ready();
 }

@@ -17,23 +17,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import shinado.indi.lib.items.VenderItem;
+import shinado.indi.lib.items.search.translator.AbsTranslator;
 
 public class ContactManager {
 
+	private AbsTranslator mTranslator;
+	private static final String TAG = "Contact@Manager";
 	private static final String[] PHONES_PROJECTION = new String[] {
 	    Phone.CONTACT_ID, Phone.DISPLAY_NAME, Phone.NUMBER, Phone.PHOTO_ID};
 	private HashMap<String, Contact> map;
 	
-	public static ContactManager getContactManager(Context context){
+	public static ContactManager getContactManager(Context context, AbsTranslator translator){
 		if(contactManager == null){
-			contactManager = new ContactManager(context);
+			contactManager = new ContactManager(context, translator);
 		}
 		return contactManager;
 	}
 	private static ContactManager contactManager;
 	private Context context;
 
-	private ContactManager(Context context){
+	private ContactManager(Context context, AbsTranslator translator){
+		this.mTranslator = translator;
 		this.context = context;
 		refreshContacts();
 	}
@@ -76,8 +80,9 @@ public class ContactManager {
 		}
 	}
 
-	private void refreshContacts() {  
-		map = new HashMap<String, Contact>();
+	private void refreshContacts() {
+		Log.d(TAG, "start loading contacts");
+		map = new HashMap<>();
 		ContentResolver resolver = context.getContentResolver();
 		Cursor phoneCursor = resolver.query(Phone.CONTENT_URI, PHONES_PROJECTION, null, null, null);  
 		if (phoneCursor != null) {  
@@ -101,7 +106,7 @@ public class ContactManager {
 		    }
 		    phoneCursor.close();       
 		}
-		Log.v("ContactManagering", "get finished");
+		Log.d(TAG, "end loading contacts");
 	}  
 
 	public VenderItem getResult(int idx){
@@ -112,11 +117,16 @@ public class ContactManager {
 	    
 	public VenderItem getResult(String value){
 		String label = getName(value);
-		return new VenderItem(context, value, label, VenderItem.BUILD_IN_ID_CONTACT);
+		return new VenderItem(value, label, mTranslator.getName(label), VenderItem.BUILD_IN_ID_CONTACT);
 	}
 	
 	public int getContactCount(){
 		return map.size();
+	}
+
+	public void destroy() {
+		mTranslator.destroy();
+		contactManager = null;
 	}
 
 	public interface OnContactChangeListener{

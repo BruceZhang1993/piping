@@ -44,6 +44,9 @@ public abstract class SearchVender extends BaseVender {
         TreeSet<VenderItem> set = new TreeSet<>();
         ArrayList<VenderItem> list = allItemMap.get(key);
 
+        if (list == null){
+            return set;
+        }
         for (VenderItem item : list){
             int i=0;
             for (String name : item.getName()){
