@@ -30,7 +30,7 @@ public abstract class ActionVender extends BaseVender {
         public void handleMessage(Message msg){
             Log.d("IFC", "handleMessage");
             ActionVender ifc = handlerWeakReference.get();
-            TreeSet<VenderItem> result = null;
+            TreeSet<VenderItem> result = new TreeSet<>();
             Object obj = msg.obj;
             if (obj != null){
                 VenderItem rs = (VenderItem) obj;
@@ -47,9 +47,9 @@ public abstract class ActionVender extends BaseVender {
     //rule:
     //[key].[instruction] [-option]...
     @Override
-    public void search(VenderItem prev, String key, int length) {
+    public void search(TreeSet<VenderItem> prev, String key, int length) {
         VenderItem result = getResult();
-        result.setSuccessor(prev);
+        result.setSuccessors(prev);
         result.setType(VenderItem.TYPE_ACTION);
         if (!key.contains(".")){
             result.setValue(key);
@@ -82,7 +82,7 @@ public abstract class ActionVender extends BaseVender {
                 }
             }
         }
-        notify(result);
+        notify(filter(result));
 
     }
 
@@ -90,5 +90,12 @@ public abstract class ActionVender extends BaseVender {
         mHandler.obtainMessage(0, result).sendToTarget();
     }
 
-    protected  abstract VenderItem getResult();
+    protected abstract VenderItem getResult();
+
+    /**
+     *
+     * @param result
+     * @return
+     */
+    protected abstract VenderItem filter(VenderItem result);
 }

@@ -1,32 +1,68 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
     tools:context="com.shinado.yi.desk.test.MainActivity" >
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:padding="2dp"
+    <LinearLayout
         android:layout_above="@+id/keyboard"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <RelativeLayout
+            android:padding="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:textStyle="bold"
-            android:paddingBottom="10dp"
-            android:id="@+id/displayText"
-            android:textSize="15dp"
-            android:textColor="#44d804"
-            android:shadowDx="0.5"
-            android:shadowDy="0.5"
-            android:shadowRadius="2.8"
-            android:shadowColor="#ff83f352"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello world" />
+            <TextView
+                android:id="@+id/status_time_tv"
+                android:text="12:12"
+                style="@style/geek"/>
 
-    </ScrollView>
+            <LinearLayout
+                android:id="@+id/status_right_ll"
+                android:layout_alignParentRight="true"
+                android:gravity="center|right"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_marginRight="3dp"
+                    android:layout_marginLeft="3dp"
+                    android:text="ON"
+                    style="@style/geek"/>
+
+                <TextView
+                    android:layout_marginRight="3dp"
+                    android:layout_marginLeft="3dp"
+                    android:textColor="@color/geek"
+                    android:text="36%"
+                    style="@style/geek"/>
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:padding="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:paddingBottom="10dp"
+                android:id="@+id/displayText"
+                style="@style/geek"
+                android:text="Hello world" />
+
+        </ScrollView>
+
+
+    </LinearLayout>
 
     <include
         android:layout_height="wrap_content"

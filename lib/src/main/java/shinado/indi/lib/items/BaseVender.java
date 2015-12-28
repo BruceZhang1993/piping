@@ -56,7 +56,7 @@ public abstract class BaseVender {
      *               length > 0 input
      *               length < 0 delete
      */
-    public abstract void search(VenderItem prev, String key, int length);
+    public abstract void search(TreeSet<VenderItem> prev, String key, int length);
 
     /**
      * fulfill result with frequency

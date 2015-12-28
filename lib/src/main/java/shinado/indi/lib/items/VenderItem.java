@@ -2,10 +2,12 @@ package shinado.indi.lib.items;
 
 import android.content.Context;
 
+import java.util.TreeSet;
+
 import shinado.indi.lib.items.search.translator.AbsTranslator;
 import shinado.indi.lib.items.search.translator.TranslatorFactory;
 
-public class VenderItem implements Cloneable, Comparable<VenderItem>{
+public class VenderItem implements Comparable<VenderItem>{
 
 	/**
 	 * the name array defined by display name
@@ -47,6 +49,7 @@ public class VenderItem implements Cloneable, Comparable<VenderItem>{
 	public static final int BUILD_IN_ID_CONTACT = 2;
 	public static final int BUILD_IN_ID_INSTALL = 3;
 	public static final int BUILD_IN_ID_COPY = 4;
+	public static final int BUILD_IN_ID_SEARCH = 5;
 
 	/**
 	 * the key to be searched
@@ -58,7 +61,7 @@ public class VenderItem implements Cloneable, Comparable<VenderItem>{
 	public static final int TYPE_ACTION = 1;
 
 
-	private VenderItem successor;
+	private TreeSet<VenderItem> successors;
 
 	public VenderItem(){
 		
@@ -81,13 +84,6 @@ public class VenderItem implements Cloneable, Comparable<VenderItem>{
 		setName(name);
 	}
 
-	@Override
-	public VenderItem clone(){
-		VenderItem vo = new VenderItem(name, value, id, displayName);
-		vo.setFreq(freq);
-		return vo;
-	}
-	
 	public VenderItem(String[] name, String value,
 					  int id, String displayName) {
 		this.name = name;
@@ -96,11 +92,11 @@ public class VenderItem implements Cloneable, Comparable<VenderItem>{
 		this.displayName = displayName;
 	}
 
-	public VenderItem getSuccessor() {
-		return successor;
+	public TreeSet<VenderItem> getSuccessors() {
+		return successors;
 	}
-	public void setSuccessor(VenderItem successor) {
-		this.successor = successor;
+	public void setSuccessors(TreeSet<VenderItem> successors) {
+		this.successors = successors;
 	}
 	public String[] getName() {
 		return name;
@@ -146,7 +142,7 @@ public class VenderItem implements Cloneable, Comparable<VenderItem>{
 
 	@Override
 	public int compareTo(VenderItem another) {
-		//search always ahead of action
+		//search results always ahead of action
 		int compare = another.type - type;
 		//same type
 		if (compare == 0){
@@ -155,6 +151,7 @@ public class VenderItem implements Cloneable, Comparable<VenderItem>{
 			//same key index
 			if (compare == 0){
 				compare = another.getFreq() - freq;
+
 				//same frequency
 				if (compare == 0){
 					compare = another.getDisplayName().compareTo(displayName);
@@ -178,12 +175,13 @@ public class VenderItem implements Cloneable, Comparable<VenderItem>{
 	public void addFrequency(){
 		++freq;
 	}
-	
+
 	public void copy(VenderItem vo){
 		this.name = vo.name;
 		this.value = vo.value;
 		this.displayName = vo.displayName;
 		this.freq = vo.freq;
+		this.type = vo.type;
 	}
 
 }

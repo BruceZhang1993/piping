@@ -26,7 +26,7 @@ public class ContactManager {
 	private static final String[] PHONES_PROJECTION = new String[] {
 	    Phone.CONTACT_ID, Phone.DISPLAY_NAME, Phone.NUMBER, Phone.PHOTO_ID};
 	private HashMap<String, Contact> map;
-	
+
 	public static ContactManager getContactManager(Context context, AbsTranslator translator){
 		if(contactManager == null){
 			contactManager = new ContactManager(context, translator);
@@ -37,11 +37,14 @@ public class ContactManager {
 	private Context context;
 
 	private ContactManager(Context context, AbsTranslator translator){
-		this.mTranslator = translator;
+		if (this.mTranslator == null){
+			this.mTranslator = translator;
+		}
 		this.context = context;
 		refreshContacts();
 	}
-	
+
+	//TODO what are you nong sha nie
 	private Contact getContact(String tel){
 		Contact c = map.get(tel);
 		if(c == null){

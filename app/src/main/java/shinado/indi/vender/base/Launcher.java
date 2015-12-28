@@ -5,28 +5,42 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.TreeSet;
 
 import shinado.indi.lib.items.VenderItem;
 import shinado.indi.lib.launcher.BaseLauncherView;
+import shinado.indi.lib.launcher.Feedable;
 import shinado.indi.lib.launcher.Searchable;
+import shinado.indi.lib.statusbar.BatteryStatusBar;
+import shinado.indi.lib.statusbar.ConnectionStatusBar;
+import shinado.indi.lib.statusbar.StatusBar;
+import shinado.indi.lib.statusbar.Statusable;
+import shinado.indi.lib.statusbar.TimeStatusBar;
 import shinado.indi.lib.util.CommonUtil;
 import shinado.indi.vender.R;
 
-public class BaseLauncher extends BaseLauncherView implements Searchable {
+public class Launcher extends BaseLauncherView implements Searchable, Feedable, Statusable {
 
-	private final String TAG = "IFC BaseLauncher";
+	private final String TAG = "IFC Launcher";
+	private ArrayList<StatusBar> mStatusBars = new ArrayList<>();
+	private HashMap<Integer, View> mStatusBarMap = new HashMap<>();
+	private LinearLayout mStatusBarLayout;
 	private EditText input_search;
 
 	private boolean initializing = true;
@@ -55,11 +69,6 @@ public class BaseLauncher extends BaseLauncherView implements Searchable {
 		super.onCreate(savedInstanceState);
 
 		Log.d(TAG, "start");
-		if (Build.VERSION.SDK_INT >= 16){
-			getWindow().getDecorView().setSystemUiVisibility(
-					View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-					| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-		}
 
 		this.setContentView(R.layout.layout_base_launcher);
 
@@ -67,6 +76,8 @@ public class BaseLauncher extends BaseLauncherView implements Searchable {
 		initViews();
 
 		addSearchable(this);
+		addFeedable(this);
+		setStatusBar();
 		Log.d(TAG, "end");
 	}
 
@@ -82,6 +93,59 @@ public class BaseLauncher extends BaseLauncherView implements Searchable {
 		else if(!animNotRequired){
 			initText();
 		}
+	}
+
+	private void setStatusBar(){
+		mStatusBarLayout = (LinearLayout) findViewById(R.id.status_right_ll);
+		mStatusBarLayout.removeAllViews();
+
+		loadLocalStatusBar();
+		for (StatusBar sb : mStatusBars){
+			sb.register();
+			if (sb.id == Statusable.ID_TIME){
+				continue;
+			}
+
+			//add view and put in map
+			int[] flags = sb.getFlags();
+			View view;
+			if (sb.getFlags() != null){
+				view = addStatusBarView(mStatusBarLayout, flags);
+			}else {
+				view = addStatusBarView(mStatusBarLayout, new int[]{sb.id});
+			}
+			mStatusBarMap.put(sb.id, view);
+		}
+
+	}
+
+	private View addStatusBarView(ViewGroup parent, int[] keys){
+		if (keys.length > 1){
+			LinearLayout layout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.layout_connection, parent, false);
+			for (int key : keys){
+				addStatusBarView(layout, new int[]{key});
+			}
+			parent.addView(layout);
+			return layout;
+		}else {
+			View view = LayoutInflater.from(this).inflate(R.layout.text_status_bar, parent, false);
+			view.setTag(keys[0]);
+			parent.addView(view);
+			return view;
+		}
+	}
+
+	private void loadLocalStatusBar(){
+		TimeStatusBar timeSb = new TimeStatusBar(this, this, Statusable.ID_TIME);
+		mStatusBars.add(timeSb);
+		mStatusBarMap.put(Statusable.ID_TIME, findViewById(R.id.status_time_tv));
+
+		ConnectionStatusBar connSb = new ConnectionStatusBar(this, this, Statusable.ID_CONNECTION);
+		mStatusBars.add(connSb);
+
+		BatteryStatusBar batterySb = new BatteryStatusBar(this, this, Statusable.ID_BATTERY);
+		mStatusBars.add(batterySb);
+
 	}
 
 	//clean text and start initiate text animation
@@ -110,48 +174,95 @@ public class BaseLauncher extends BaseLauncherView implements Searchable {
 	@Override
 	public void destroy(){
 		super.destroy();
+		for (StatusBar sb : mStatusBars){
+			sb.unregister();
+		}
 		isRun = false;
 	}
-	
-	private static final int WHAT_TIK = 1;
-	private static final int WHAT_TOK = 0;
-	private static final int WHAT_INPUT = 2;
-	private static final int WHAT_START = 3;
-	private static final int WHAT_HIDE = 4;
-	private static final int WHAT_LINE = 5;
+
+	@Override
+	public void onFeed(int flag, String msg, String pkg) {
+		displayText(msg + "#" + pkg + "\n");
+	}
+
+	@Override
+	public void onStatusBarNotified(int id, int flag, Object msg) {
+		View view = mStatusBarMap.get(id);
+		TextView textView = null;
+		if (view instanceof TextView){
+			textView = (TextView) view;
+		} else if (view instanceof ViewGroup){
+			textView = (TextView) view.findViewWithTag(flag);
+		}
+		if (msg instanceof Boolean){
+			boolean b = (boolean) msg;
+			String text = "";
+			switch (id){
+				case Statusable.ID_CONNECTION:
+					if (b){
+						switch (flag){
+							case ConnectionStatusBar.FLAG_WIFI:
+								text = "w";
+								break;
+							case ConnectionStatusBar.FLAG_NETWORK:
+								text = "m";
+								break;
+							case ConnectionStatusBar.FLAG_BLUETOOTH:
+								text = "b";
+								break;
+							case ConnectionStatusBar.FLAG_AIRPLANE:
+								text = "a";
+								break;
+						}
+					}
+					break;
+			}
+			textView.setText(text);
+		} else if (msg instanceof String){
+			textView.setText((String) msg);
+		}
+
+	}
 
 	static class OutputHandler extends Handler{
 
-		private WeakReference<BaseLauncher> deskViewWeakReference;
+		private static final int WHAT_TIK = 1;
+		private static final int WHAT_TOK = 0;
+		private static final int WHAT_INPUT = 2;
+		private static final int WHAT_START = 3;
+		private static final int WHAT_HIDE = 4;
+		private static final int WHAT_LINE = 5;
 
-		public OutputHandler(BaseLauncher baseLauncher){
-			deskViewWeakReference = new WeakReference<>(baseLauncher);
+		private WeakReference<Launcher> deskViewWeakReference;
+
+		public OutputHandler(Launcher launcher){
+			deskViewWeakReference = new WeakReference<>(launcher);
 		}
 
 		@Override
 		public void handleMessage(Message msg){
-			BaseLauncher baseLauncher = deskViewWeakReference.get();
+			Launcher launcher = deskViewWeakReference.get();
 			switch(msg.what){
 				case WHAT_TIK:
-					baseLauncher.showView.setText(baseLauncher.mPreviousLines.toString() + baseLauncher.mCurrentLine + "_");
+					launcher.showView.setText(launcher.mPreviousLines.toString() + launcher.mCurrentLine + "_");
 					break;
 				case WHAT_TOK:
-					baseLauncher.showView.setText(baseLauncher.mPreviousLines.toString() + baseLauncher.mCurrentLine);
+					launcher.showView.setText(launcher.mPreviousLines.toString() + launcher.mCurrentLine);
 					break;
 				case WHAT_INPUT:
-					baseLauncher.mPreviousLines.append(msg.obj);
-					baseLauncher.showView.setText(baseLauncher.mPreviousLines.toString());
-					baseLauncher.scrollView.fullScroll(View.FOCUS_DOWN);
+					launcher.mPreviousLines.append(msg.obj);
+					launcher.showView.setText(launcher.mPreviousLines.toString());
+					launcher.scrollView.fullScroll(View.FOCUS_DOWN);
 					break;
 				case WHAT_START:
-					baseLauncher.input_search.setText("");
-					baseLauncher.showKeyboard();
+					launcher.input_search.setText("");
+					launcher.showKeyboard();
 					break;
 				case WHAT_HIDE:
-					baseLauncher.hideKeyboard();
+					launcher.hideKeyboard();
 					break;
 				case WHAT_LINE:
-					baseLauncher.replaceLine((String) msg.obj);
+					launcher.replaceLine((String) msg.obj);
 					break;
 			}
 		}
@@ -190,7 +301,7 @@ public class BaseLauncher extends BaseLauncherView implements Searchable {
 
 	@Override
 	public void onNotified(TreeSet<VenderItem> result_set) {
-		Log.d(TAG, "onNotified");
+		Log.d(TAG, "onNotified, size:" + result_set.size());
 		resultList = result_set;
 		resultIndex = 0;
 		replaceLine(false);
@@ -212,7 +323,7 @@ public class BaseLauncher extends BaseLauncherView implements Searchable {
 			public void run(){
 				switch (flag){
 					case FLAG_REPLACE:
-						mHandler.obtainMessage(WHAT_LINE, msg).sendToTarget();
+						mHandler.obtainMessage(OutputHandler.WHAT_LINE, msg).sendToTarget();
 						break;
 					case FLAG_INPUT:
 						typeText(msg);
@@ -245,7 +356,7 @@ public class BaseLauncher extends BaseLauncherView implements Searchable {
 			while(showView == null);
 			initializing = true;
 
-			mHandler.sendEmptyMessage(WHAT_HIDE);
+			mHandler.sendEmptyMessage(OutputHandler.WHAT_HIDE);
 
 			typeTexts();
 			typeDots();
@@ -255,13 +366,13 @@ public class BaseLauncher extends BaseLauncherView implements Searchable {
 			displayText("\n");
 
 			initializing = false;
-			mHandler.sendEmptyMessage(WHAT_START);
+			mHandler.sendEmptyMessage(OutputHandler.WHAT_START);
 		}
 
 		private void typeTexts(){
 			for (String str: INIT_TEXT) {
 				Message message = new Message();
-				message.what = WHAT_INPUT;
+				message.what = OutputHandler.WHAT_INPUT;
 				message.obj = "\n";
 				mHandler.sendMessage(message);
 				typeText(str);
@@ -294,6 +405,9 @@ public class BaseLauncher extends BaseLauncherView implements Searchable {
 					sleep(500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
+				}
+				if (initializing){
+					continue;
 				}
 				mHandler.sendEmptyMessage(++i%2);
 			}
@@ -352,7 +466,7 @@ public class BaseLauncher extends BaseLauncherView implements Searchable {
 				token = str.substring(j, j+length);
 			}
 			Message msg = new Message();
-			msg.what = WHAT_INPUT;
+			msg.what = OutputHandler.WHAT_INPUT;
 			msg.obj = token;
 			mHandler.sendMessage(msg);
 			try {
@@ -367,7 +481,7 @@ public class BaseLauncher extends BaseLauncherView implements Searchable {
 
 	private void displayText(String sth){
 		Message msg = new Message();
-		msg.what = WHAT_INPUT;
+		msg.what = OutputHandler.WHAT_INPUT;
 		msg.obj = sth;
 		mHandler.sendMessage(msg);
 	}

@@ -28,7 +28,7 @@ public abstract class SearchVender extends BaseVender {
     }
 
     @Override
-    public void search(VenderItem prev, String key, int length) {
+    public void search(TreeSet<VenderItem> prev, String key, int length) {
         Log.d("IFC", "start searching");
         if(length > 0){
             push(forwardSearch(key), length);
@@ -127,7 +127,7 @@ public abstract class SearchVender extends BaseVender {
         public void handleMessage(Message msg){
             Log.d("IFC", "handleMessage");
             SearchVender ifc = handlerWeakReference.get();
-            TreeSet<VenderItem> result = null;
+            TreeSet<VenderItem> result = new TreeSet<>();
             if(msg.what > 0){
                 TreeSet<VenderItem> some = (TreeSet<VenderItem>) msg.obj;
                 result = some;
@@ -145,9 +145,7 @@ public abstract class SearchVender extends BaseVender {
                 }
             }
             if(ifc.mOnResultChangedListener != null){
-                if(result != null){
-                    ifc.mOnResultChangedListener.onResultChange(result, ifc.resultStack.size() == 1);
-                }
+                ifc.mOnResultChangedListener.onResultChange(result, ifc.resultStack.size() == 1);
             }
         }
     }

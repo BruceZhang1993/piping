@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +54,7 @@ public class AppManager {
 		List<ResolveInfo> list = pm.queryIntentActivities(mainIntent, 0);
 		for(int i=0; i<list.size(); i++){
 			ResolveInfo app = list.get(i);
+
 			if (app.resolvePackageName != null){
 				if (app.resolvePackageName.equals(context.getPackageName())){
 					continue;
@@ -112,8 +114,7 @@ public class AppManager {
 		}
 	}
 	
-	public void launch(String activityName)
-    {
+	public void launch(String activityName) {
 		ResolveInfo info = getResolve(activityName);
 		Intent intent = new Intent();
 		intent.setComponent(new ComponentName(info.activityInfo.applicationInfo.packageName,
@@ -124,8 +125,7 @@ public class AppManager {
 		context.startActivity(intent); 
     }
 
-	public void launch(int idx)
-    {
+	public void launch(int idx) {
 		String activityName = getActivityName(idx);
 		launch(activityName);
     }

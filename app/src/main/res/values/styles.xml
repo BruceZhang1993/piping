@@ -11,4 +11,21 @@
         <item name="android:background">@drawable/key_style</item>
     </style>
 
+    <style name="geek">
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">13dp</item>
+        <item name="android:textColor">@color/geek</item>
+        <item name="android:shadowDx">0.5</item>
+        <item name="android:shadowDy">0.5</item>
+        <item name="android:shadowRadius">2.8</item>
+        <item name="android:shadowColor">#ff83f352</item>
+    </style>
+
+    <style name="status_bar" parent="geek">
+
+        <item name="android:layout_marginRight">3dp</item>
+        <item name="android:layout_marginLeft">3dp</item>
+    </style>
 </resources>

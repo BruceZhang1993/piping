@@ -2,12 +2,16 @@ package shinado.indi.lib.items.action;
 
 import android.widget.Toast;
 
+import java.util.TreeSet;
+
 import shinado.indi.lib.items.VenderItem;
+import shinado.indi.lib.launcher.Searchable;
+import shinado.indi.lib.util.FunctionUtil;
 
 /**
  * Created by Administrator on 2015/12/21.
  */
-public class CopyVender extends ActionVender{
+public class CopyVender extends PreActionVender{
 
     VenderItem mResult;
 
@@ -26,11 +30,14 @@ public class CopyVender extends ActionVender{
 
     @Override
     public int function(VenderItem result) {
-        VenderItem successor = result.getSuccessor();
-        if (successor != null){
-            Toast.makeText(context, successor.getDisplayName(), Toast.LENGTH_LONG).show();
+        TreeSet<VenderItem> successors = result.getSuccessors();
+        if (successors != null && successors.size() > 0){
+            VenderItem item = (VenderItem)successors.toArray()[0];
+            String msg = item.getDisplayName() + ": " + item.getValue();
+            FunctionUtil.copyToClipboard(context, msg);
+            display("copied to clipboard", Searchable.FLAG_INPUT);
         }else {
-            Toast.makeText(context, "successor is null", Toast.LENGTH_LONG).show();
+            display("nothing was copied", Searchable.FLAG_INPUT);
         }
         return 0;
     }

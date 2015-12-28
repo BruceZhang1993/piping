@@ -2,6 +2,7 @@ package shinado.indi.lib.launcher;
 
 import android.content.Context;
 import android.os.Environment;
+import android.os.Vibrator;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,12 +21,14 @@ import shinado.indi.lib.items.BaseVender;
 import shinado.indi.lib.items.Vender;
 import shinado.indi.lib.items.VenderFactory;
 import shinado.indi.lib.items.VenderItem;
+import shinado.indi.lib.items.VenderLoadHelper;
 import shinado.indi.lib.items.action.CopyVender;
 import shinado.indi.lib.items.action.InstallVender;
 import shinado.indi.lib.items.search.AppVender;
 import shinado.indi.lib.items.search.ContactVender;
 import shinado.indi.lib.items.search.translator.AbsTranslator;
 import shinado.indi.lib.items.search.translator.TranslatorFactory;
+import shinado.indi.lib.settings.Preferences;
 import shinado.indi.vender.lib.BuildConfig;
 
 
@@ -34,7 +37,9 @@ public class SearchHelper {
 	private boolean blockInput = false;
 	private static final String TAG = "SearchHelper";
 	private Searchable searchable;
-	
+
+	private Preferences mPreferences;
+	private Vibrator mVib;
 	/**
 	 * Input for searching components
 	 */
@@ -49,11 +54,13 @@ public class SearchHelper {
 
 	protected Hashtable<Integer, BaseVender> functionMap;
 
-	private VenderItem mPrevisouItem = null;
+	private TreeSet<VenderItem> mPrevisouItems = new TreeSet<>();
 
 	public SearchHelper(Context context, Searchable searchable){
 		Log.d(TAG, "start");
 		this.searchable = searchable;
+		mVib = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+		mPreferences = new Preferences();
 
 		functionMap = new Hashtable<>();
 		loadLocalFunctions(context);
@@ -94,29 +101,11 @@ public class SearchHelper {
 	}
 
 	private void loadLocalFunctions(Context context){
-		AbsTranslator translator = TranslatorFactory.getTranslator(context, 2);
-
-		AppVender appFunction = new AppVender();
-		appFunction.init(context, this, BaseVender.TYPE_APP);
-		appFunction.setOnResultChangedListener(mOnResultChangedListener);
-		appFunction.load(translator);
-		functionMap.put(BaseVender.TYPE_APP, appFunction);
-
-		ContactVender contactFunction = new ContactVender();
-		contactFunction.init(context, this, BaseVender.TYPE_CONTACT);
-		contactFunction.load(translator);
-		functionMap.put(BaseVender.TYPE_CONTACT, contactFunction);
-		contactFunction.setOnResultChangedListener(mOnResultChangedListener);
-
-		InstallVender insFunction = new InstallVender();
-		insFunction.init(context, this, VenderItem.BUILD_IN_ID_INSTALL);
-		functionMap.put(VenderItem.BUILD_IN_ID_INSTALL, insFunction);
-		insFunction.setOnResultChangedListener(mOnResultChangedListener);
-
-		CopyVender cpFunction = new CopyVender();
-		cpFunction.init(context, this, VenderItem.BUILD_IN_ID_COPY);
-		functionMap.put(VenderItem.BUILD_IN_ID_COPY, cpFunction);
-		cpFunction.setOnResultChangedListener(mOnResultChangedListener);
+		Hashtable<Integer, BaseVender> map = VenderLoadHelper.load(this, context);
+		for (BaseVender vender : map.values()){
+			vender.setOnResultChangedListener(mOnResultChangedListener);
+		}
+		functionMap.putAll(map);
 	}
 
 	private BaseVender.OnResultChangedListener mOnResultChangedListener = new BaseVender.OnResultChangedListener(){
@@ -125,6 +114,7 @@ public class SearchHelper {
 
 		@Override
 		public void onResultChange(TreeSet<VenderItem> list, boolean flag) {
+
 			if (list != null){
 				result_set.addAll(list);
 			}
@@ -160,13 +150,14 @@ public class SearchHelper {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				if (s.toString().endsWith(".")){
-					if(result_set.size() > 0){
-						mPrevisouItem = (VenderItem) result_set.toArray()[0];
+					mPrevisouItems.clear();
+					for (VenderItem item : result_set){
+						mPrevisouItems.add(item);
 					}
 				}
 				input_search.setSelection(count);
 				result_set.clear();
-				doSearch(mPrevisouItem, s.toString(), count - before);
+				doSearch(mPrevisouItems, s.toString(), count - before);
 			}
 
 			@Override
@@ -221,7 +212,7 @@ public class SearchHelper {
 		searchable.onNotified(result_set);
 	}
 
-	private void doSearch(VenderItem prev, String key, int length){
+	private void doSearch(TreeSet<VenderItem> prev, String key, int length){
 		for(BaseVender fuc:functionMap.values()){
 			fuc.search(prev, key, length);
 		}
@@ -242,6 +233,9 @@ public class SearchHelper {
 	private void pressKey(View v){
 		if (blockInput){
 			return;
+		}
+		if (mPreferences.isVibrating()){
+			mVib.vibrate(5);
 		}
 		String key = (String) v.getTag();
     	if(key.length() == 1){

@@ -2,27 +2,46 @@ package shinado.indi.lib.launcher;
 
 import android.app.Activity;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.WindowManager;
 
+import java.util.ArrayList;
 
+import shinado.indi.lib.statusbar.BarService;
+import shinado.indi.lib.statusbar.BatteryStatusBar;
+import shinado.indi.lib.statusbar.ConnectionStatusBar;
+import shinado.indi.lib.statusbar.StatusBar;
+import shinado.indi.lib.statusbar.Statusable;
+import shinado.indi.lib.statusbar.TimeStatusBar;
 
 public abstract class BaseLauncherView extends Activity{
 
 	protected FeedHelper feedHelper;
 	public SearchHelper searchHelper;
-	
+	private Intent mBarService;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mBarService = new Intent(this, BarService.class);
+		startService(mBarService);
+	}
+
 	@Override
 	public void onDestroy(){
         super.onDestroy();
+		stopService(mBarService);
 		destroy();
 	}
+
 
 	public void addSearchable(Searchable searchable){
 		searchHelper = new SearchHelper(this, searchable);
 	}
 	public void addFeedable(Feedable feedable){
 		feedHelper = new FeedHelper(this, feedable);
+		feedHelper.start();
 	}
 
 	/**
@@ -44,7 +63,6 @@ public abstract class BaseLauncherView extends Activity{
         super.onResume();
 
 		resume(flag);
-		System.out.println("on resume"+flag);
 		flag = false;
 	}
 	

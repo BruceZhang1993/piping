@@ -18,14 +18,16 @@ public class InstallVender extends ActionVender {
     private static final String URL_LIST = "http://1.yilaunch.sinaapp.com/install/list.php";
     private static final String URL_INSTALL = "http://1.yilaunch.sinaapp.com/install/search.php";
 
+    private static final String OPT_LS = "-ls";
+    private static final String OPT_F  = "-f";
+    private static final String OPT_M  = "-m";
+
     private static final String HELP = "Usage of install:\n" +
             "[key].install [-option]\n" +
             "where option includes:\n" +
-            "-ls list all functions available\n" +
-            "-td list trending functions\n" +
-            "-lt list latest functions\n" +
-            "-s  search for items\n" +
-            "-m  install whatever matches";
+            OPT_LS + " list all functions available\n" +
+            OPT_F  + " find items\n" +
+            OPT_M  + " install whatever matches";
 
     public InstallVender() {
         mResult = new VenderItem();
@@ -81,6 +83,11 @@ public class InstallVender extends ActionVender {
     }
 
     @Override
+    protected VenderItem filter(VenderItem result) {
+        return result;
+    }
+
+    @Override
     public int function(VenderItem result) {
         String value = result.getValue();
         if (value == null || value.trim().isEmpty()){
@@ -109,7 +116,7 @@ public class InstallVender extends ActionVender {
             if (split.length > 1){
                 String option = split[1];
                 params.put("option", option);
-                if (option.contains("-f")){
+                if (option.contains(OPT_LS)){
                     requestList(params);
                     return;
                 }
