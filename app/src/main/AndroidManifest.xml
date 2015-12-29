@@ -12,7 +12,7 @@
 
         <activity
             android:launchMode="singleInstance"
-            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+            android:theme="@style/LauncherTheme"
             android:name=".base.Launcher"
             android:excludeFromRecents="true"
             android:label="@string/app_name" >

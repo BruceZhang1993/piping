@@ -5,6 +5,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
@@ -17,6 +21,7 @@ import shinado.indi.lib.statusbar.TimeStatusBar;
 
 public abstract class BaseLauncherView extends Activity{
 
+	private ArrayList<StatusBar> mStatusBars = new ArrayList<>();
 	protected FeedHelper feedHelper;
 	public SearchHelper searchHelper;
 	private Intent mBarService;
@@ -35,6 +40,29 @@ public abstract class BaseLauncherView extends Activity{
 		destroy();
 	}
 
+	public ArrayList<StatusBar> addStatusable(Statusable statusable){
+		loadLocalStatusBar(statusable);
+		loadServerStatusBar(statusable);
+		for (StatusBar sb : mStatusBars){
+			sb.register();
+		}
+		return mStatusBars;
+	}
+
+	private void loadLocalStatusBar(Statusable sb){
+		TimeStatusBar timeSb = new TimeStatusBar(this, sb, Statusable.ID_TIME);
+		mStatusBars.add(timeSb);
+
+		ConnectionStatusBar connSb = new ConnectionStatusBar(this, sb, Statusable.ID_CONNECTION);
+		mStatusBars.add(connSb);
+
+		BatteryStatusBar batterySb = new BatteryStatusBar(this, sb, Statusable.ID_BATTERY);
+		mStatusBars.add(batterySb);
+	}
+
+	private void loadServerStatusBar(Statusable sb){
+		//TODO
+	}
 
 	public void addSearchable(Searchable searchable){
 		searchHelper = new SearchHelper(this, searchable);
@@ -53,6 +81,9 @@ public abstract class BaseLauncherView extends Activity{
 	public void destroy(){
 		if(feedHelper != null){
 			feedHelper.destroy();
+		}
+		for (StatusBar sb : mStatusBars){
+			sb.unregister();
 		}
 	}
 

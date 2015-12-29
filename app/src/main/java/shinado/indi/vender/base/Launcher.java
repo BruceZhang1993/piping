@@ -38,7 +38,6 @@ import shinado.indi.vender.R;
 public class Launcher extends BaseLauncherView implements Searchable, Feedable, Statusable {
 
 	private final String TAG = "IFC Launcher";
-	private ArrayList<StatusBar> mStatusBars = new ArrayList<>();
 	private HashMap<Integer, View> mStatusBarMap = new HashMap<>();
 	private LinearLayout mStatusBarLayout;
 	private EditText input_search;
@@ -96,10 +95,12 @@ public class Launcher extends BaseLauncherView implements Searchable, Feedable, 
 	}
 
 	private void setStatusBar(){
+		ArrayList<StatusBar> mStatusBars = addStatusable(this);
+		mStatusBarMap.put(Statusable.ID_TIME, findViewById(R.id.status_time_tv));
+
 		mStatusBarLayout = (LinearLayout) findViewById(R.id.status_right_ll);
 		mStatusBarLayout.removeAllViews();
 
-		loadLocalStatusBar();
 		for (StatusBar sb : mStatusBars){
 			sb.register();
 			if (sb.id == Statusable.ID_TIME){
@@ -135,19 +136,6 @@ public class Launcher extends BaseLauncherView implements Searchable, Feedable, 
 		}
 	}
 
-	private void loadLocalStatusBar(){
-		TimeStatusBar timeSb = new TimeStatusBar(this, this, Statusable.ID_TIME);
-		mStatusBars.add(timeSb);
-		mStatusBarMap.put(Statusable.ID_TIME, findViewById(R.id.status_time_tv));
-
-		ConnectionStatusBar connSb = new ConnectionStatusBar(this, this, Statusable.ID_CONNECTION);
-		mStatusBars.add(connSb);
-
-		BatteryStatusBar batterySb = new BatteryStatusBar(this, this, Statusable.ID_BATTERY);
-		mStatusBars.add(batterySb);
-
-	}
-
 	//clean text and start initiate text animation
 	private void initText(){
 		mPreviousLines = new StringBuffer();
@@ -174,9 +162,7 @@ public class Launcher extends BaseLauncherView implements Searchable, Feedable, 
 	@Override
 	public void destroy(){
 		super.destroy();
-		for (StatusBar sb : mStatusBars){
-			sb.unregister();
-		}
+
 		isRun = false;
 	}
 
@@ -186,7 +172,7 @@ public class Launcher extends BaseLauncherView implements Searchable, Feedable, 
 	}
 
 	@Override
-	public void onStatusBarNotified(int id, int flag, Object msg) {
+	public void onStatusBarNotified(int id, int flag, String msg) {
 		View view = mStatusBarMap.get(id);
 		TextView textView = null;
 		if (view instanceof TextView){
@@ -194,33 +180,8 @@ public class Launcher extends BaseLauncherView implements Searchable, Feedable, 
 		} else if (view instanceof ViewGroup){
 			textView = (TextView) view.findViewWithTag(flag);
 		}
-		if (msg instanceof Boolean){
-			boolean b = (boolean) msg;
-			String text = "";
-			switch (id){
-				case Statusable.ID_CONNECTION:
-					if (b){
-						switch (flag){
-							case ConnectionStatusBar.FLAG_WIFI:
-								text = "w";
-								break;
-							case ConnectionStatusBar.FLAG_NETWORK:
-								text = "m";
-								break;
-							case ConnectionStatusBar.FLAG_BLUETOOTH:
-								text = "b";
-								break;
-							case ConnectionStatusBar.FLAG_AIRPLANE:
-								text = "a";
-								break;
-						}
-					}
-					break;
-			}
-			textView.setText(text);
-		} else if (msg instanceof String){
-			textView.setText((String) msg);
-		}
+		textView.setText(msg);
+
 
 	}
 

@@ -9,6 +9,6 @@ public interface Statusable {
     public static final int ID_TIME = 2;
     public static final int ID_CONNECTION = 3;
 
-    public void onStatusBarNotified(int id, int flag, Object msg);
+    public void onStatusBarNotified(int id, int flag, String msg);
 
 }

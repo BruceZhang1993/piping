@@ -48,13 +48,13 @@ public class ConnectionStatusBar extends StatusBar{
                     boolean connected = activeNetwork.isConnectedOrConnecting();
                     switch (type){
                         case ConnectivityManager.TYPE_WIFI:
-                            mStatusable.onStatusBarNotified(id, FLAG_WIFI, connected);
+                            mStatusable.onStatusBarNotified(id, FLAG_WIFI, connected ? "w" : "");
                             break;
                         case ConnectivityManager.TYPE_MOBILE:
-                            mStatusable.onStatusBarNotified(id, FLAG_NETWORK, connected);
+                            mStatusable.onStatusBarNotified(id, FLAG_NETWORK, connected ? "m" : "");
                             break;
                         case ConnectivityManager.TYPE_BLUETOOTH:
-                            mStatusable.onStatusBarNotified(id, FLAG_BLUETOOTH, connected);
+                            mStatusable.onStatusBarNotified(id, FLAG_BLUETOOTH, connected ? "b" : "");
                             break;
                     }
                 }
@@ -62,7 +62,7 @@ public class ConnectionStatusBar extends StatusBar{
                 boolean noConnectivity =
                         intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
 
-                mStatusable.onStatusBarNotified(id, FLAG_AIRPLANE, noConnectivity);
+                mStatusable.onStatusBarNotified(id, FLAG_AIRPLANE, noConnectivity ? "✈" : "");
             }
         }
     };
