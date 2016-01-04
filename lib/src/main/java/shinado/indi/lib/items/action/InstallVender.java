@@ -48,14 +48,14 @@ public class InstallVender extends ActionVender {
 
             @Override
             public void onFinish(Downloadable v) {
-                display("Installing...", Searchable.FLAG_INPUT);
+                input("Installing...");
                 mSearchHelper.releaseInput();
                 mSearchHelper.addNewVender(context, (Vender) v);
             }
 
             @Override
             public void onFail(Downloadable v) {
-                display("Failed", Searchable.FLAG_INPUT);
+                input("Failed");
                 mSearchHelper.releaseInput();
             }
 
@@ -72,7 +72,7 @@ public class InstallVender extends ActionVender {
                 sb.append("　");
                 sb.append(prgs);
                 sb.append("%");
-                display(sb.toString(), Searchable.FLAG_REPLACE);
+                replace(sb.toString());
             }
         });
     }
@@ -91,38 +91,47 @@ public class InstallVender extends ActionVender {
     public int function(VenderItem result) {
         String value = result.getValue();
         if (value == null || value.trim().isEmpty()){
-            display(HELP, Searchable.FLAG_INPUT);
+            input(HELP);
         }else{
             handleWithOption(value);
         }
         return 0;
     }
 
-    private void handleWithOption(String ins){
+    private void handleWithOption(String value){
         mSearchHelper.blockInput();
-        display("loading...", Searchable.FLAG_INPUT);
+        input("loading...");
 
         HashMap<String, String> params = new HashMap<>();
-        String[] split = ins.split(" ", 2);
-        //no key provided
-        if (split[0].contains("-")){
-            params.put("option", ins);
-            requestList(params);
-        }
-        //with key
-        else {
-            String name = split[0];
-            params.put("name", name);
-            if (split.length > 1){
+
+        if (value.contains(" ")){
+            String[] split = value.split(" ", 2);
+            //e.g, ".x -ls" -> " -ls"
+            if (split[0].equals("")){
+                String ins = split[1];
+                params.put("option", ins);
+                requestList(params);
+            }
+            else{
+                //e.g.  "k.x -ls" -> "k -ls"
+                String name = split[0];
+                params.put("name", name);
                 String option = split[1];
                 params.put("option", option);
-                if (option.contains(OPT_LS)){
+                if (option.contains(OPT_LS) || option.contains(OPT_F)){
                     requestList(params);
-                    return;
+                }else if (option.contains(OPT_M)) {
+                    requestInstall(params);
                 }
             }
+        }
+        //e.g.  "k.x" -> "k"
+        else{
+            String name = value;
+            params.put("name", name);
             requestInstall(params);
         }
+
     }
 
     private void requestInstall(HashMap<String, String> params){
@@ -136,7 +145,7 @@ public class InstallVender extends ActionVender {
                             mLoader.addToQueue(obj);
                             mLoader.start();
                         } else {
-                            display("Item not found", Searchable.FLAG_INPUT);
+                            input("Item not found");
                         }
                     }
                 },
@@ -151,7 +160,7 @@ public class InstallVender extends ActionVender {
                     public void onResponse(Result obj) {
                         String msg = constructMessage(obj);
                         mSearchHelper.releaseInput();
-                        display(msg, Searchable.FLAG_INPUT);
+                        input(msg);
                     }
                 },
                 mDefaultError);
@@ -161,7 +170,7 @@ public class InstallVender extends ActionVender {
         @Override
         public void onError(String msg) {
             mSearchHelper.releaseInput();
-            display(msg, Searchable.FLAG_INPUT);
+            input(msg);
         }
     };
 

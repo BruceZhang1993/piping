@@ -32,6 +32,7 @@ import shinado.indi.lib.statusbar.ConnectionStatusBar;
 import shinado.indi.lib.statusbar.StatusBar;
 import shinado.indi.lib.statusbar.Statusable;
 import shinado.indi.lib.statusbar.TimeStatusBar;
+import shinado.indi.lib.util.AppManager;
 import shinado.indi.lib.util.CommonUtil;
 import shinado.indi.vender.R;
 
@@ -89,9 +90,9 @@ public class Launcher extends BaseLauncherView implements Searchable, Feedable, 
 			initiated = true;
 		}
 		//re-initiate text if animation is required
-		else if(!animNotRequired){
-			initText();
-		}
+//		else if(!animNotRequired){
+//			initText();
+//		}
 	}
 
 	private void setStatusBar(){
@@ -168,7 +169,13 @@ public class Launcher extends BaseLauncherView implements Searchable, Feedable, 
 
 	@Override
 	public void onFeed(int flag, String msg, String pkg) {
-		displayText(msg + "#" + pkg + "\n");
+		//find item and add to resultList
+		VenderItem item = searchHelper.getItem(VenderItem.BUILD_IN_ID_APP, pkg + ",");
+		String display = item.getDisplayName();
+		resultList.clear();
+		resultList.add(item);
+		displayText(display + " - " + msg + "\n");
+		replaceLine(true);
 	}
 
 	@Override

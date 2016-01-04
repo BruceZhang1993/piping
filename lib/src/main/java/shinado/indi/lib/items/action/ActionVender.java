@@ -46,6 +46,7 @@ public abstract class ActionVender extends BaseVender {
 
     //rule:
     //[key].[instruction] [-option]...
+    //value: [key] [-option]...
     @Override
     public void search(TreeSet<VenderItem> prev, String key, int length) {
         VenderItem result = getResult();
@@ -64,8 +65,7 @@ public abstract class ActionVender extends BaseVender {
 
             String[] split = key.split(" ", 2);
             //the key to the action
-            //e.g. dic.ins => "ins"
-            //e.g. dic.    => ""
+            //e.g. dic.ins -s => "ins"
             String sKey = split[0].substring(indexOfDot+1);
 
             if (sKey.length() == 0){
@@ -73,6 +73,7 @@ public abstract class ActionVender extends BaseVender {
             }else {
                 if (contains(result.getName(), sKey)){
                     //e.g. dic.ins -ls => "dic -ls"
+                    //        .ins -ls => " -ls"
                     if (split.length > 1){
                         value += " " + split[1];
                     }
@@ -98,4 +99,9 @@ public abstract class ActionVender extends BaseVender {
      * @return
      */
     protected abstract VenderItem filter(VenderItem result);
+
+    @Override
+    public VenderItem getItem(String value){
+        return getResult();
+    }
 }

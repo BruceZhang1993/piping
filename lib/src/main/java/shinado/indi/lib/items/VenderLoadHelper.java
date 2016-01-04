@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import shinado.indi.lib.items.action.CopyVender;
 import shinado.indi.lib.items.action.InstallVender;
 import shinado.indi.lib.items.action.SearchActionVender;
+import shinado.indi.lib.items.action.TaskVender;
 import shinado.indi.lib.items.search.AppVender;
 import shinado.indi.lib.items.search.ContactVender;
 import shinado.indi.lib.items.search.translator.AbsTranslator;
@@ -44,6 +45,10 @@ public class VenderLoadHelper {
         SearchActionVender searchFunction = new SearchActionVender();
         searchFunction.init(context, helper, VenderItem.BUILD_IN_ID_SEARCH);
         functionMap.put(VenderItem.BUILD_IN_ID_SEARCH, searchFunction);
+
+        TaskVender taskFunction = new TaskVender();
+        taskFunction.init(context, helper, VenderItem.BUILD_IN_ID_TASKS);
+        functionMap.put(VenderItem.BUILD_IN_ID_TASKS, taskFunction);
 
         return functionMap;
     }

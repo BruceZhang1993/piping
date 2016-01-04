@@ -40,6 +40,12 @@ public class ContactVender extends SearchVender {
 
 
 	@Override
+	public VenderItem getItem(String value) {
+		//TODO
+		return null;
+	}
+
+	@Override
 	public int function(VenderItem rs) {
 		String body = rs.getValue();
 		if(!body.equals("")){

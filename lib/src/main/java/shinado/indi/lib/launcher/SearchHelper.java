@@ -26,6 +26,7 @@ import shinado.indi.lib.items.action.CopyVender;
 import shinado.indi.lib.items.action.InstallVender;
 import shinado.indi.lib.items.search.AppVender;
 import shinado.indi.lib.items.search.ContactVender;
+import shinado.indi.lib.items.search.SearchVender;
 import shinado.indi.lib.items.search.translator.AbsTranslator;
 import shinado.indi.lib.items.search.translator.TranslatorFactory;
 import shinado.indi.lib.settings.Preferences;
@@ -264,5 +265,9 @@ public class SearchHelper {
 
 	public void releaseInput(){
 		this.blockInput = false;
+	}
+
+	public VenderItem getItem(int id, String value){
+		return functionMap.get(id).getItem(value);
 	}
 }

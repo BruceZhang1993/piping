@@ -50,6 +50,7 @@ public class VenderItem implements Comparable<VenderItem>{
 	public static final int BUILD_IN_ID_INSTALL = 3;
 	public static final int BUILD_IN_ID_COPY = 4;
 	public static final int BUILD_IN_ID_SEARCH = 5;
+	public static final int BUILD_IN_ID_TASKS = 6;
 
 	/**
 	 * the key to be searched

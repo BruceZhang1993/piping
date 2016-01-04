@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.TreeSet;
 
 import shinado.indi.lib.launcher.SearchHelper;
+import shinado.indi.lib.launcher.Searchable;
 
 /**
  * the basic
@@ -58,6 +59,7 @@ public abstract class BaseVender {
      */
     public abstract void search(TreeSet<VenderItem> prev, String key, int length);
 
+    public abstract VenderItem getItem(String value);
     /**
      * fulfill result with frequency
      */
@@ -140,7 +142,19 @@ public abstract class BaseVender {
         mSearchHelper.getSearchable().onDisplay(msg + "\n", flag);
     }
 
-    protected void setInputLock(boolean b){
+    protected void input(String msg){
+        mSearchHelper.getSearchable().onDisplay(msg + "\n", Searchable.FLAG_INPUT);
+    }
 
+    protected void replace(String msg){
+        mSearchHelper.getSearchable().onDisplay(msg + "\n", Searchable.FLAG_REPLACE);
+    }
+
+    protected void blockInput(){
+        mSearchHelper.blockInput();
+    }
+
+    protected void releaseInput(){
+        mSearchHelper.releaseInput();
     }
 }

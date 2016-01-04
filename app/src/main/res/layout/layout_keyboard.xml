@@ -153,7 +153,7 @@
             style="@style/keyboard"
             android:tag="shift"   
 		    android:src="@drawable/key_shift_white"
-            android:layout_weight="2"
+            android:layout_weight="1.5"
             />  
          
         <Button 
@@ -202,7 +202,7 @@
             style="@style/keyboard"
             android:tag="backspace"   
 		    android:src="@drawable/key_backspace_white"
-            android:layout_weight="2"
+            android:layout_weight="1.5"
             />
          
     </LinearLayout>
