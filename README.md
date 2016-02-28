@@ -8,7 +8,7 @@ call someone like this:
 moreover, every instruction in Piping is considered as a pipe, therefore, you can put two of them together to make things easier, like, texting Maya's profile to Play:  
 ![pipe](https://cloud.githubusercontent.com/assets/3215337/13378016/ddd69eee-de2f-11e5-9ed8-96e2e53d9545.gif)
 
-You can also install pipes in pipe store, to extend the functionality of Piping:
+You can also install pipes in pipe store, to extend the functionality of Piping:  
 ![install](https://cloud.githubusercontent.com/assets/3215337/13378141/50e23ac4-de35-11e5-87f2-a377f980bae6.gif)
 
 ## Copyright
