@@ -5,7 +5,7 @@ Piping is an Android launcher to increase your zhuangability. With Piping, you c
 call someone like this:  
 ![call](https://cloud.githubusercontent.com/assets/3215337/13377996/07e0dd54-de2f-11e5-8b42-02c8272e828c.gif)
   
-moreover, every instruction in Piping is considered as a pipe, therefore, you can put two of them together to make things easier, like, texting Maya's profile to Play:  
+moreover, every instruction in Piping is considered as a pipe, therefore, you can put two of them together to make things easier, like, sending Maya's profile to Play:  
 ![pipe](https://cloud.githubusercontent.com/assets/3215337/13378016/ddd69eee-de2f-11e5-9ed8-96e2e53d9545.gif)
 
 You can also install pipes in pipe store, to extend the functionality of Piping:  
