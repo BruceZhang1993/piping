@@ -1,4 +1,11 @@
-﻿Vender is an Android launcher based on search. With Vender, everything is in search. What's more, the themes could be changed, the searching function would be dynamically updated. For the situations where only simple function is required such as calculating one plus one, looking up some words in dictionary, or checking currency rate, you do not need to leave this launcher to get things done. We hope Vender will grow to be a community where eveyone can work on its themes and functionalities. 
+Piping is an Android launcher based on search. With Piping, you can launch applications like this:
+![]({{site.baseurl}}/https://cloud.githubusercontent.com/assets/3215337/13377995/07b66204-de2f-11e5-9a6e-c4400de85c8a.gif)
+call someone like this:
+![]({{site.baseurl}}/https://cloud.githubusercontent.com/assets/3215337/13377996/07e0dd54-de2f-11e5-8b42-02c8272e828c.gif)
+moreover, every instruction in Piping is considered as a pipe, therefore, you can put two of them together to make things easier, like, texting Maya's profile to Play:
+![]({{site.baseurl}}/https://cloud.githubusercontent.com/assets/3215337/13378016/ddd69eee-de2f-11e5-9ed8-96e2e53d9545.gif)
+You can also download pipes in pipe store, to extend the functionality of Piping, such as, getting translation for words:
+
 
 ## Copyright
 
