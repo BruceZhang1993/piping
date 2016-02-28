@@ -1,26 +1,29 @@
 package shinado.indi.lib.items.action;
 
-import android.widget.Toast;
-
-import java.util.TreeSet;
-
 import shinado.indi.lib.items.VenderItem;
-import shinado.indi.lib.launcher.Searchable;
 import shinado.indi.lib.util.FunctionUtil;
 
-/**
- * Created by Administrator on 2015/12/21.
- */
 public class CopyVender extends PreActionVender{
 
     VenderItem mResult;
 
-    public CopyVender(){
+    public CopyVender(int id){
+        super(id);
         mResult = new VenderItem();
-        mResult.setId(VenderItem.BUILD_IN_ID_COPY);
+        mResult.setId(id);
         mResult.setDisplayName(".cp");
-        mResult.setValue("");
         mResult.setName(new String[]{".", "cp"});
+    }
+
+    @Override
+    public void acceptInput(VenderItem result, String input) {
+        FunctionUtil.copyToClipboard(context, input);
+        input("copied to clipboard");
+    }
+
+    @Override
+    public void getOutput(VenderItem result, OutputCallback callback) {
+        callback.onOutput("error, cannot get output from cp");
     }
 
     @Override
@@ -29,17 +32,8 @@ public class CopyVender extends PreActionVender{
     }
 
     @Override
-    public int function(VenderItem result) {
-        TreeSet<VenderItem> successors = result.getSuccessors();
-        if (successors != null && successors.size() > 0){
-            VenderItem item = (VenderItem)successors.toArray()[0];
-            String msg = item.getDisplayName() + ": " + item.getValue();
-            FunctionUtil.copyToClipboard(context, msg);
-            display("copied to clipboard", Searchable.FLAG_INPUT);
-        }else {
-            display("nothing was copied", Searchable.FLAG_INPUT);
-        }
-        return 0;
+    public void execute(VenderItem result) {
+        input(".cp must take an application or contact");
     }
 
 }

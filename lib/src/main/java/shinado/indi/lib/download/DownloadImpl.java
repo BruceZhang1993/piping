@@ -105,6 +105,7 @@ public class DownloadImpl {
                     fos.write(buf, 0, numread);
                     downloadFileSize += numread;
                     publishProgress();
+                    Thread.sleep(50);
                 }
                 fos.close();
                 is.close();

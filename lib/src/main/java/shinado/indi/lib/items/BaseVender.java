@@ -2,46 +2,42 @@ package shinado.indi.lib.items;
 
 import android.content.Context;
 
-import java.util.ArrayList;
 import java.util.TreeSet;
 
 import shinado.indi.lib.launcher.SearchHelper;
 import shinado.indi.lib.launcher.Searchable;
+import shinado.indi.lib.items.VenderItem.Value;
 
 /**
  * the basic
  */
 public abstract class BaseVender {
 
-    public static final int TYPE_APP = VenderItem.BUILD_IN_ID_APP;
-    public static final int TYPE_CONTACT = VenderItem.BUILD_IN_ID_CONTACT;
-
     protected int id;
     protected Context context;
     protected TreeSet<VenderItem> frequentItems = new TreeSet<>();
-    protected OnResultChangedListener mOnResultChangedListener;
     protected SearchHelper mSearchHelper;
     protected FrequentMap mFrequentMap;
 
-    public BaseVender(){
-    }
-
-    public void init(Context context, SearchHelper s, int id){
-        this.context = context;
-        mFrequentMap = new FrequentMap();
-        this.mSearchHelper = s;
+    public BaseVender(int id) {
         this.id = id;
     }
 
-    public void removeFrequency(VenderItem vo){
-        mFrequentMap.remove(vo.getValue());
+    public void init(Context context, SearchHelper s) {
+        this.context = context;
+        mFrequentMap = new FrequentMap();
+        this.mSearchHelper = s;
+    }
+
+    public void removeFrequency(VenderItem vo) {
+        mFrequentMap.remove(vo.getValue().body);
         frequentItems.remove(vo);
     }
 
-    public void addFrequency(VenderItem item){
+    public void addFrequency(VenderItem item) {
         item.addFrequency();
-        boolean bExist = mFrequentMap.addFrequency(item.getValue());
-        if(!bExist){
+        boolean bExist = mFrequentMap.addFrequency(item.getValue().body);
+        if (!bExist) {
             frequentItems.add(item);
         }
     }
@@ -50,111 +46,146 @@ public abstract class BaseVender {
      * fire when input text is changed
      * used by a TextWatcher
      *
-     * @param prev the previous result before entering ".", for action vender only
-     * @param key  the text input
+     * @param prev   the previous result before entering ".", for action vender only
+     * @param key    the text input
      * @param length count-before
      *               which means when
      *               length > 0 input
      *               length < 0 delete
      */
-    public abstract void search(TreeSet<VenderItem> prev, String key, int length);
+    public abstract TreeSet<VenderItem> search(TreeSet<VenderItem> prev, String key, int length);
 
     public abstract VenderItem getItem(String value);
+
     /**
      * fulfill result with frequency
      */
-    protected void fulfillResult(VenderItem vo){
-        Integer freq = mFrequentMap.get(vo.getValue());
-        if(freq != null){
+    protected void fulfillResult(VenderItem vo) {
+        Integer freq = mFrequentMap.get(vo.getValue().body);
+        if (freq != null) {
             vo.setFreq(freq);
             frequentItems.add(vo);
         }
     }
 
     /**
-     * if name contains key in a way that's friendly for searching
-     * e.g.
-     * contains(["google", "map"], "gm") -> true
-     * contains(["face", "book"], "gom") -> true
-     * contains(["face", "book"], "gma") -> true
-     * contains(["face", "book"], "map") -> true
-     * contains(["face", "book"], "gg") -> false
+     * "tran.ins -ls" -> ["tran", "ins", ["ls"]]
+     * "maya.txt.play" -> ["maya.txt", "play", null]
+     *
+     * @param key
+     * @return
      */
-    protected boolean contains(String name[], String key){
-        for(int i=0; i<name.length; i++){
-            String str = name[i];
-            char c = str.charAt(0);
-            //key start with the first character of name
-            //e.g. ["face", "book"], "boo" => true
-            if(key.startsWith(c+"")){
-                if(contains(name, key, i, true)){
-                    return true;
+    protected Value getValue(String key) {
+        Value command = new Value();
+        int indexOfDot = key.lastIndexOf(".");
+        if (indexOfDot < 0) {
+            command.body = key;
+        } else {
+            if (indexOfDot == 0) {
+                command.pre = null;
+            } else {
+                String left = key.substring(0, indexOfDot);
+                command.pre = left;
+            }
+            String right = key.substring(indexOfDot + 1, key.length());
+            String[] splitRight = right.split("-");
+            int splitLength = splitRight.length;
+            if (splitLength > 0) {
+                command.body = splitRight[0].trim();
+                if (splitLength > 1) {
+                    String[] params = new String[splitLength - 1];
+                    for (int i = 1; i < splitRight.length; i++) {
+                        params[i - 1] = splitRight[i].trim();
+                    }
+                    command.params = params;
+                } else {
+                    command.params = null;
                 }
+            } else {
+                command.body = null;
+                command.params = null;
             }
         }
-        return false;
+        return command;
     }
 
-    protected boolean contains(String name[], String key, int i, boolean firstTime){
-        if(i >= name.length){
-            return false;
+    /**
+     * accept input from the successors of result
+     */
+    public abstract void acceptInput(VenderItem result, String input);
+
+    /**
+     * get output for the next VenderItem
+     */
+    public abstract void getOutput(VenderItem result, OutputCallback callback);
+
+    public void startExecution(VenderItem item) {
+        execute(item, null, false);
+    }
+
+    /**
+     * execute an instruction
+     * if rs has previous items, accept input from the previous ones.
+     *
+     * @param hasNext if true, execute this item and get output for the next one.
+     */
+    private void execute(final VenderItem rs, OutputCallback callback, boolean hasNext) {
+        Value value = rs.getValue();
+        //pre being empty is the only
+        if (!value.isPreEmpty()) {
+            TreeSet<VenderItem> prevs = rs.getSuccessors();
+            if (prevs != null && !prevs.isEmpty()) {
+                VenderItem prev = prevs.first();
+                BaseVender preVender = mSearchHelper.getVender(prev.getId());
+                preVender.execute(prev, new OutputCallback() {
+                    @Override
+                    public void onOutput(String input) {
+                        acceptInput(rs, input);
+                    }
+                }, true);
+                return;
+            }
         }
-        String str = name[i];
-        char c = str.charAt(0);
-        if(key.startsWith(c+"")){
-            for(int j=1; j<key.length() && j<str.length(); j++){
-                //not matched, find next
-                if(key.charAt(j) != str.charAt(j)){
-                    String sub = key.substring(j, key.length());
-                    return contains(name, sub, i+1, false);
-                }
-            }
-            if(key.length() <= str.length()){
-                return true;
-            }else{
-                String sub = key.substring(str.length(), key.length());
-                return contains(name, sub, i+1, false);
-            }
-        }else{
-            if(firstTime){
-                return contains(name, key, i+1, true);
-            }else{
-                return false;
-            }
+        if (!hasNext) {
+            execute(rs);
+        } else {
+            getOutput(rs, callback);
         }
     }
 
+    protected abstract void execute(VenderItem rs);
 
-    public void setOnResultChangedListener(OnResultChangedListener l){
-        this.mOnResultChangedListener = l;
-    }
-    public interface OnResultChangedListener{
-        public void onResultChange(TreeSet<VenderItem> list, boolean flag);
+    public static interface OutputCallback {
+        public void onOutput(String output);
     }
 
-    public abstract int function(VenderItem result);
 
     /**
      * display something in the view
+     *
      * @param msg the message to display
      */
-    protected void display(String msg, int flag){
+    protected void display(String msg, int flag) {
         mSearchHelper.getSearchable().onDisplay(msg + "\n", flag);
     }
 
-    protected void input(String msg){
-        mSearchHelper.getSearchable().onDisplay(msg + "\n", Searchable.FLAG_INPUT);
+    protected void input(String msg) {
+        display(msg + "\n", Searchable.FLAG_INPUT);
     }
 
-    protected void replace(String msg){
-        mSearchHelper.getSearchable().onDisplay(msg + "\n", Searchable.FLAG_REPLACE);
+    protected void replace(String msg) {
+        display(msg + "\n", Searchable.FLAG_REPLACE);
     }
 
-    protected void blockInput(){
+    protected void blockInput() {
         mSearchHelper.blockInput();
     }
 
-    protected void releaseInput(){
+    protected void releaseInput() {
         mSearchHelper.releaseInput();
+    }
+
+    public int getId() {
+        return id;
     }
 }

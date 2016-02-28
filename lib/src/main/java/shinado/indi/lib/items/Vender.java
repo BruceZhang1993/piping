@@ -28,7 +28,7 @@ public class Vender extends Model implements Downloadable{
     }
 
     //e.g :
-    // /storage/0/nix/function/weather.jar
+    // /storage/0/nix/execute/weather.dex
     @Column(name = "cUrl")
     public String url;
 
@@ -51,6 +51,6 @@ public class Vender extends Model implements Downloadable{
 
     @Override
     public String getFileName() {
-        return pkg + ".apk";
+        return name + ".dex";
     }
 }

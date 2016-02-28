@@ -1,10 +1,8 @@
 package shinado.indi.lib.items.search;
 
-import android.content.Context;
 
 import shinado.indi.lib.items.VenderItem;
 import shinado.indi.lib.items.search.translator.AbsTranslator;
-import shinado.indi.lib.launcher.SearchHelper;
 import shinado.indi.lib.util.AppManager;
 
 
@@ -14,6 +12,10 @@ import shinado.indi.lib.util.AppManager;
 public class AppVender extends SearchVender {
 
     private AppManager appManager;
+
+    public AppVender(int id) {
+        super(id);
+    }
 
     public void load(final AbsTranslator translator) {
         new Thread() {
@@ -31,17 +33,32 @@ public class AppVender extends SearchVender {
     }
 
     @Override
+    public int getType() {
+        return VenderItem.TYPE_APPLICATION;
+    }
+
+    @Override
     public VenderItem getItem(String value) {
         return appManager.getResult(value);
     }
 
     @Override
-    public int function(VenderItem rs) {
-        String body = rs.getValue();
+    public void acceptInput(VenderItem result, String input) {
+        input("error, applications do not take input. \n input:"+input);
+    }
+
+    @Override
+    public void getOutput(VenderItem result, OutputCallback callback) {
+        callback.onOutput(result.getDisplayName() + ":" + result.getValue().body);
+    }
+
+    @Override
+    public void execute(VenderItem rs) {
+        String body = rs.getValue().body;
         if (body.equals("android")) {
-            return -1;
+            return ;
         } else if (body.equals("search")) {
-            return 1;
+            return ;
         }
         try {
             appManager.launch(body);
@@ -52,7 +69,6 @@ public class AppVender extends SearchVender {
             removeFrequency(rs);
             removeItemInMap(rs);
         }
-        return 2;
     }
 
     private void refreshAppMessage(AbsTranslator translator) {
@@ -60,7 +76,6 @@ public class AppVender extends SearchVender {
         appManager.addOnAppChangeListener(new AppManager.OnAppChangeListener() {
             @Override
             public void onAppChange(int flag, VenderItem vo) {
-                System.out.println("appChange:search:" + flag + "," + vo.getValue());
                 if (flag == AppManager.OnAppChangeListener.FLAG_ADD) {
                     putItemInMap(vo);
                     addFrequency(vo);
@@ -75,8 +90,14 @@ public class AppVender extends SearchVender {
             fulfillResult(vo);
             putItemInMap(vo);
         }
-        appManager.destroy();
         resultStack.push(frequentItems);
     }
 
+    public void destroy(){
+        if (appManager == null){
+            return;
+        }
+        appManager.destroy();
+        appManager = null;
+    }
 }

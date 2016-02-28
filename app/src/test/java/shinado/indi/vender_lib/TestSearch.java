@@ -4,9 +4,9 @@ import org.junit.Test;
 
 import java.util.TreeSet;
 
-import shinado.indi.lib.items.Vender;
 import shinado.indi.lib.items.VenderItem;
 import shinado.indi.lib.items.search.SearchVender;
+import shinado.indi.lib.items.search.translator.AbsTranslator;
 
 import static org.junit.Assert.*;
 
@@ -16,16 +16,19 @@ import static org.junit.Assert.*;
 public class TestSearch extends SearchVender{
 
     public TestSearch(){
-        putItemInMap(new VenderItem(null, "", "Kakao Talk", 1));
-        putItemInMap(new VenderItem(null, "", "KT Player", 2));
-        putItemInMap(new VenderItem(null, "", "Talk Box", 3));
-        putItemInMap(new VenderItem(null, "", "wk kat", 4));
-        putItemInMap(new VenderItem(null, "", "wka wka", 5));
-        putItemInMap(new VenderItem(null, "", "XBrowser", 6));
+        super(1);
+        for (VenderItem item : AppList.getFakeList()){
+            putItemInMap(item);
+        }
     }
 
     @Override
-    public int function(VenderItem result) {
+    public VenderItem getItem(String value) {
+        return null;
+    }
+
+    @Override
+    public int execute(VenderItem result) {
         return 0;
     }
 
@@ -53,11 +56,16 @@ public class TestSearch extends SearchVender{
     public void testSequence3() throws Exception {
         int[] sequence = new int[]{6};
         TreeSet<VenderItem> some = forwardSearch("b");
-        doPush(some);
+        push(some);
         TreeSet<VenderItem> result = forwardSearch("br");
         int i=0;
         for (VenderItem item : result){
             assertEquals(sequence[i++], item.getId());
         }
+    }
+
+    @Override
+    public void load(AbsTranslator translator) {
+
     }
 }

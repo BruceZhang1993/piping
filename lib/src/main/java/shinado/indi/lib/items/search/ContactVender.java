@@ -1,19 +1,21 @@
 package shinado.indi.lib.items.search;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
 import shinado.indi.lib.items.VenderItem;
 import shinado.indi.lib.items.search.translator.AbsTranslator;
-import shinado.indi.lib.launcher.SearchHelper;
-import shinado.indi.lib.launcher.Searchable;
 import shinado.indi.lib.util.ContactManager;
 
 
 public class ContactVender extends SearchVender {
 
 	private ContactManager contactManager;
+
+	public ContactVender(int id) {
+		super(id);
+	}
 
 	public void load(final AbsTranslator translator){
 		new Thread() {
@@ -38,6 +40,11 @@ public class ContactVender extends SearchVender {
 
 	}
 
+	@Override
+	public int getType() {
+		return VenderItem.TYPE_CONTACT;
+	}
+
 
 	@Override
 	public VenderItem getItem(String value) {
@@ -46,15 +53,27 @@ public class ContactVender extends SearchVender {
 	}
 
 	@Override
-	public int function(VenderItem rs) {
-		String body = rs.getValue();
-		if(!body.equals("")){
-			Intent myIntentDial = new Intent(Intent.ACTION_CALL,Uri.parse("tel:"+body));
+	public void acceptInput(VenderItem rs, String input) {
+		String strUri = "smsto:" + rs.getValue().body;
+		Log.d("testURI", strUri);
+		Uri uri = Uri.parse(strUri);
+		Intent it = new Intent(Intent.ACTION_SENDTO, uri);
+		it.putExtra("sms_body", input);
+		context.startActivity(it);
+	}
+
+	@Override
+	public void getOutput(VenderItem result, OutputCallback callback) {
+		callback.onOutput(result.getDisplayName() + ":" + result.getValue().body);
+	}
+
+	@Override
+	public void execute(VenderItem rs) {
+		final VenderItem.Value value = rs.getValue();
+		if(!value.isBodyEmpty()){
+			Intent myIntentDial = new Intent(Intent.ACTION_CALL,Uri.parse("tel:"+value.body));
 			context.startActivity(myIntentDial);
 			addFrequency(rs);
-			return 1;
-		}else{
-			return 0;
 		}
 	}
 

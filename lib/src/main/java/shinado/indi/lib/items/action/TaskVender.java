@@ -10,31 +10,69 @@ import shinado.indi.lib.items.VenderItem;
 import shinado.indi.lib.launcher.SearchHelper;
 import shinado.indi.lib.util.ProcessManager;
 
-public class TaskVender extends PreActionVender{
+public class TaskVender extends PreActionVender {
 
     private VenderItem mResult;
     private ProcessManager pm;
-    private static final String OPT_LS = "-ls";
-    private static final String OPT_IDLE = "-i";
+    private static final String OPT_LS = "ls";
+    private static final String OPT_IDLE = "i";
 
     private static final String HELP = "Usage of install:\n" +
-            "[key].x [-option]\n" +
+            "[key].x [option]\n" +
             "where option includes:\n" +
-            OPT_LS + " list running process\n" +
-            OPT_IDLE + " show idle memory\n";
+            VenderItem.INDICATOR + OPT_LS + " list running process\n" +
+            VenderItem.INDICATOR + OPT_IDLE + " show idle memory\n";
 
-    public TaskVender(){
+    public TaskVender(int id) {
+        super(id);
         mResult = new VenderItem();
-        mResult.setId(VenderItem.BUILD_IN_ID_TASKS);
+        mResult.setId(id);
         mResult.setDisplayName(".x");
-        mResult.setValue("");
         mResult.setName(new String[]{".", "x"});
     }
 
     @Override
-    public void init(Context context, SearchHelper s, int id) {
-        super.init(context, s, id);
+    public void init(Context context, SearchHelper s) {
+        super.init(context, s);
         pm = new ProcessManager(context);
+    }
+
+    @Override
+    public void acceptInput(VenderItem result, String input) {
+        TreeSet<VenderItem> successors = result.getSuccessors();
+        VenderItem pre = successors.first();
+        if (pre.getId() == VenderItem.BUILD_IN_ID_APP) {
+            input("Killing: " + pre.getDisplayName());
+            pm.killProcess(pre.getValue().body);
+        } else {
+            input("Target is not process");
+        }
+    }
+
+    @Override
+    public void getOutput(VenderItem result, OutputCallback callback) {
+        VenderItem.Value value = result.getValue();
+        if (!value.isParamsEmpty()){
+            String[] params = value.params;
+            switch (params[0]) {
+                case OPT_LS:
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("List of running process:");
+                    sb.append("\n");
+                    List<String> list = pm.getRunningProcess();
+                    for (String running : list) {
+                        sb.append(running);
+                        sb.append("\n");
+                    }
+                    callback.onOutput(sb.toString());
+                    break;
+                case OPT_IDLE:
+                    callback.onOutput("idle:" + pm.getMemoSize());
+                    break;
+                default:
+                    input(HELP);
+            }
+        }
     }
 
     @Override
@@ -48,10 +86,11 @@ public class TaskVender extends PreActionVender{
     }
 
     @Override
-    public int function(VenderItem result) {
-        String value = result.getValue();
-        TreeSet<VenderItem> successors = result.getSuccessors();
-        if (value == null || value.trim().isEmpty()){
+    public void execute(VenderItem result) {
+        VenderItem.Value value = result.getValue();
+
+        if (value.isEmpty()) {
+            //.x
             blockInput();
             input("Killing all");
             pm.killAll();
@@ -62,19 +101,24 @@ public class TaskVender extends PreActionVender{
                 }
             }, 1000);
             releaseInput();
-        }else{
-            if (value.contains(" ")){
-                String[] split = value.split(" ", 2);
-                //e.g, ".x -ls" -> " -ls"
-                if (split[0].equals("")){
-                    String ins = split[1];
-                    switch (ins){
+        } else {
+            if (value.isParamsEmpty()) {
+                //wc.x
+                input("Process not found");
+            } else {
+                String[] params = value.params;
+                if (params.length > 1) {
+                    input(".x only takes one param, ignoring the rest");
+                }
+                if (value.isPreEmpty()) {
+                    //.x -ls
+                    switch (params[0]) {
                         case OPT_LS:
                             StringBuilder sb = new StringBuilder();
                             sb.append("List of running process:");
                             sb.append("\n");
                             List<String> list = pm.getRunningProcess();
-                            for (String running:list){
+                            for (String running : list) {
                                 sb.append(running);
                                 sb.append("\n");
                             }
@@ -86,30 +130,11 @@ public class TaskVender extends PreActionVender{
                         default:
                             input(HELP);
                     }
-                }
-                else{
-                    //e.g.  "k.x -ls" -> "k -ls"
+                } else {
+                    //wc.x -ls
                     input(HELP);
                 }
             }
-            //e.g.  "k.x" -> "k"
-            else{
-                if (successors != null && successors.size() > 0){
-                    VenderItem pre = successors.first();
-                    if (pre.getId() == VenderItem.BUILD_IN_ID_APP){
-                        input("Killing: " + pre.getDisplayName());
-                        pm.killProcess(pre.getValue());
-                    }else {
-                        input("Target is not process");
-                    }
-                    return 0;
-                }else{
-                    input("Process not found");
-                }
-            }
-
         }
-
-        return 0;
     }
 }

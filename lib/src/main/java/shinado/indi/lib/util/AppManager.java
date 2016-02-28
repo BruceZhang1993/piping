@@ -1,8 +1,10 @@
 package shinado.indi.lib.util;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -45,6 +47,12 @@ public class AppManager {
         this.context = context;
         pm = context.getPackageManager();
         loadApps();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        filter.addDataScheme("package");
+        context.registerReceiver(mReceiver, filter);
     }
 
     private void loadApps() {
@@ -55,9 +63,9 @@ public class AppManager {
         for (int i = 0; i < list.size(); i++) {
             ResolveInfo app = list.get(i);
 
-                if (app.activityInfo.packageName.equals(context.getPackageName())) {
-                    continue;
-                }
+            if (app.activityInfo.packageName.equals(context.getPackageName())) {
+                continue;
+            }
 
             mActivityMap.put(app.activityInfo.name, app);
             mPackageMap.put(app.activityInfo.packageName, app);
@@ -135,20 +143,19 @@ public class AppManager {
         launch(activityName);
     }
 
-    //TODO
-    public void onInstall(ApplicationInfo app) {
-        System.out.println("appChange:init add");
-//        activityNames.add(app.packageName);
-
+    private void onInstall(ApplicationInfo app) {
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         mainIntent.setPackage(app.packageName);
         List<ResolveInfo> list = pm.queryIntentActivities(mainIntent, 0);
-//        resolveInfo.addAll(list);
+        for (ResolveInfo info : list) {
+            mActivityMap.put(info.activityInfo.name, info);
+            mPackageMap.put(info.activityInfo.packageName, info);
+        }
 
         if (onAppChangeListener != null) {
             for (OnAppChangeListener l : onAppChangeListener) {
-                l.onAppChange(OnAppChangeListener.FLAG_ADD, getResult("," + app.packageName));
+                l.onAppChange(OnAppChangeListener.FLAG_ADD, getResult(app.packageName + ","));
             }
         }
     }
@@ -161,37 +168,48 @@ public class AppManager {
 
     /**
      * "packageName,activityName"
-     *
      */
     private VenderItem getResult(ResolveInfo info) {
         String value = info.activityInfo.packageName + "," + info.activityInfo.name;
         String label = info.loadLabel(pm).toString();
-        return new VenderItem(value, label, mTranslator.getName(label), VenderItem.BUILD_IN_ID_APP);
+        VenderItem item = new VenderItem(value, label, mTranslator.getName(label), VenderItem.BUILD_IN_ID_APP);
+        item.setType(VenderItem.TYPE_APPLICATION);
+        return item;
     }
 
-    public VenderItem getResult(String value){
+    private ResolveInfo getResolveByValue(String value) {
         String[] split = value.split(",");
         ResolveInfo info = null;
-        if (split[0].isEmpty()){
+        if (split[0].isEmpty()) {
             info = getResolveByActivity(split[1]);
-        }else {
+        } else {
             info = getResolveByPackage(split[0]);
         }
 
-        value = info.activityInfo.packageName + "," + info.activityInfo.name;
-        String label = info.loadLabel(pm).toString();
-        return new VenderItem(value, label, mTranslator.getName(label), VenderItem.BUILD_IN_ID_APP);
+        return info;
     }
 
-    //TODO
-    public void onUninstall(String name) {
-        System.out.println("appChange:init remove");
-//        int index = activityNames.indexOf(name);
-//        activityNames.remove(index);
-//        resolveInfo.remove(index);
+    public VenderItem getResult(String value) {
+        ResolveInfo info = getResolveByValue(value);
+
+        if (info == null) {
+            return new VenderItem(value, VenderItem.BUILD_IN_ID_APP);
+        } else {
+            value = info.activityInfo.packageName + "," + info.activityInfo.name;
+            String label = info.loadLabel(pm).toString();
+            return new VenderItem(value, label, mTranslator.getName(label), VenderItem.BUILD_IN_ID_APP);
+        }
+
+    }
+
+    private void onUninstall(String packageName) {
+        ResolveInfo info = getResolveByPackage(packageName);
+
+        mPackageMap.remove(info.activityInfo.packageName);
+        mActivityMap.remove(info.activityInfo.name);
         if (onAppChangeListener != null) {
             for (OnAppChangeListener l : onAppChangeListener) {
-                l.onAppChange(OnAppChangeListener.FLAG_REMOVE, new VenderItem(name));
+                l.onAppChange(OnAppChangeListener.FLAG_REMOVE, getResult(info));
             }
         }
     }
@@ -211,32 +229,51 @@ public class AppManager {
         this.onAppChangeListener.add(onAppChangeListener);
     }
 
-    public void removeApp(String activityName) {
-        String pkgName = getResolveByActivity(activityName).activityInfo.applicationInfo.packageName;
+    public static void uninstall(Context context, String value) {
+        String[] split = value.split(",");
+        String pkgName = split[0];
         Uri uri = Uri.fromParts("package", pkgName, null);
         Intent it = new Intent(Intent.ACTION_DELETE, uri);
         context.startActivity(it);
     }
 
-    public void removeApp(int idx) {
-        removeApp(getActivityName(idx));
-    }
-
-    public void detailApp(String activityName) {
-        String pkgName = getResolveByActivity(activityName).activityInfo.applicationInfo.packageName;
+    public static void info(Context context, String value) {
+        String[] split = value.split(",");
+        String pkgName = split[0];
         Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
         Uri uri = Uri.fromParts("package", pkgName, null);
         intent.setData(uri);
         context.startActivity(intent);
     }
 
-    public void detailApp(int idx) {
-        detailApp(getActivityName(idx));
-    }
-
+    /**
+     *
+     */
     public void destroy() {
-        mTranslator.destroy();
+        if (mTranslator != null) {
+            mTranslator.destroy();
+        }
         appManager = null;
+        context.unregisterReceiver(mReceiver);
     }
 
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
+                String packageName = intent.getDataString().replace("package:", "");
+                ApplicationInfo info = null;
+                try {
+                    info = pm.getApplicationInfo(
+                            packageName, PackageManager.GET_META_DATA);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                onInstall(info);
+            } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
+                String packageName = intent.getDataString().replace("package:", "");
+                onUninstall(packageName);
+            }
+        }
+    };
 }

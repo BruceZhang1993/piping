@@ -120,7 +120,9 @@ public class ContactManager {
 	    
 	public VenderItem getResult(String value){
 		String label = getName(value);
-		return new VenderItem(value, label, mTranslator.getName(label), VenderItem.BUILD_IN_ID_CONTACT);
+		VenderItem item = new VenderItem(value, label, mTranslator.getName(label), VenderItem.BUILD_IN_ID_CONTACT);
+		item.setType(VenderItem.TYPE_CONTACT);
+		return item;
 	}
 	
 	public int getContactCount(){

@@ -1,13 +1,10 @@
 package shinado.indi.lib.items;
 
-import android.content.Context;
-
 import java.util.TreeSet;
 
-import shinado.indi.lib.items.search.translator.AbsTranslator;
-import shinado.indi.lib.items.search.translator.TranslatorFactory;
-
 public class VenderItem implements Comparable<VenderItem>{
+
+	public static String INDICATOR = "-";
 
 	/**
 	 * the name array defined by display name
@@ -28,7 +25,7 @@ public class VenderItem implements Comparable<VenderItem>{
 	/**
 	 * the value to be executed
 	 */
-	private String value;
+	private Value value;
 
 	/**
 	 * as {@link #BUILD_IN_ID_APP}, {@link #BUILD_IN_ID_CONTACT}, etc
@@ -50,45 +47,51 @@ public class VenderItem implements Comparable<VenderItem>{
 	public static final int BUILD_IN_ID_INSTALL = 3;
 	public static final int BUILD_IN_ID_COPY = 4;
 	public static final int BUILD_IN_ID_SEARCH = 5;
-	public static final int BUILD_IN_ID_TASKS = 6;
+	public static final int BUILD_IN_ID_MIGHTY = 6;
 
 	/**
 	 * the key to be searched
+	 * e.g. input "k"
+	 * ["kakao", "talk"] -> 0
+	 * ["we", "kite"] -> 1
+	 * so that "kakao talk" will come first
 	 */
 	private int keyIndex;
 
 	private int type;
-	public static final int TYPE_SEARCH = 100;
-	public static final int TYPE_ACTION = 1;
-
+	public static final int TYPE_APPLICATION = 0x0001;
+	public static final int TYPE_CONTACT = 0x0010;
+	public static final int TYPE_ACTION = 0x0100;
 
 	private TreeSet<VenderItem> successors;
 
 	public VenderItem(){
-		
 	}
 
 	public VenderItem(String value){
-		this.value = value;
+		this.value = new Value(value);
 	}
 
 	public VenderItem(String value, int id){
-		this.value = value;
+		this(value);
 		this.id = id;
 	}
 
 	public VenderItem(String value, String displayName, String[] name, int id){
-
-		this.value = value;
-		this.id = id;
+		this(value, id);
 		setDisplayName(displayName);
 		setName(name);
+	}
+
+	public VenderItem(String value, String displayName, String[] name, int id, int type){
+		this(value, displayName, name, id);
+		this.type = type;
 	}
 
 	public VenderItem(String[] name, String value,
 					  int id, String displayName) {
 		this.name = name;
-		this.value = value;
+		this.value = new Value(value);
 		this.id = id;
 		this.displayName = displayName;
 	}
@@ -105,10 +108,10 @@ public class VenderItem implements Comparable<VenderItem>{
 	public void setName(String[] name) {
 		this.name = name;
 	}
-	public String getValue() {
+	public Value getValue() {
 		return value;
 	}
-	public void setValue(String value) {
+	public void setValue(Value value) {
 		this.value = value;
 	}
 	public int getId() {
@@ -127,7 +130,7 @@ public class VenderItem implements Comparable<VenderItem>{
 		this.keyIndex = keyIndex;
 	}
 	public void setType(int type){
-		if (type != TYPE_ACTION && type != TYPE_SEARCH){
+		if (type != TYPE_ACTION && type != TYPE_APPLICATION && type != TYPE_CONTACT){
 			return;
 		}
 		this.type = type;
@@ -185,4 +188,42 @@ public class VenderItem implements Comparable<VenderItem>{
 		this.type = vo.type;
 	}
 
+	/**
+	 * the value of key
+	 * e.g.
+	 * "tran.ins -ls"  -> ["tran", "ins", ["ls"]]
+	 * "maya.txt.play" -> ["maya.txt", "play", null]
+	 */
+	public static class Value {
+
+		public String pre;
+
+		public String body;
+
+		public String[] params;
+
+		public Value(){
+
+		}
+
+		public Value(String body){
+			this.body = body;
+		}
+
+		public boolean isEmpty(){
+			return isPreEmpty() && isParamsEmpty();
+		}
+
+		public boolean isPreEmpty(){
+			return pre == null || pre.isEmpty();
+		}
+
+		public boolean isParamsEmpty(){
+			return params == null || params.length == 0;
+		}
+
+		public boolean isBodyEmpty(){
+			return body == null || body.isEmpty();
+		}
+	}
 }

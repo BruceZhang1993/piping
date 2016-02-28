@@ -188,8 +188,6 @@ public class Launcher extends BaseLauncherView implements Searchable, Feedable, 
 			textView = (TextView) view.findViewWithTag(flag);
 		}
 		textView.setText(msg);
-
-
 	}
 
 	static class OutputHandler extends Handler{

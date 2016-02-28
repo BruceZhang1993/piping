@@ -1,107 +1,66 @@
 package shinado.indi.lib.items.action;
 
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-
-import java.lang.ref.WeakReference;
 import java.util.TreeSet;
 
 import shinado.indi.lib.items.BaseVender;
+import shinado.indi.lib.items.CompareUtil;
 import shinado.indi.lib.items.VenderItem;
+import shinado.indi.lib.items.VenderItem.Value;
 
 public abstract class ActionVender extends BaseVender {
 
-    protected FunctionHandler mHandler;
-
-    public ActionVender() {
-        mHandler = new FunctionHandler(this);
+    public ActionVender(int id) {
+        super(id);
     }
 
-    static class FunctionHandler extends Handler {
-
-        private WeakReference<ActionVender> handlerWeakReference;
-
-        public FunctionHandler(ActionVender ifc){
-            handlerWeakReference = new WeakReference<>(ifc);
-        }
-
-        @Override
-        public void handleMessage(Message msg){
-            Log.d("IFC", "handleMessage");
-            ActionVender ifc = handlerWeakReference.get();
-            TreeSet<VenderItem> result = new TreeSet<>();
-            Object obj = msg.obj;
-            if (obj != null){
-                VenderItem rs = (VenderItem) obj;
-                result = new TreeSet<>();
-                result.add(rs);
-            }
-
-            if(ifc.mOnResultChangedListener != null){
-                ifc.mOnResultChangedListener.onResultChange(result, false/*ifc.resultStack.size() == 1*/);
-            }
-        }
-    }
-
-    //rule:
-    //[key].[instruction] [-option]...
-    //value: [key] [-option]...
     @Override
-    public void search(TreeSet<VenderItem> prev, String key, int length) {
-        VenderItem result = getResult();
-        result.setSuccessors(prev);
-        result.setType(VenderItem.TYPE_ACTION);
-        if (!key.contains(".")){
-            result.setValue(key);
-        }else{
-            int indexOfDot = key.indexOf(".");
-            String value = "";
-            //e.g. dic.ins
-            //     value = "dic"
-            if (indexOfDot != 0){
-                value = key.substring(0, indexOfDot);
-            }
+    public TreeSet<VenderItem> search(TreeSet<VenderItem> prev, String key, int length) {
+        VenderItem result = doSearch(prev, key);
 
-            String[] split = key.split(" ", 2);
-            //the key to the action
-            //e.g. dic.ins -s => "ins"
-            String sKey = split[0].substring(indexOfDot+1);
+        result = filter(result);
 
-            if (sKey.length() == 0){
-                result.setValue(value);
-            }else {
-                if (contains(result.getName(), sKey)){
-                    //e.g. dic.ins -ls => "dic -ls"
-                    //        .ins -ls => " -ls"
-                    if (split.length > 1){
-                        value += " " + split[1];
-                    }
-                    result.setValue(value);
-                }else{
-                    result = null;
-                }
-            }
+        TreeSet<VenderItem> list = new TreeSet<>();
+        if (result != null) {
+            list.add(result);
         }
-        notify(filter(result));
-
+        return list;
     }
 
-    protected void notify(VenderItem result){
-        mHandler.obtainMessage(0, result).sendToTarget();
+    public VenderItem doSearch(TreeSet<VenderItem> prev, String key) {
+        VenderItem result = getResult();
+        Value value= getValue(key, result.getName());
+
+        if (value == null) {
+            result = null;
+        } else {
+            result.setSuccessors(prev);
+            result.setType(VenderItem.TYPE_ACTION);
+            result.setValue(value);
+        }
+        return result;
+    }
+
+    public Value getValue(String key, String[] targetName) {
+        Value value = getValue(key);
+
+        if (CompareUtil.contains(targetName, value.body)) {
+            return value;
+        } else {
+            return null;
+        }
     }
 
     protected abstract VenderItem getResult();
 
     /**
-     *
      * @param result
      * @return
      */
     protected abstract VenderItem filter(VenderItem result);
 
     @Override
-    public VenderItem getItem(String value){
+    public VenderItem getItem(String value) {
         return getResult();
     }
+
 }

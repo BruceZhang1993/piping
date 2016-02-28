@@ -5,6 +5,9 @@ import java.util.TreeSet;
 import shinado.indi.lib.items.VenderItem;
 
 public abstract class PreActionVender extends ActionVender{
+    public PreActionVender(int id) {
+        super(id);
+    }
 
     @Override
     protected VenderItem filter(VenderItem result) {
