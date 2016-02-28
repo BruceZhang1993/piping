@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import indi.shinado.piping.pipes.SearchableName;
+import indi.shinado.piping.pipes.entity.SearchableName;
 
 public class TestSearchableName {
 

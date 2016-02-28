@@ -34,7 +34,7 @@ public class InstallVender extends ActionVender {
         super(id);
         mResult = new VenderItem();
         mResult.setId(id);
-        mResult.setDisplayName(".install");
+        mResult.setDisplayName("$install");
         mResult.setName(new String[]{".", "in", "s", "tall"});
         setupDownload();
     }
@@ -151,12 +151,16 @@ public class InstallVender extends ActionVender {
                 }
                 String option = value.params[0];
                 params.put("option", option);
-                params.put("name", value.pre);
 
                 if (option.equals(OPT_LS) || option.equals(OPT_F)) {
                     requestList(params);
                 } else if (option.equals(OPT_M)) {
-                    requestInstall(params);
+                    if(!value.isPreEmpty()){
+                        params.put("name", value.pre);
+                        requestInstall(params);
+                    }else{
+                        input("The content cannot be null for -m option");
+                    }
                 }
             }
         }
@@ -228,10 +232,13 @@ public class InstallVender extends ActionVender {
 
     private String constructMessage(Result rs) {
         StringBuilder sb = new StringBuilder();
+        sb.append("List of pipes:\n");
+        int i=1;
         for (Vender f : rs.list) {
+            sb.append(i + ". ");
             sb.append(f.name);
-            sb.append("-");
-            sb.append(f.pkg);
+            sb.append(" -- by ");
+            sb.append(f.author);
             sb.append("\n");
         }
         return sb.toString();

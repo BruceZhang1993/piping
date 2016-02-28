@@ -148,10 +148,6 @@ public class SearchHelper {
         return result_set;
     }
 
-    private void onNotify(TreeSet<VenderItem> result) {
-        searchable.onNotified(result);
-    }
-
     private void doSearch(TreeSet<VenderItem> prev, String key, int length) {
         for (BaseVender fuc : functionMap.values()) {
             TreeSet<VenderItem> list = fuc.search(prev, key, length);
@@ -159,6 +155,10 @@ public class SearchHelper {
                 result_set.addAll(list);
             }
         }
+    }
+
+    private void onNotify(TreeSet<VenderItem> result) {
+        searchable.onNotified(result);
     }
 
     private void setOnKeyboardListener(ViewGroup root) {

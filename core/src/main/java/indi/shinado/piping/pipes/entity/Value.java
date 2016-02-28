@@ -1,4 +1,4 @@
-package indi.shinado.piping.pipes;
+package indi.shinado.piping.pipes.entity;
 
 /**
  * the value of key

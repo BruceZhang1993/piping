@@ -3,7 +3,7 @@ package com.shinado.piping;
 import org.junit.Assert;
 import org.junit.Test;
 
-import indi.shinado.piping.pipes.Value;
+import indi.shinado.piping.pipes.entity.Value;
 
 public class TestValue {
 
