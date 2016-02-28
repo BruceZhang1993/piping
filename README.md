@@ -1,4 +1,4 @@
-Piping is an Android launcher to increase users' zhuangability. With Piping, you can launch applications like this:  
+Piping is an Android launcher to increase your zhuangability. With Piping, you can launch applications like this:  
   
 ![app](https://cloud.githubusercontent.com/assets/3215337/13377995/07b66204-de2f-11e5-9a6e-c4400de85c8a.gif)
   
