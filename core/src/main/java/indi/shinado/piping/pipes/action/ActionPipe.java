@@ -1,12 +1,11 @@
 package indi.shinado.piping.pipes.action;
 
-import android.content.Context;
-
 import java.util.TreeSet;
 
 import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.entity.Pipe;
-import indi.shinado.piping.pipes.entity.Value;
+import indi.shinado.piping.pipes.entity.Instruction;
+import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
 public abstract class ActionPipe extends BasePipe{
 
@@ -15,28 +14,33 @@ public abstract class ActionPipe extends BasePipe{
     }
 
     @Override
-    public void search(TreeSet<Pipe> prev, String input, int length, SearchResultCallback callback) {
-        Pipe result = doSearch(prev, input);
+    public void search(String input, int length, SearchResultCallback callback) {
+        Pipe result = search(input);
 
-        callback(result, callback);
+        callback(result, input, callback);
     }
 
-    private void callback(Pipe result, SearchResultCallback callback){
+    private void callback(Pipe result, String input, SearchResultCallback callback){
         TreeSet<Pipe> list = new TreeSet<>();
         if (result != null) {
             list.add(result);
         }
-        callback.onSearchResult(list);
+        callback.onSearchResult(list, input);
     }
 
-    public Pipe doSearch(TreeSet<Pipe> prev, String input) {
+    public Pipe search(String input) {
         Pipe result = getResult();
-        result.setValue(new Value(input));
-        if (!result.getSearchableName().contains(input)){
+        result.setInstruction(new Instruction(input));
+        if (!result.getSearchableName().contains(result.getInstruction().body)){
             return null;
         }
-        result.setPrevious(prev);
+//        result.setPrevious(prev);
         return result;
+    }
+
+    @Override
+    public void load(AbsTranslator translator, OnItemsLoadedListener listener, int total){
+        listener.onItemsLoaded(getId(), total);
     }
 
     /**

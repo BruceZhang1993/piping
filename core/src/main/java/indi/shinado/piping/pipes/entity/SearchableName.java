@@ -73,12 +73,12 @@ public class SearchableName {
             }
         } else {
             return
-                    //removing the comment below makes searching constant
+                    //commenting firstTime&& below makes searching constant
                     //ok I know you are expecting an "e.g.", then let's make an "e.g.":
                     //for item "facebook", since it's split as ["fa", "ce", "boo", "k"]
-                    //by removing the comment, contains("fb") returns false, contains("fc") returns true
+                    //by commenting firstTime&&, contains("fb") returns false, contains("fc") returns true
                     //otherwise, they both return true
-//                    firstTime &&
+                    firstTime &&
                             contains(name, key, i + 1, true);
 
         }

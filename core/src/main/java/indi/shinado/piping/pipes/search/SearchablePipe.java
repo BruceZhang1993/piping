@@ -6,11 +6,11 @@ import java.util.Stack;
 import java.util.TreeSet;
 
 import indi.shinado.piping.pipes.BasePipe;
+import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
-import indi.shinado.piping.pipes.entity.Value;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
-public abstract class SearchablePipe extends BasePipe{
+public abstract class SearchablePipe extends BasePipe {
 
     private OnItemsLoadedListener mOnItemsLoadedListener;
     protected HashMap<String, ArrayList<Pipe>> allItemMap = new HashMap<>();
@@ -21,24 +21,30 @@ public abstract class SearchablePipe extends BasePipe{
         super(id);
     }
 
-    /*
-     maya.txt.play
+    /**
+     * when inputting characters, which is, length > 0, do the search and save results in the stack
+     * when deleting characters, which is length < 0, pop the stack
      */
     @Override
-    public void search(TreeSet<Pipe> prev, String input, int length, SearchResultCallback callback) {
+    public void search(String input, int length, SearchResultCallback callback) {
         TreeSet<Pipe> result = null;
-        Value value = new Value(input);
+        Instruction value = new Instruction(input);
         //contains params
-        if (!value.isParamsEmpty()){
-            callback.onSearchResult(null);
+        if (!value.isParamsEmpty()) {
+            callback.onSearchResult(null, input);
+            return;
+        }
+        if (value.isBodyEmpty()) {
+            callback.onSearchResult(null, input);
+            return;
         }
 
         if (length > 0) {
-            result = search(prev, value);
+            result = search(value);
             push(result);
         } else if (length < 0) {
             for (int i = length; i < 0; i++) {
-                if (!resultStack.isEmpty()){
+                if (!resultStack.isEmpty()) {
                     pop();
                 }
             }
@@ -50,17 +56,20 @@ public abstract class SearchablePipe extends BasePipe{
                 result = peek();
             }
         }
-        callback.onSearchResult(result);
+        callback.onSearchResult(result, input);
     }
 
-    protected TreeSet<Pipe> search(TreeSet<Pipe> prev, Value value) {
+    /**
+     * search when length > 0
+     * when length == 1, fetch from map,
+     * otherwise, get search from stack
+     */
+    protected TreeSet<Pipe> search(Instruction value) {
         TreeSet<Pipe> some = new TreeSet<>();
         String key = value.body;
         if (key.length() == 1) {
-            if (!key.equals(".")) {
-                ArrayList<Pipe> allItems = fetchItemsFromMap(key);
-                some = fulfill(allItems, key, value, prev);
-            }
+            ArrayList<Pipe> allItems = fetchItemsFromMap(key);
+            some = fulfill(allItems, key, value);
         } else {
             some = getResultFromStack(key);
         }
@@ -72,24 +81,22 @@ public abstract class SearchablePipe extends BasePipe{
     }
 
     /**
-     * fulfill with key index and value which contains the full info of the instruction
-     * @param list
-     * @param key
-     * @param value
-     * @return
+     * fulfill with key index and instruction
      */
-    protected TreeSet<Pipe> fulfill(ArrayList<Pipe> list, String key, Value value, TreeSet<Pipe> prev) {
+    protected TreeSet<Pipe> fulfill(ArrayList<Pipe> list, String key, Instruction value) {
         TreeSet<Pipe> set = new TreeSet<>();
         if (list == null) {
             return set;
         }
+
         //set key index for each item
         for (Pipe item : list) {
             int keyIndex = getKeyIndex(item, key);
             item.setKeyIndex(keyIndex);
-            item.getValue().pre = value.pre;
-            item.getValue().params = value.params;
-            item.setPrevious(prev);
+            item.setInstruction(value);
+            //only set previous for the first item
+            //pass it on to next when shifting
+//            item.setPrevious(prev);
             set.add(item);
         }
         return set;
@@ -161,8 +168,6 @@ public abstract class SearchablePipe extends BasePipe{
         }
     }
 
-    public abstract void load(AbsTranslator translator, OnItemsLoadedListener listener);
-
     protected void push(TreeSet<Pipe> some) {
         resultStack.push(some);
     }
@@ -175,11 +180,5 @@ public abstract class SearchablePipe extends BasePipe{
         return resultStack.pop();
     }
 
-    public void setOnItemsLoadedListener(OnItemsLoadedListener listener){
-        this.mOnItemsLoadedListener = listener;
-    }
 
-    public interface OnItemsLoadedListener{
-        public void onItemsLoaded(int id);
-    }
 }

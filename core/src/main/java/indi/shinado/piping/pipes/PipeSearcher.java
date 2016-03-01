@@ -6,6 +6,10 @@ import java.util.TreeSet;
 
 import indi.shinado.piping.pipes.entity.Pipe;
 
+/**
+ * organize searching from every BasePipe added
+ * organize previous items
+ */
 public class PipeSearcher {
 
     /**
@@ -13,13 +17,12 @@ public class PipeSearcher {
      */
     private TreeSet<Pipe> mResults = new TreeSet<>();
 
-    private TreeSet<Pipe> mPrevious = new TreeSet<>();
-
     protected ArrayList<BasePipe> mBasePipes = new ArrayList<>();
+    protected Pipe.PreviousPipes mPrevious = new Pipe.PreviousPipes();
 
     private OnResultChangeListener mOnResultChangeListener;
 
-    private OnKeyDownListener mOnKeyDownListener;
+    private int recallTimes = 0;
 
     public void addPipe(BasePipe pipe) {
         mBasePipes.add(pipe);
@@ -29,47 +32,70 @@ public class PipeSearcher {
         mBasePipes.addAll(pipes);
     }
 
-    public void search(String input, int before, int count) {
-        mPrevious.addAll(getPreviousPipes(input));
+    public void search(String input, int before, int count, int pointer) {
+        getPreviousPipes(input, pointer);
+        resetOnSearch();
 
-        mResults.clear();
-        doSearch(mPrevious, input, count - before);
+        doSearch(input, count - before);
     }
 
-    public void onKeyDown(int keyCode){
-        if (mOnKeyDownListener != null){
-            mOnKeyDownListener.onKeyDown(keyCode);
-        }
-    }
-
-    public TreeSet<Pipe> getPreviousPipes(String input) {
-        TreeSet<Pipe> pipes = new TreeSet<>();
+    public void getPreviousPipes(String input, int pointer) {
         if (input.endsWith(".")) {
-            mPrevious.clear();
-            pipes.addAll(mResults);
+            mPrevious = new Pipe.PreviousPipes(mResults, pointer);
         }
-        return pipes;
     }
 
-    private void doSearch(TreeSet<Pipe> prev, String input, int length) {
+    private void resetOnSearch(){
+        mResults.clear();
+        recallTimes = 0;
+    }
+
+    public void clearPrevious(){
+        mPrevious.clear();
+    }
+
+    private void doSearch(String input, int length) {
         for (BasePipe pipe : mBasePipes) {
-            pipe.search(prev, input, length, mCallback);
+            pipe.search(input, length, mCallback);
         }
     }
 
     private BasePipe.SearchResultCallback mCallback = new BasePipe.SearchResultCallback() {
         @Override
-        public void onSearchResult(TreeSet<Pipe> results) {
+        public void onSearchResult(TreeSet<Pipe> results, String input) {
             if (results != null && results.size() != 0){
                 mResults.addAll(results);
-                notifyResultChange(mResults);
+            }
+            if (++recallTimes == mBasePipes.size()){
+                removeFirstPreviousInResult();
+                setPreviousForFirstResult();
+                notifyResultChange(mResults, input, mPrevious);
+            }
+        }
+
+        //only set previous for the first item
+        //pass it on to next when shifting
+        private void setPreviousForFirstResult(){
+            if (!mResults.isEmpty()){
+                Pipe first = mResults.first();
+                first.setPrevious(mPrevious);
+            }
+        }
+
+        //remove the result that matches the previous
+        private void removeFirstPreviousInResult(){
+            if(!mResults.isEmpty()){
+                Pipe display = mPrevious.get();
+                if (display != null){
+                    mResults.remove(display);
+                }
             }
         }
     };
 
-    private void notifyResultChange(TreeSet<Pipe> results) {
+    private void notifyResultChange(TreeSet<Pipe> results, String input, Pipe.PreviousPipes previous) {
         if (mOnResultChangeListener != null){
-            mOnResultChangeListener.onResultChange(results);
+            mOnResultChangeListener.onResultChange(results, input, previous);
         }
     }
 
@@ -77,16 +103,8 @@ public class PipeSearcher {
         mOnResultChangeListener = listener;
     }
 
-    public void setOnKeyDownListener(OnKeyDownListener listener){
-        this.mOnKeyDownListener = listener;
-    }
-
     public interface OnResultChangeListener{
-        public void onResultChange(TreeSet<Pipe> results);
-    }
-
-    public interface OnKeyDownListener{
-        public void onKeyDown(int keyCode);
+        public void onResultChange(TreeSet<Pipe> results, String input, Pipe.PreviousPipes previous);
     }
 
 }

@@ -5,44 +5,42 @@ import android.content.Context;
 import java.util.ArrayList;
 
 import indi.shinado.piping.pipes.action.CopyPipe;
+import indi.shinado.piping.pipes.search.ApplicationPipe;
+import indi.shinado.piping.pipes.search.ContactPipe;
 import indi.shinado.piping.pipes.search.SearchablePipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
-public class PipesLoader {
+public class PipesLoader implements IPipesLoader{
 
-    private Context context;
-    private Console console;
-    private AbsTranslator translator;
-    private SearchablePipe.OnItemsLoadedListener listener;
-
-    public PipesLoader(Context context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener) {
-        this.context = context;
-        this.console = console;
-        this.translator = translator;
-        this.listener = listener;
-    }
-
-    public ArrayList<BasePipe> loadFromLocal(){
+    public ArrayList<BasePipe> loadFromLocal(Context context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener){
         ArrayList<BasePipe> pipes = new ArrayList<>();
         pipes.add(new CopyPipe(1));
+        pipes.add(new ApplicationPipe(2));
+        pipes.add(new ContactPipe(3));
 
         for (BasePipe basePipe : pipes){
-            register(basePipe);
+            register(basePipe, context, console, translator, listener, pipes.size());
         }
         return pipes;
     }
 
-    public void register(BasePipe basePipe){
+    public void register(BasePipe basePipe, Context context, Console console, AbsTranslator translator,
+                         SearchablePipe.OnItemsLoadedListener listener, int total){
         basePipe.setConsole(console);
         basePipe.setContext(context);
-        if (basePipe instanceof SearchablePipe){
-            ((SearchablePipe)basePipe).load(translator, listener);
-        }
+        basePipe.load(translator, listener, total);
     }
 
-    public ArrayList<BasePipe> loadFromStorage(){
+    public ArrayList<BasePipe> loadFromStorage(Context context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener){
         ArrayList<BasePipe> pipes = new ArrayList<>();
         return pipes;
     }
 
+    @Override
+    public ArrayList<BasePipe> load(Context context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener) {
+        ArrayList<BasePipe> pipes = new ArrayList<>();
+        pipes.addAll(loadFromLocal(context, console, translator, listener));
+        pipes.addAll(loadFromStorage(context, console, translator, listener));
+        return pipes;
+    }
 }

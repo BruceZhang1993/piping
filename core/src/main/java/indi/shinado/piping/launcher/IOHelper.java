@@ -1,4 +1,4 @@
-package indi.shinado.piping.keyboard;
+package indi.shinado.piping.launcher;
 
 import android.content.Context;
 import android.os.Vibrator;
@@ -8,27 +8,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import indi.shinado.piping.pipes.PipeSearcher;
 import indi.shinado.piping.settings.Preferences;
 
-public class SearchHelper {
+public class IOHelper {
 
     private boolean blockInput = false;
     private Preferences mPreferences;
     private Vibrator mVib;
     private TextView mInputView;
-    private PipeSearcher mSearcher;
+    private ConsoleHelper mConsoleHelper;
 
-    public SearchHelper(Context context, Searchable searchable, Keyboard keyboard, PipeSearcher searcher){
-        mInputView = searchable.getInputView();
-        setOnKeyboardListener(keyboard.getKeyboard());
-        mSearcher = searcher;
-        setTextChangeListener(mInputView);
-
+    public IOHelper(Context context){
         if (context != null) {
             mVib = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         }
         mPreferences = new Preferences();
+    }
+
+    /**
+     * dang dang dang~ dang~dang~~dang~~~dang dang dang dang dang dang dang dang dang dang dang dang~~dangdangdangdangdangdangdang~~~
+     */
+    public void connect(IOMethod method, ConsoleHelper helper){
+        mInputView = method.getInputView();
+        setOnKeyboardListener(method.getKeyboard());
+        mConsoleHelper = helper;
+        setTextChangeListener(mInputView);
     }
 
     private void setTextChangeListener(TextView inputView) {
@@ -36,7 +40,7 @@ public class SearchHelper {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mSearcher.search(s.toString().trim(), before, count);
+                mConsoleHelper.onUserInput(s.toString().trim(), before, count);
             }
 
             @Override
@@ -91,11 +95,11 @@ public class SearchHelper {
                     mInputView.setText(text.subSequence(0, text.length() - 1));
                 }
             } else if (key.equals("shift")) {
-                mSearcher.onKeyDown(KeyCode.KEY_SHIFT);
+                mConsoleHelper.onShift();
             } else if (key.equals("space")) {
                 mInputView.setText(text + " ");
             } else if (key.equals("enter")) {
-                mSearcher.onKeyDown(KeyCode.KEY_ENTER);
+                mConsoleHelper.onEnter();
             }
         }
     }

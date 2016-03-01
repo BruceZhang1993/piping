@@ -4,8 +4,9 @@ import android.content.Context;
 
 import java.util.TreeSet;
 
+import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
-import indi.shinado.piping.pipes.entity.Value;
+import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
 public abstract class BasePipe {
 
@@ -33,11 +34,11 @@ public abstract class BasePipe {
      * @param hasNext if true, execute this item and get output for the next one.
      */
     private void execute(final Pipe rs, OutputCallback callback, boolean hasNext) {
-        Value value = rs.getValue();
-        if (!value.isPreEmpty()) {
-            TreeSet<Pipe> prevs = rs.getPrevious();
-            if (prevs != null && !prevs.isEmpty()) {
-                Pipe prev = prevs.first();
+        Instruction instruction = rs.getInstruction();
+        if (!instruction.isPreEmpty()) {
+            Pipe.PreviousPipes previous = rs.getPrevious();
+            if (!previous.isEmpty()) {
+                Pipe prev = previous.get();
                 prev.getBasePipe().execute(prev, new OutputCallback() {
                     @Override
                     public void onOutput(String input) {
@@ -54,6 +55,10 @@ public abstract class BasePipe {
         }
     }
 
+    private boolean checkNest(Pipe pipe){
+        return false;
+    }
+
     public Console getConsole() {
         return console;
     }
@@ -67,7 +72,6 @@ public abstract class BasePipe {
     }
 
     /**
-     * @param prev once users input ".", the search results prior the input will be put into this set
      * @param input user input
      * @param length the length of the input change, e.g.
      *               "" -> "a" : 1
@@ -75,7 +79,7 @@ public abstract class BasePipe {
      *               "aoa" -> "ao" : -1
      * @param callback to receive results
      */
-    public abstract void search(TreeSet<Pipe> prev, String input, int length, SearchResultCallback callback);
+    public abstract void search(String input, int length, SearchResultCallback callback);
 
     /**
      * accept input from the successors of result
@@ -89,11 +93,17 @@ public abstract class BasePipe {
 
     protected abstract void execute(Pipe rs);
 
+    public abstract void load(AbsTranslator translator, OnItemsLoadedListener listener, int total);
+
+    public interface OnItemsLoadedListener {
+        public void onItemsLoaded(int id, int total);
+    }
+
     public static interface OutputCallback {
         public void onOutput(String output);
     }
 
     public interface SearchResultCallback{
-        public void onSearchResult(TreeSet<Pipe> results);
+        public void onSearchResult(TreeSet<Pipe> results, String input);
     }
 }

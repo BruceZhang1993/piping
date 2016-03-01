@@ -3,13 +3,20 @@ package com.shinado.piping;
 import org.junit.Assert;
 import org.junit.Test;
 
-import indi.shinado.piping.pipes.entity.Value;
+import indi.shinado.piping.pipes.entity.Instruction;
 
 public class TestValue {
 
     @Test
     public void test(){
-        Value value = getValue(".trans");
+
+        Instruction value = getValue("");
+        Assert.assertEquals(true, value.isEmpty());
+        Assert.assertEquals(true, value.isParamsEmpty());
+        Assert.assertEquals(true, value.isPreEmpty());
+        Assert.assertEquals(true, value.isBodyEmpty());
+
+        value = getValue(".trans");
         Assert.assertEquals(true, value.isEmpty());
 
         value = getValue("what.trans");
@@ -90,7 +97,7 @@ public class TestValue {
         Assert.assertEquals(1, value.params.length);
     }
 
-    private Value getValue(String key){
-        return new Value(key);
+    private Instruction getValue(String key){
+        return new Instruction(key);
     }
 }

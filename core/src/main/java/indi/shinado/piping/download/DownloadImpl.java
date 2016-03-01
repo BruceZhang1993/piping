@@ -10,8 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import shinado.indi.lib.GlobalDefs;
-import shinado.indi.lib.util.FileUtil;
+import indi.shinado.piping.GlobalDefs;
+import indi.shinado.piping.util.FileUtil;
 
 public class DownloadImpl {
 

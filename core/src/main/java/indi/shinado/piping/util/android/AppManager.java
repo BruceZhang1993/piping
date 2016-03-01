@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import indi.shinado.piping.pipes.entity.Pipe;
-import indi.shinado.piping.pipes.entity.Value;
+import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
 public class AppManager {
@@ -30,6 +30,10 @@ public class AppManager {
         if (appManager == null) {
             appManager = new AppManager(context, translator);
         }
+        return appManager;
+    }
+
+    public static AppManager getAppManager(){
         return appManager;
     }
 
@@ -172,7 +176,8 @@ public class AppManager {
     private Pipe getResult(ResolveInfo info) {
         String value = info.activityInfo.packageName + "," + info.activityInfo.name;
         String label = info.loadLabel(pm).toString();
-        Pipe item = new Pipe(Pipe.BUILD_IN_ID_APP, label, mTranslator.getName(label), new Value(value));
+        Pipe item = new Pipe(Pipe.BUILD_IN_ID_APP, label, mTranslator.getName(label), value);
+        item.setTypeIndex(Pipe.TYPE_SEARCHABLE);
         return item;
     }
 
@@ -192,11 +197,11 @@ public class AppManager {
         ResolveInfo info = getResolveByValue(value);
 
         if (info == null) {
-            return new Pipe(Pipe.BUILD_IN_ID_APP, new Value(value));
+            return new Pipe(Pipe.BUILD_IN_ID_APP, new Instruction(value));
         } else {
             value = info.activityInfo.packageName + "," + info.activityInfo.name;
             String label = info.loadLabel(pm).toString();
-            return new Pipe(Pipe.BUILD_IN_ID_APP, label, mTranslator.getName(label), new Value(value));
+            return new Pipe(Pipe.BUILD_IN_ID_APP, label, mTranslator.getName(label), value);
         }
 
     }

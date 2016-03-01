@@ -7,6 +7,8 @@ import android.view.KeyEvent;
 
 import java.util.ArrayList;
 
+import indi.shinado.piping.feed.FeedHelper;
+import indi.shinado.piping.feed.Feedable;
 import indi.shinado.piping.statusbar.BarService;
 import indi.shinado.piping.statusbar.BatteryStatusBar;
 import indi.shinado.piping.statusbar.ConnectionStatusBar;
@@ -19,6 +21,7 @@ public abstract class BaseLauncherView extends Activity{
 
 	private ArrayList<StatusBar> mStatusBars = new ArrayList<>();
 	private Intent mBarService;
+	private FeedHelper feedHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +61,9 @@ public abstract class BaseLauncherView extends Activity{
 		//TODO
 	}
 
-	public void addSearchable(){
-		//TODO
+	public void addFeedable(Feedable feedable){
+		feedHelper = new FeedHelper(this, feedable);
+		feedHelper.start();
 	}
 
 	/**
@@ -71,6 +75,9 @@ public abstract class BaseLauncherView extends Activity{
 	public void destroy(){
 		for (StatusBar sb : mStatusBars){
 			sb.unregister();
+		}
+		if(feedHelper != null){
+			feedHelper.destroy();
 		}
 	}
 

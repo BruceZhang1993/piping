@@ -13,7 +13,7 @@ public class CopyPipe extends ActionPipe{
         mResult = new Pipe();
         mResult.setId(id);
         mResult.setDisplayName("$copy");
-        mResult.setSearchableName(new SearchableName("copy"));
+        mResult.setSearchableName(new SearchableName(new String[]{"co", "py"}));
         mResult.setBasePipe(this);
     }
 

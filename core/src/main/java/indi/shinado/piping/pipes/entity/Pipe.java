@@ -5,7 +5,11 @@ import java.util.TreeSet;
 import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.action.BasePipeNotSetException;
 
-public class Pipe {
+public class Pipe implements Comparable<Pipe> {
+
+    public static final int TYPE_SEARCHABLE = 100;
+
+    public static final int TYPE_ACTION = 10;
 
     /**
      * three basic type
@@ -23,44 +27,50 @@ public class Pipe {
 
     private SearchableName searchableName;
 
-    private TreeSet<Pipe> previous;
+    private PreviousPipes previous;
 
-    private Value value;
+    private Instruction instruction;
+
+    private String executable;
 
     private BasePipe basePipe;
 
     private int keyIndex;
 
-    public Pipe(){
+    private int frequency;
+
+    private int typeIndex = TYPE_ACTION;
+
+    public Pipe() {
 
     }
 
-    public Pipe(int id){
+    public Pipe(int id) {
         this();
         this.id = id;
     }
 
-    public Pipe(int id, String displayName){
+    public Pipe(int id, String displayName) {
         this(id);
         this.displayName = displayName;
     }
 
-    public Pipe(int id, Value value){
+    public Pipe(int id, Instruction instruction) {
         this(id);
-        this.value = value;
+        this.instruction = instruction;
     }
 
-    public Pipe(int id, String displayName, SearchableName searchableName){
+    public Pipe(int id, String displayName, SearchableName searchableName) {
         this(id, displayName);
         this.searchableName = searchableName;
     }
 
-    public Pipe(int id, String displayName, SearchableName searchableName, Value value){
+    public Pipe(int id, String displayName, SearchableName searchableName, String executable) {
         this(id, displayName);
         this.searchableName = searchableName;
-        this.value = value;
+        this.executable = executable;
     }
-    
+
     public SearchableName getSearchableName() {
         return searchableName;
     }
@@ -69,12 +79,12 @@ public class Pipe {
         this.searchableName = searchableName;
     }
 
-    public Value getValue() {
-        return value;
+    public Instruction getInstruction() {
+        return instruction;
     }
 
-    public void setValue(Value value) {
-        this.value = value;
+    public void setInstruction(Instruction value) {
+        this.instruction = value;
     }
 
     public String getDisplayName() {
@@ -93,16 +103,24 @@ public class Pipe {
         this.id = id;
     }
 
-    public TreeSet<Pipe> getPrevious() {
+    public PreviousPipes getPrevious() {
         return previous;
     }
 
-    public void setPrevious(TreeSet<Pipe> previous) {
-        this.previous = previous;
+    public void setPrevious(PreviousPipes previous) {
+        if (previous == null){
+            this.previous = new PreviousPipes();
+        }else {
+            this.previous = previous;
+        }
+    }
+
+    public void execute() {
+        getBasePipe().startExecution(this);
     }
 
     public BasePipe getBasePipe() {
-        if (basePipe == null){
+        if (basePipe == null) {
             throw new BasePipeNotSetException("Must set BasePipe in getResult() in BasePipe");
         }
         return basePipe;
@@ -112,7 +130,7 @@ public class Pipe {
         this.basePipe = basePipe;
     }
 
-    public void input(){
+    public void input() {
         getBasePipe().getConsole().input(displayName);
     }
 
@@ -122,5 +140,114 @@ public class Pipe {
 
     public int getKeyIndex() {
         return keyIndex;
+    }
+
+    public String getExecutable() {
+        return executable;
+    }
+
+    public void setExecutable(String executable) {
+        this.executable = executable;
+    }
+
+    public int getTypeIndex() {
+        return typeIndex;
+    }
+
+    public void setTypeIndex(int typeIndex) {
+        this.typeIndex = typeIndex;
+    }
+
+    public int getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(int frequency) {
+        this.frequency = frequency;
+    }
+
+    @Override
+    public int compareTo(Pipe another) {
+        //search results always ahead of action
+        int compare = another.typeIndex - typeIndex;
+        //same type
+        if (compare == 0) {
+            compare = keyIndex - another.keyIndex;
+
+            //same key index
+            if (compare == 0) {
+                compare = another.frequency - frequency;
+
+                //same frequency
+                if (compare == 0) {
+                    compare = another.getDisplayName().compareTo(displayName);
+                }
+            }
+        }
+        return compare;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Pipe){
+            return displayName.equals(((Pipe)o).displayName);
+        }
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return displayName.hashCode();
+    }
+
+    public static class PreviousPipes{
+        private TreeSet<Pipe> previous;
+        private int pointer;
+
+        public PreviousPipes(){
+
+        }
+
+        public PreviousPipes(TreeSet<Pipe> previous, int pointer){
+            this.previous = new TreeSet<>();
+            this.previous.addAll(previous);
+            this.pointer = pointer;
+        }
+
+        public TreeSet<Pipe> getPrevious() {
+            return previous;
+        }
+
+        public void setPrevious(TreeSet<Pipe> previous) {
+            this.previous = previous;
+        }
+
+        public int getPointer() {
+            return pointer;
+        }
+
+        public void setPointer(int pointer) {
+            this.pointer = pointer;
+        }
+
+        public void clear(){
+            if (previous != null){
+                previous.clear();
+            }
+            pointer = 0;
+        }
+
+        public Pipe get(){
+            return previous == null || previous.size() == 0 ? null :
+                    (Pipe) previous.toArray()[pointer];
+        }
+
+        public TreeSet<Pipe> getAll(){
+            return previous;
+        }
+
+        public boolean isEmpty() {
+            return previous == null || previous.isEmpty();
+        }
     }
 }

@@ -1,35 +1,16 @@
 package shinado.indi.vender.base;
 
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TreeSet;
 
-import indi.shinado.piping.keyboard.Searchable;
-import indi.shinado.piping.launcher.BaseLauncherView;
-import indi.shinado.piping.statusbar.Statusable;
-import shinado.indi.vender.R;
 
 public class Launcher
-//		extends BaseLauncherView implements Searchable, Statusable
+//		extends BaseLauncherView implements Statusable
 {
 //
 //	private final String TAG = "IFC Launcher";
@@ -42,7 +23,6 @@ public class Launcher
 //	private TextView showView;
 //	private ScrollView scrollView;
 //	private View keyboard;
-//	private StringBuffer mPreviousLines = new StringBuffer();
 //	private String mCurrentLine = "";
 //
 //	private int resultIndex = 0;
@@ -404,7 +384,7 @@ public class Launcher
 //		}else{
 //			line += result.getDisplayName();
 //			line += " -" + value;
-//			Log.v(TAG, "input:" + result.getValue());
+//			Log.v(TAG, "input:" + result.getInstruction());
 //			Log.v(TAG, "display:"+line);
 //		}
 //

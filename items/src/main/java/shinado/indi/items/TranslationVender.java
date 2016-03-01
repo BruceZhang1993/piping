@@ -5,20 +5,54 @@ import java.util.ArrayList;
 
 import csu.org.dependency.volley.Listener;
 import csu.org.dependency.volley.VolleyProvider;
-import shinado.indi.lib.items.VenderItem;
-import shinado.indi.lib.items.action.ActionVender;
+import indi.shinado.piping.pipes.action.ActionPipe;
+import indi.shinado.piping.pipes.entity.Pipe;
+import indi.shinado.piping.pipes.entity.SearchableName;
+import indi.shinado.piping.pipes.entity.Instruction;
 
-public class TranslationVender extends ActionVender {
+public class TranslationVender extends ActionPipe {
 
     public TranslationVender(int id) {
         super(id);
-        mResult = new VenderItem();
+        mResult = new Pipe();
         mResult.setId(id);
-        mResult.setDisplayName(".trans");
-        mResult.setName(new String[]{".", "trans"});
+        mResult.setDisplayName("$trans");
+        mResult.setSearchableName(new SearchableName(new String[]{"tran", "s", "la", "tion"}));
     }
 
-    private VenderItem mResult;
+    @Override
+    public void acceptInput(Pipe result, String input) {
+
+    }
+
+    @Override
+    public void getOutput(Pipe result, OutputCallback callback) {
+
+    }
+
+    @Override
+    protected void execute(Pipe rs) {
+        Instruction value = rs.getInstruction();
+
+        if (value.isEmpty()) {
+            //.trans
+            getConsole().input(HELP);
+        } else {
+            if (value.isParamsEmpty()) {
+                //what.trans
+                getConsole().blockInput();
+                getConsole().input("loading...");
+                requestTranslation(value.pre);
+            } else {
+                //.trans -w
+                //what.trans -k
+                getConsole().input(HELP);
+            }
+
+        }
+    }
+
+    private Pipe mResult;
     private static final String URL = "http://openapi.baidu.com/public/2.0/bmt/translate?client_id=yUZ32TKgbLjGeST3zvRSXxGN&" +
             "q=%s&from=auto&to=auto";
 
@@ -26,40 +60,8 @@ public class TranslationVender extends ActionVender {
             "[key].trans";
 
     @Override
-    protected VenderItem getResult() {
+    protected Pipe getResult() {
         return mResult;
-    }
-
-    @Override
-    protected VenderItem filter(VenderItem result) {
-        return result;
-    }
-
-    @Override
-    public int execute(VenderItem result) {
-        VenderItem.Value value = result.getValue();
-
-        if (value.isEmpty()) {
-            //.trans
-            input(HELP);
-        } else {
-            if (value.isParamsEmpty()) {
-                //what.trans
-                mSearchHelper.blockInput();
-                input("loading...");
-                requestTranslation(value.pre);
-            } else {
-                //.trans -w
-                //what.trans -k
-                input(HELP);
-            }
-        }
-        return 0;
-    }
-
-    private void handleWithOption(String value) {
-
-
     }
 
     private void requestTranslation(final String q) {
@@ -68,7 +70,7 @@ public class TranslationVender extends ActionVender {
 
                     @Override
                     public void onResponse(Result obj) {
-                        mSearchHelper.releaseInput();
+                        getConsole().releaseInput();
                         if (obj != null) {
                             StringBuilder result = new StringBuilder("Translation for " + q + "\n");
                             for (Result.TransResult r : obj.trans_result) {
@@ -78,9 +80,9 @@ public class TranslationVender extends ActionVender {
                                     e.printStackTrace();
                                 }
                             }
-                            input(result.toString());
+                            getConsole().input(result.toString());
                         } else {
-                            input("error");
+                            getConsole().input("error");
                         }
                     }
                 },
@@ -90,8 +92,8 @@ public class TranslationVender extends ActionVender {
     private Listener.Error mDefaultError = new Listener.Error() {
         @Override
         public void onError(String msg) {
-            mSearchHelper.releaseInput();
-            input(msg);
+            getConsole().releaseInput();
+            getConsole().input(msg);
         }
     };
 

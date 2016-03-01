@@ -6,7 +6,7 @@ package indi.shinado.piping.pipes.entity;
  * "tran.ins -ls"  -> ["tran", "ins", ["ls"]]
  * ".txt.play" -> [".txt.", "play", null]
  */
-public class Value {
+public class Instruction {
 
     public String pre;
 
@@ -14,7 +14,7 @@ public class Value {
 
     public String[] params;
 
-    public Value(){
+    public Instruction(){
 
     }
 
@@ -27,7 +27,7 @@ public class Value {
      * @param input user input
      * @return formatted value
      */
-    public Value(String input){
+    public Instruction(String input){
         int indexOfDot = input.lastIndexOf(".");
         String right = null;
         if (indexOfDot < 0) {
