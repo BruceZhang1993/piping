@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.ArrayList;
 
 import indi.shinado.piping.pipes.action.CopyPipe;
+import indi.shinado.piping.pipes.action.InstallPipe;
 import indi.shinado.piping.pipes.search.ApplicationPipe;
 import indi.shinado.piping.pipes.search.ContactPipe;
 import indi.shinado.piping.pipes.search.SearchablePipe;
@@ -17,6 +18,7 @@ public class PipesLoader implements IPipesLoader{
         pipes.add(new CopyPipe(1));
         pipes.add(new ApplicationPipe(2));
         pipes.add(new ContactPipe(3));
+        pipes.add(new InstallPipe(4));
 
         for (BasePipe basePipe : pipes){
             register(basePipe, context, console, translator, listener, pipes.size());

@@ -7,9 +7,9 @@ import android.view.KeyEvent;
 
 import java.util.ArrayList;
 
+import indi.shinado.piping.feed.BarService;
 import indi.shinado.piping.feed.FeedHelper;
 import indi.shinado.piping.feed.Feedable;
-import indi.shinado.piping.statusbar.BarService;
 import indi.shinado.piping.statusbar.BatteryStatusBar;
 import indi.shinado.piping.statusbar.ConnectionStatusBar;
 import indi.shinado.piping.statusbar.StatusBar;

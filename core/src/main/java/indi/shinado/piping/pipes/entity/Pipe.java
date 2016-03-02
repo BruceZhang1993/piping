@@ -20,6 +20,7 @@ public class Pipe implements Comparable<Pipe> {
     public static final int BUILD_IN_ID_COPY = 4;
     public static final int BUILD_IN_ID_SEARCH = 5;
     public static final int BUILD_IN_ID_MIGHTY = 6;
+    public static final String INDICATOR = "-";
 
     private String displayName;
 

@@ -120,9 +120,9 @@ public class ConsoleHelper {
     public void onEnter() {
         Pipe current = getCurrent();
         if (current != null) {
+            console.onEnter(current);
             current.getBasePipe().startExecution(current);
             current.setPrevious(null);
-            console.onEnter(current);
         }
         mSearcher.clearPrevious();
         mHistory.add(mCurrentInput);

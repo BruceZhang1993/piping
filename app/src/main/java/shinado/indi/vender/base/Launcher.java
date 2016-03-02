@@ -1,14 +1,5 @@
 package shinado.indi.vender.base;
 
-import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-
-import java.util.HashMap;
-
-
 public class Launcher
 //		extends BaseLauncherView implements Statusable
 {

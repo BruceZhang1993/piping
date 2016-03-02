@@ -30,6 +30,8 @@ public class Launcher {
 
     @Test
     public void testSearch() {
+        helper.onUserInput("cp", 0, 2);
+
         helper.onUserInput("", 0, 0);
         helper.onUserInput("k", 0, 1);
         helper.onUserInput("ka", 1, 2);
@@ -72,6 +74,11 @@ public class Launcher {
         @Override
         public void input(String string) {
             System.out.println("console input:" + string);
+        }
+
+        @Override
+        public void replaceCurrentLine(String line) {
+             System.out.println("replace:" + line);
         }
 
         @Override

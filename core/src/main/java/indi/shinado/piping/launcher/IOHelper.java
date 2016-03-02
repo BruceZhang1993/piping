@@ -35,6 +35,14 @@ public class IOHelper {
         setTextChangeListener(mInputView);
     }
 
+    public void blockInput(){
+        this.blockInput = true;
+    }
+
+    public void releaseInput(){
+        this.blockInput = false;
+    }
+
     private void setTextChangeListener(TextView inputView) {
         inputView.addTextChangedListener(new TextWatcher() {
 

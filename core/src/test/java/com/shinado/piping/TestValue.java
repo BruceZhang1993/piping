@@ -16,6 +16,14 @@ public class TestValue {
         Assert.assertEquals(true, value.isPreEmpty());
         Assert.assertEquals(true, value.isBodyEmpty());
 
+        value = getValue("trans-ls");
+        Assert.assertEquals(false, value.isEmpty());
+        Assert.assertEquals(false, value.isParamsEmpty());
+        Assert.assertEquals(true, value.isPreEmpty());
+        Assert.assertEquals(1, value.params.length);
+        Assert.assertEquals("ls", value.params[0]);
+
+
         value = getValue(".trans");
         Assert.assertEquals(true, value.isEmpty());
 
@@ -81,7 +89,6 @@ public class TestValue {
         Assert.assertEquals(true, value.isParamsEmpty());
         Assert.assertEquals(true, value.isPreEmpty());
         Assert.assertEquals("maya", value.body);
-
 
         value = getValue("maya.txt.");
         Assert.assertEquals(false, value.isEmpty());

@@ -17,11 +17,11 @@ public class TestSearchableName {
         Assert.assertEquals(false, searchableName.contains(""));
         Assert.assertEquals(true, searchableName.contains("i"));
         Assert.assertEquals(true, searchableName.contains("if"));
-        Assert.assertEquals(true, searchableName.contains("fb"));
+        Assert.assertEquals(false, searchableName.contains("fb"));
         Assert.assertEquals(false, searchableName.contains("fe"));
         Assert.assertEquals(false, searchableName.contains("fo"));
         Assert.assertEquals(true, searchableName.contains("facebook"));
-        Assert.assertEquals(true, searchableName.contains("facebookw"));
-        Assert.assertEquals(true, searchableName.contains("facebook w"));
+        Assert.assertEquals(false, searchableName.contains("facebookw"));
+        Assert.assertEquals(false, searchableName.contains("facebook w"));
     }
 }
