@@ -29,6 +29,9 @@ public abstract class ActionPipe extends BasePipe{
     }
 
     public Pipe search(String input) {
+        if (input.isEmpty()){
+            return null;
+        }
         Pipe result = getResult();
         result.setInstruction(new Instruction(input));
         if (!result.getSearchableName().contains(result.getInstruction().body)){
