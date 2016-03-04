@@ -201,6 +201,10 @@ public class Pipe implements Comparable<Pipe> {
         return displayName.hashCode();
     }
 
+    public void addFrequency() {
+        this.frequency++;
+    }
+
     public static class PreviousPipes{
         private TreeSet<Pipe> previous;
         private int pointer;

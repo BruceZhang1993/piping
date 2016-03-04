@@ -15,12 +15,12 @@ import java.lang.ref.WeakReference;
 
 import indi.shinado.piping.feed.Feedable;
 import indi.shinado.piping.launcher.BaseLauncherView;
-import indi.shinado.piping.launcher.ConsoleHelper;
-import indi.shinado.piping.launcher.DeviceConsole;
-import indi.shinado.piping.launcher.HackerView;
+import indi.shinado.piping.launcher.impl.ConsoleHelper;
+import indi.shinado.piping.launcher.impl.DeviceConsole;
+import indi.shinado.piping.launcher.impl.HackerView;
 import indi.shinado.piping.launcher.IOHelper;
 import indi.shinado.piping.launcher.IOMethod;
-import indi.shinado.piping.pipes.PipesLoader;
+import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
 import indi.shinado.piping.util.android.AppManager;
@@ -78,10 +78,6 @@ public class HackerLauncher extends BaseLauncherView implements IOMethod, Device
         mInputView = new TextView(this, null);
         mHackerView = new HackerView(console, this);
         mHackerView.init();
-    }
-
-    private void hideKeyboard() {
-        mKeyboard.setVisibility(View.GONE);
     }
 
     private void showKeyboard() {
@@ -195,7 +191,6 @@ public class HackerLauncher extends BaseLauncherView implements IOMethod, Device
     static class KeyboardHandler extends Handler {
 
         private static final int WHAT_START = 3;
-        private static final int WHAT_HIDE = 4;
 
         private WeakReference<HackerLauncher> deskViewWeakReference;
 
@@ -209,9 +204,6 @@ public class HackerLauncher extends BaseLauncherView implements IOMethod, Device
             switch (msg.what) {
                 case WHAT_START:
                     launcher.showKeyboard();
-                    break;
-                case WHAT_HIDE:
-                    launcher.hideKeyboard();
                     break;
             }
         }

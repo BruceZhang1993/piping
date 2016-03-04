@@ -3,11 +3,9 @@ package com.shinado.piping;
 import org.junit.Assert;
 import org.junit.Test;
 
-import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.action.ActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
-import indi.shinado.piping.util.android.FunctionUtil;
 
 /**
  * Created by shinado on 2016/2/29.

@@ -39,7 +39,7 @@ public class PipeSearcher {
         doSearch(input, count - before);
     }
 
-    public void getPreviousPipes(String input, int pointer) {
+    private void getPreviousPipes(String input, int pointer) {
         if (input.endsWith(".")) {
             mPrevious = new Pipe.PreviousPipes(mResults, pointer);
         }

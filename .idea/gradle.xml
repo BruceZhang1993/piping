@@ -14,7 +14,16 @@
             <option value="$PROJECT_DIR$/dependency" />
             <option value="$PROJECT_DIR$/dla-lib" />
             <option value="$PROJECT_DIR$/items" />
-            <option value="$PROJECT_DIR$/lib" />
+          </set>
+        </option>
+        <option name="myModules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/dependency" />
+            <option value="$PROJECT_DIR$/dla-lib" />
+            <option value="$PROJECT_DIR$/items" />
           </set>
         </option>
       </GradleProjectSettings>

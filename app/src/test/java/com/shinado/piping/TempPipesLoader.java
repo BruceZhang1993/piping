@@ -5,9 +5,9 @@ import android.content.Context;
 import java.util.ArrayList;
 
 import indi.shinado.piping.pipes.BasePipe;
-import indi.shinado.piping.pipes.Console;
+import indi.shinado.piping.launcher.Console;
 import indi.shinado.piping.pipes.IPipesLoader;
-import indi.shinado.piping.pipes.entity.Pipe;
+import indi.shinado.piping.pipes.entity.PipeEntity;
 import indi.shinado.piping.pipes.search.SearchablePipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
@@ -20,6 +20,10 @@ public class TempPipesLoader implements IPipesLoader {
         pipes.add(actionPipe);
         register(actionPipe, context, console, translator, listener, 2);
 
+        TestDefaultInputActionPipe defaultPipe = new TestDefaultInputActionPipe();
+        pipes.add(defaultPipe);
+        register(defaultPipe, context, console, translator, listener, 2);
+
         TestAppPipe appPipe = new TestAppPipe();
         pipes.add(appPipe);
         register(appPipe, context, console, translator, listener, 2);
@@ -29,6 +33,11 @@ public class TempPipesLoader implements IPipesLoader {
         register(contactPipe, context, console, translator, listener, 2);
 
         return pipes;
+    }
+
+    @Override
+    public BasePipe load(PipeEntity entity, Context context, Console console, AbsTranslator translator, BasePipe.OnItemsLoadedListener listener) {
+        return null;
     }
 
     private void register(BasePipe basePipe, Context context, Console console, AbsTranslator translator,

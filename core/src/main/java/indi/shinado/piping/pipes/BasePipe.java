@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.TreeSet;
 
+import indi.shinado.piping.launcher.Console;
 import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
@@ -11,9 +12,12 @@ import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 public abstract class BasePipe {
 
     protected int id;
+
     protected Context context;
 
     protected Console console;
+
+    protected IPipeManager pipeManager;
 
     public BasePipe(int id){
         this.id = id;
@@ -55,8 +59,12 @@ public abstract class BasePipe {
         }
     }
 
-    private boolean checkNest(Pipe pipe){
-        return false;
+    public IPipeManager getPipeManager() {
+        return pipeManager;
+    }
+
+    public void setPipeManager(IPipeManager pipeManager) {
+        this.pipeManager = pipeManager;
     }
 
     public Console getConsole() {

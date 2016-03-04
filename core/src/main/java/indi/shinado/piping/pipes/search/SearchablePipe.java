@@ -83,7 +83,7 @@ public abstract class SearchablePipe extends BasePipe {
     /**
      * fulfill with key index and instruction
      */
-    protected TreeSet<Pipe> fulfill(ArrayList<Pipe> list, String key, Instruction value) {
+    protected TreeSet<Pipe> fulfill(ArrayList<Pipe> list, String input, Instruction value) {
         TreeSet<Pipe> set = new TreeSet<>();
         if (list == null) {
             return set;
@@ -91,15 +91,19 @@ public abstract class SearchablePipe extends BasePipe {
 
         //set key index for each item
         for (Pipe item : list) {
-            int keyIndex = getKeyIndex(item, key);
-            item.setKeyIndex(keyIndex);
-            item.setInstruction(value);
-            //only set previous for the first item
-            //pass it on to next when shifting
-//            item.setPrevious(prev);
+            fulfill(item, input, value);
             set.add(item);
         }
         return set;
+    }
+
+    protected void fulfill(Pipe item, String input, Instruction value){
+        int keyIndex = getKeyIndex(item, input);
+        item.setKeyIndex(keyIndex);
+        item.setInstruction(value);
+        //only set previous for the first item
+        //pass it on to next when shifting
+//            item.setPrevious(prev);
     }
 
     /**

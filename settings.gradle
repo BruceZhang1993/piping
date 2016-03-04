@@ -1,1 +1,1 @@
-include ':app', ':dla-lib', ':lib', ':dependency', ':items', ':core'
+include ':app', ':dla-lib', ':dependency', ':items', ':core'

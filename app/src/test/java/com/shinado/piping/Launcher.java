@@ -8,13 +8,18 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import indi.shinado.piping.launcher.DeviceConsole;
-import indi.shinado.piping.launcher.ConsoleHelper;
+import indi.shinado.piping.launcher.impl.DeviceConsole;
+import indi.shinado.piping.launcher.impl.ConsoleHelper;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.translator.EnglishTranslator;
 
 @RunWith(MockitoJUnitRunner.class)
 public class Launcher {
+
+    public static final String KEY_SPACE = "space";
+    public static final String KEY_BACKSPACE = "backspace";
+    public static final String KEY_ENTER = "enter";
+    public static final String KEY_SHIFT = "shift";
 
     @Mock
     private Context context;
@@ -23,6 +28,8 @@ public class Launcher {
 
     private ConsoleHelper helper;
 
+    private String mCurrentInput = "";
+
     @Before
     public void setup() {
         helper = new ConsoleHelper(context, console, new TempPipesLoader(), new EnglishTranslator(context));
@@ -30,43 +37,84 @@ public class Launcher {
 
     @Test
     public void testSearch() {
-        helper.onUserInput("cp", 0, 2);
+        inputString("test");
+        clear();
+        inputString("qq.test");
+        inputString("-ls");
+        clear();
+        inputString("test-ls");
+        clear();
 
-        helper.onUserInput("", 0, 0);
-        helper.onUserInput("k", 0, 1);
-        helper.onUserInput("ka", 1, 2);
+        pressKey("k");
+        pressKey("a");
+        pressKey(KEY_SHIFT);
+        clear();
 
-        helper.onShift();
+        pressKey("k");
+        pressKey(KEY_BACKSPACE);
+        pressKey("k");
+        pressKey("a");
+        pressKey(".");
+        pressKey("t");
+        pressKey("e");
+        pressKey("s");
+        pressKey("t");
+        pressKey(KEY_ENTER);
 
-        helper.onUserInput("k", 2, 1);
-        helper.onUserInput("", 1, 0);
-        helper.onUserInput("k", 0, 1);
-        helper.onUserInput("ka", 1, 2);
-        helper.onUserInput("ka.", 2, 3);
-        helper.onUserInput("ka.c", 3, 4);
-        helper.onUserInput("ka.cp", 4, 5);
+        pressKey("k");
+        pressKey("a");
+        pressKey(".");
+        pressKey("k");
+        pressKey("a");
+        pressKey(KEY_ENTER);
 
-        helper.onEnter();
+        pressKey("k");
+        pressKey("a");
+        pressKey(KEY_SHIFT);
+        pressKey(KEY_SHIFT);
 
-        helper.onUserInput("", 0, 5);
-        helper.onUserInput("k", 1, 0);
-        helper.onUserInput("ka", 2, 1);
-        helper.onUserInput("ka.", 3, 2);
-        helper.onUserInput("ka.k", 3, 4);
-        helper.onUserInput("ka.ka", 4, 5);
-        helper.onEnter();
+        pressKey(".");
+        pressKey("k");
+        pressKey("a");
+        pressKey(KEY_SHIFT);
+        pressKey(KEY_ENTER);
+    }
 
-        helper.onUserInput("", 0, 5);
-        helper.onUserInput("k", 1, 0);
-        helper.onUserInput("ka", 2, 1);
-        helper.onShift();
-        helper.onShift();
-        helper.onUserInput("ka.", 3, 2);
-        helper.onUserInput("ka.k", 3, 4);
-        helper.onUserInput("ka.ka", 4, 5);
-        helper.onShift();
-        helper.onEnter();
+    private void inputString(String string){
+        for (int i=0; i<string.length(); i++){
+            char c = string.charAt(i);
+            pressKey(""+c);
+        }
+    }
 
+    private void clear(){
+        helper.reset();
+        mCurrentInput = "";
+    }
+
+    private void pressKey(String key){
+        if (key.length() == 1) {
+            input(key);
+        } else {
+            if (key.equals(KEY_BACKSPACE)) {
+                //EditView must have something
+                if (mCurrentInput.length() > 0) {
+                    mCurrentInput = mCurrentInput.substring(0, mCurrentInput.length()-1);
+                }
+            } else if (key.equals(KEY_SHIFT)) {
+                helper.onShift();
+            } else if (key.equals(KEY_SPACE)) {
+                input(key);
+            } else if (key.equals(KEY_ENTER)) {
+                helper.onEnter();
+            }
+        }
+    }
+
+    private void input(String key){
+        int before = mCurrentInput.length();
+        mCurrentInput += key;
+        helper.onUserInput(mCurrentInput, before, mCurrentInput.length());
     }
 
     public class StaticConsole implements DeviceConsole {

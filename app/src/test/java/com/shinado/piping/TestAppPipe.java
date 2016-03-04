@@ -42,6 +42,8 @@ public class TestAppPipe extends SearchablePipe {
         add("what kat", translator, 5);
         add("XBrowser", translator, 6);
         add("candy", translator, 7);
+        add("$install", new String[]{"ins", "tall"}, 8);
+        add("uninstall", new String[]{"un", "ins", "tall"}, 9);
 
         new Thread() {
             public void run() {
@@ -56,6 +58,12 @@ public class TestAppPipe extends SearchablePipe {
 
             }
         }.start();
+    }
+
+    private void add(String displayName, String[] name, int id) {
+        Pipe pipe = new Pipe(id, displayName, new SearchableName(name), displayName + ".exe");
+        pipe.setBasePipe(this);
+        putItemInMap(pipe);
     }
 
     private void add(String displayName, AbsTranslator translator, int id) {
@@ -120,6 +128,21 @@ public class TestAppPipe extends SearchablePipe {
         results = search(new Instruction("k.k"));
         push(results);
         assertEquals(new int[]{2, 1, 4, 3, 5}, results);
+
+    }
+
+    @Test
+    public void testSearch2() {
+        TreeSet<Pipe> results = search(new Instruction(""));
+        assertEquals(new int[]{}, results);
+
+        results = search(new Instruction("i"));
+        push(results);
+        assertEquals(new int[]{8, 9}, results);
+
+        results = search(new Instruction("in"));
+        push(results);
+        assertEquals(new int[]{8, 9}, results);
 
     }
 

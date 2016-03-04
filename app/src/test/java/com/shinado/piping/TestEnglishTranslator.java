@@ -11,9 +11,6 @@ import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 import indi.shinado.piping.pipes.search.translator.EnglishTranslator;
 
-/**
- * Created by shinado on 2016/2/29.
- */
 public class TestEnglishTranslator {
 
     private AbsTranslator translator;

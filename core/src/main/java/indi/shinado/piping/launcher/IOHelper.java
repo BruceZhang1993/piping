@@ -8,9 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import indi.shinado.piping.launcher.impl.ConsoleHelper;
 import indi.shinado.piping.settings.Preferences;
 
 public class IOHelper {
+
+    public static final String KEY_SPACE = "space";
+    public static final String KEY_BACKSPACE = "backspace";
+    public static final String KEY_ENTER = "enter";
+    public static final String KEY_SHIFT = "shift";
+
 
     private boolean blockInput = false;
     private Preferences mPreferences;
@@ -97,16 +104,16 @@ public class IOHelper {
             mInputView.setText(text + key);
         } else {
             String text = mInputView.getText().toString();
-            if (key.equals("backspace")) {
+            if (key.equals(KEY_BACKSPACE)) {
                 //EditView must have something
                 if (text.length() > 0) {
                     mInputView.setText(text.subSequence(0, text.length() - 1));
                 }
-            } else if (key.equals("shift")) {
+            } else if (key.equals(KEY_SHIFT)) {
                 mConsoleHelper.onShift();
-            } else if (key.equals("space")) {
+            } else if (key.equals(KEY_SPACE)) {
                 mInputView.setText(text + " ");
-            } else if (key.equals("enter")) {
+            } else if (key.equals(KEY_ENTER)) {
                 mConsoleHelper.onEnter();
             }
         }

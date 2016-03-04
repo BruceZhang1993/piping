@@ -56,5 +56,4 @@ public class DefaultApplication extends Application{
         ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
     }
 
-
 }

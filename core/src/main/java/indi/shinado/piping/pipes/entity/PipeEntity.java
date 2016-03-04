@@ -1,14 +1,15 @@
 package indi.shinado.piping.pipes.entity;
 
 import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 import indi.shinado.piping.download.Downloadable;
 
-/**
- * Created by shinado on 2016/3/2.
- */
+@Table(name = "TPipeEntity")
 public class PipeEntity extends Model implements Downloadable{
 
+    @Column(name = "cId")
     public int sid;
 
     public PipeEntity() {
@@ -25,14 +26,19 @@ public class PipeEntity extends Model implements Downloadable{
 
     //e.g :
     // /storage/0/nix/execute/weather.dex
+    @Column(name = "cUrl")
     public String url;
 
+    @Column(name = "cName")
     public String name;
 
+    @Column(name = "cAuthor")
     public String author;
 
+    @Column(name = "cPackage")
     public String pkg;
 
+    @Column(name = "cClassName")
     public String className;
 
     @Override

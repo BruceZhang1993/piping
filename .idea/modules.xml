@@ -8,7 +8,6 @@
       <module fileurl="file://$PROJECT_DIR$/dependency/dependency.iml" filepath="$PROJECT_DIR$/dependency/dependency.iml" />
       <module fileurl="file://$PROJECT_DIR$/dla-lib/dla-lib.iml" filepath="$PROJECT_DIR$/dla-lib/dla-lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/items/items.iml" filepath="$PROJECT_DIR$/items/items.iml" />
-      <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
     </modules>
   </component>
 </project>
