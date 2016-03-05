@@ -46,7 +46,9 @@ public class PipeSearcher {
     }
 
     public void search(String input, int before, int count, int pointer) {
-        getPreviousPipes(input, pointer);
+        if (before < count){
+            getPreviousPipes(input, pointer);
+        }
         resetOnSearch();
 
         doSearch(input, count - before);
@@ -117,7 +119,7 @@ public class PipeSearcher {
     }
 
     public interface OnResultChangeListener{
-        public void onResultChange(TreeSet<Pipe> results, String input, Pipe.PreviousPipes previous);
+        void onResultChange(TreeSet<Pipe> results, String input, Pipe.PreviousPipes previous);
     }
 
 }
