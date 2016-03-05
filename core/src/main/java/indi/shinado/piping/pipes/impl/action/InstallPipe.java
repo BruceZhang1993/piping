@@ -12,6 +12,7 @@ import indi.shinado.piping.download.Downloadable;
 import indi.shinado.piping.launcher.Console;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Instruction;
+import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.PipeEntity;
 import indi.shinado.piping.pipes.entity.SearchableName;
@@ -28,8 +29,8 @@ public class InstallPipe extends DefaultInputActionPipe{
     private static final String HELP = "Usage of install:\n" +
             "[key].install [-option]\n" +
             "where option includes:\n" +
-            Pipe.INDICATOR + OPT_LS + " list all items\n" +
-            Pipe.INDICATOR + OPT_M + " install whatever matches\n";
+            Keys.PARAMS + OPT_LS + " list all items\n" +
+            Keys.PARAMS + OPT_M + " install whatever matches\n";
 
     public InstallPipe(int id) {
         super(id);
@@ -187,6 +188,7 @@ public class InstallPipe extends DefaultInputActionPipe{
             @Override
             public void onFinish(Downloadable v) {
                 getConsole().replaceCurrentLine("Item installed.");
+                getConsole().input("\n");
                 getConsole().releaseInput();
                 getPipeManager().addNewPipe((PipeEntity) v);
             }

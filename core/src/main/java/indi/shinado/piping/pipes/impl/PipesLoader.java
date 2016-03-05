@@ -66,7 +66,9 @@ public class PipesLoader implements IPipesLoader {
         ArrayList<BasePipe> pipes = new ArrayList<>();
         List<PipeEntity> entities = new Select().all().from(PipeEntity.class).execute();
         for (PipeEntity p : entities) {
-            pipes.add(loadFromStorage(context, p));
+            BasePipe pipe = loadFromStorage(context, p);
+            register(pipe, context, console, translator, listener, -1);
+            pipes.add(pipe);
         }
         return pipes;
     }

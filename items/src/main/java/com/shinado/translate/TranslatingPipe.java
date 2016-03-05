@@ -9,6 +9,7 @@ import java.util.Random;
 import csu.org.dependency.volley.Listener;
 import csu.org.dependency.volley.VolleyProvider;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
+import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.util.CommonUtil;
@@ -25,7 +26,7 @@ public class TranslatingPipe extends DefaultInputActionPipe {
             "&q=%s&from=auto&to=auto&salt=%s&sign=%s";
 
     private static final String HELP = "Usage of " + NAME + ":\n" +
-            "[key].trans";
+            "[key]"+ Keys.PIPE +"trans";
 
     public TranslatingPipe(int id) {
         super(id);

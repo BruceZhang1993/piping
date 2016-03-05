@@ -2,6 +2,9 @@ package indi.shinado.piping.launcher.impl;
 
 import android.content.Context;
 
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
@@ -83,6 +86,7 @@ public class ConsoleHelper implements IPipeManager{
 
     @Override
     public void addNewPipe(PipeEntity entity){
+        entity.save();
         BasePipe pipe = mLoader.load(entity, mContext, console, mTranslator, new BasePipe.OnItemsLoadedListener() {
             @Override
             public void onItemsLoaded(int id, int total) {
@@ -91,6 +95,22 @@ public class ConsoleHelper implements IPipeManager{
         });
         pipe.setPipeManager(this);
         mSearcher.addPipe(pipe);
+    }
+
+    @Override
+    public boolean removePipe(int id) {
+        if (inDatabase(id)){
+            mSearcher.removePipe(id);
+            new Delete().from(PipeEntity.class).where("cId = " + id).execute();
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    private boolean inDatabase(int id){
+        PipeEntity search = new Select().from(PipeEntity.class).where("cId = ?", id).executeSingle();
+        return (search != null);
     }
 
     public void forceShow(Pipe item){

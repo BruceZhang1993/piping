@@ -1,6 +1,7 @@
 package indi.shinado.piping.pipes.impl.action;
 
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
+import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.impl.PipesLoader;
@@ -10,7 +11,7 @@ public class AppInfoPipe extends DefaultInputActionPipe{
 
     private static final String NAME = "$info";
     private static final String HELP = "Usage of " + NAME + "\n" +
-            "[application].info to display information of a certain application";
+            "[application] + "+ Keys.PIPE +"info to display information of a certain application";
 
     public AppInfoPipe(int id) {
         super(id);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeSet;
 
+import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 
 /**
@@ -28,6 +29,18 @@ public class PipeSearcher {
         mBasePipes.add(pipe);
     }
 
+    public boolean removePipe(int id){
+        int i = 0;
+        for (BasePipe pipe : mBasePipes){
+            if (pipe.getId() == id){
+                mBasePipes.remove(i);
+                return true;
+            }
+            i++;
+        }
+        return false;
+    }
+
     public void addPipes(Collection<BasePipe> pipes) {
         mBasePipes.addAll(pipes);
     }
@@ -40,7 +53,7 @@ public class PipeSearcher {
     }
 
     private void getPreviousPipes(String input, int pointer) {
-        if (input.endsWith(".")) {
+        if (input.endsWith(Keys.PIPE)) {
             mPrevious = new Pipe.PreviousPipes(mResults, pointer);
         }
     }

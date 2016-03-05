@@ -33,13 +33,14 @@ public abstract class ActionPipe extends BasePipe{
             return null;
         }
         Pipe result = getResult();
-        result.setInstruction(new Instruction(input));
+        fulfill(result, input);
         if (!result.getSearchableName().contains(result.getInstruction().body)){
             return null;
         }
 //        result.setPrevious(prev);
         return result;
     }
+
 
     @Override
     public void load(AbsTranslator translator, OnItemsLoadedListener listener, int total){

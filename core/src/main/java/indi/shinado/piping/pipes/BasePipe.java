@@ -43,12 +43,16 @@ public abstract class BasePipe {
             Pipe.PreviousPipes previous = rs.getPrevious();
             if (!previous.isEmpty()) {
                 Pipe prev = previous.get();
-                prev.getBasePipe().execute(prev, new OutputCallback() {
-                    @Override
-                    public void onOutput(String input) {
-                        acceptInput(rs, input);
-                    }
-                }, true);
+                if (rs.ignoreInput()){
+                    acceptInput(rs, "");
+                }else{
+                    prev.getBasePipe().execute(prev, new OutputCallback() {
+                        @Override
+                        public void onOutput(String input) {
+                            acceptInput(rs, input);
+                        }
+                    }, true);
+                }
                 return;
             }
         }
@@ -59,6 +63,35 @@ public abstract class BasePipe {
         }
     }
 
+    protected void fulfill(Pipe item, String input){
+        int keyIndex = getKeyIndex(item, input);
+        item.setKeyIndex(keyIndex);
+        item.setInstruction(new Instruction(input));
+        //only set previous for the first item
+        //pass it on to next when shifting
+//            item.setPrevious(prev);
+    }
+
+    /**
+     * return the key index to be searched
+     * e.g. input "k"
+     * ["kakao", "talk"] -> 0
+     * ["we", "kite"] -> 1
+     * ["we", "chat"] -> 2
+     * so that "kakao talk" will come first
+     */
+    protected int getKeyIndex(Pipe item, String key) {
+        int i = 0;
+        //set key index
+        for (String str : item.getSearchableName().getNames()) {
+            if (str.startsWith(key)) {
+                break;
+            }
+            i++;
+        }
+
+        return i;
+    }
     public IPipeManager getPipeManager() {
         return pipeManager;
     }

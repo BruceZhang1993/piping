@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import indi.shinado.piping.launcher.impl.ConsoleHelper;
+import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.settings.Preferences;
 
 public class IOHelper {
@@ -17,12 +18,14 @@ public class IOHelper {
     public static final String KEY_BACKSPACE = "backspace";
     public static final String KEY_ENTER = "enter";
     public static final String KEY_SHIFT = "shift";
+    public static final String KEY_PARAMS = "param";
+    public static final String KEY_PIPE = "pipe";
 
 
     private boolean blockInput = false;
     private Preferences mPreferences;
     private Vibrator mVib;
-    private TextView mInputView;
+    private String mUserInput = "";
     private ConsoleHelper mConsoleHelper;
 
     public IOHelper(Context context){
@@ -36,10 +39,10 @@ public class IOHelper {
      * dang dang dang~ dang~dang~~dang~~~dang dang dang dang dang dang dang dang dang dang dang dang~~dangdangdangdangdangdangdang~~~
      */
     public void connect(IOMethod method, ConsoleHelper helper){
-        mInputView = method.getInputView();
-        setOnKeyboardListener(method.getKeyboard());
+        ViewGroup keyboard = method.getKeyboard();
+        setOnKeyboardListener(keyboard);
+        setSpecialKeys(keyboard);
         mConsoleHelper = helper;
-        setTextChangeListener(mInputView);
     }
 
     public void blockInput(){
@@ -48,25 +51,6 @@ public class IOHelper {
 
     public void releaseInput(){
         this.blockInput = false;
-    }
-
-    private void setTextChangeListener(TextView inputView) {
-        inputView.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mConsoleHelper.onUserInput(s.toString().trim(), before, count);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
     }
 
     private void setOnKeyboardListener(ViewGroup root) {
@@ -84,6 +68,13 @@ public class IOHelper {
         }
     }
 
+    private void setSpecialKeys(ViewGroup root){
+        TextView paramTv = (TextView) root.findViewWithTag(KEY_PARAMS);
+        paramTv.setText(Keys.PARAMS);
+        TextView pipeTv = (TextView) root.findViewWithTag(KEY_PIPE);
+        pipeTv.setText(Keys.PIPE);
+    }
+
     private View.OnClickListener onKeyboardListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -98,25 +89,43 @@ public class IOHelper {
         if (mPreferences.isVibrating()) {
             mVib.vibrate(5);
         }
+        int before = mUserInput.length();
         String key = (String) v.getTag();
         if (key.length() == 1) {
-            String text = mInputView.getText().toString();
-            mInputView.setText(text + key);
+            mUserInput += key;
         } else {
-            String text = mInputView.getText().toString();
-            if (key.equals(KEY_BACKSPACE)) {
-                //EditView must have something
-                if (text.length() > 0) {
-                    mInputView.setText(text.subSequence(0, text.length() - 1));
-                }
-            } else if (key.equals(KEY_SHIFT)) {
-                mConsoleHelper.onShift();
-            } else if (key.equals(KEY_SPACE)) {
-                mInputView.setText(text + " ");
-            } else if (key.equals(KEY_ENTER)) {
-                mConsoleHelper.onEnter();
+            switch (key){
+                case KEY_BACKSPACE:
+                    if (mUserInput.length() > 0) {
+                        mUserInput = mUserInput.substring(0, mUserInput.length() - 1);
+                    }
+                    break;
+                case KEY_SPACE:
+                    mUserInput += "";
+                    break;
+                case KEY_PARAMS:
+                    mUserInput += Keys.PARAMS;
+                    break;
+                case KEY_PIPE:
+                    mUserInput += Keys.PIPE;
+                    break;
+                case KEY_ENTER:
+                    mConsoleHelper.onEnter();
+                    break;
+                case KEY_SHIFT:
+                    mConsoleHelper.onShift();
+                    break;
             }
         }
+
+        mConsoleHelper.onUserInput(mUserInput, before, mUserInput.length());
     }
 
+    public void clearInput(){
+        mUserInput = "";
+    }
+
+    public String getCurrentUserInput(){
+        return mUserInput;
+    }
 }

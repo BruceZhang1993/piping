@@ -33,8 +33,8 @@ public abstract class FrequentPipe extends SearchablePipe {
      * fulfill result with frequency
      */
     @Override
-    protected void fulfill(Pipe vo, String input, Instruction value) {
-        super.fulfill(vo, input, value);
+    protected void fulfill(Pipe vo, String input) {
+        super.fulfill(vo, input);
         Integer freq = mFrequentMap.get(vo.getExecutable());
         if (freq != null) {
             vo.setFrequency(freq);

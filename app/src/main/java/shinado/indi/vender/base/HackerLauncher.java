@@ -1,5 +1,6 @@
 package shinado.indi.vender.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +11,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.shinado.piping.lock.LockService;
 
 import java.lang.ref.WeakReference;
 
@@ -28,7 +31,6 @@ import shinado.indi.vender.R;
 
 public class HackerLauncher extends BaseLauncherView implements IOMethod, DeviceConsole, Feedable {
 
-    private TextView mInputView;
     private ScrollView mScrollView;
     private ViewGroup mKeyboard;
     private HackerView mHackerView;
@@ -36,7 +38,7 @@ public class HackerLauncher extends BaseLauncherView implements IOMethod, Device
     /**
      * user input
      */
-    private String mInputText = "";
+//    private String mInputText = "";
 
     private ConsoleHelper mConsoleHelper;
 
@@ -59,12 +61,14 @@ public class HackerLauncher extends BaseLauncherView implements IOMethod, Device
 
         setupStatusBar();
         addFeedable(this);
+//        startService(new Intent(this, LockService.class));
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         mHackerView.stop();
+//        stopService(new Intent(this, LockService.class));
     }
 
     private void setupStatusBar(){
@@ -75,7 +79,6 @@ public class HackerLauncher extends BaseLauncherView implements IOMethod, Device
         mScrollView = (ScrollView) this.findViewById(R.id.scrollView);
         mKeyboard = (ViewGroup) findViewById(R.id.keyboard);
         TextView console = (TextView) this.findViewById(R.id.displayText);
-        mInputView = new TextView(this, null);
         mHackerView = new HackerView(console, this);
         mHackerView.init();
     }
@@ -94,15 +97,7 @@ public class HackerLauncher extends BaseLauncherView implements IOMethod, Device
     }
 
     private void replaceItem(boolean ignoreMatch, Pipe pipe) {
-        String value = mInputView.getText().toString();
-        if (mInputText.equals(value)) {
-            if (!ignoreMatch) {
-                return;
-            }
-        }
-        mInputText = value;
-
-        String newLine = constructDisplay(value, pipe);
+        String newLine = constructDisplay(mIOHelper.getCurrentUserInput(), pipe);
         mHackerView.replaceCurrentLine(newLine);
     }
 
@@ -135,7 +130,7 @@ public class HackerLauncher extends BaseLauncherView implements IOMethod, Device
     public void onEnter(Pipe pipe) {
         //add new line
         mHackerView.appendNewLine();
-        mInputView.setText("");
+        mIOHelper.clearInput();
         mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
@@ -170,11 +165,6 @@ public class HackerLauncher extends BaseLauncherView implements IOMethod, Device
     }
 
     @Override
-    public TextView getInputView() {
-        return mInputView;
-    }
-
-    @Override
     public ViewGroup getKeyboard() {
         return mKeyboard;
     }
@@ -182,8 +172,7 @@ public class HackerLauncher extends BaseLauncherView implements IOMethod, Device
     @Override
     public void onFeed(int flag, String msg, String pkg) {
         //clear input
-        mInputView.setText("");
-        mInputText = "";
+        mIOHelper.clearInput();
         mConsoleHelper.reset();
         mConsoleHelper.forceShow(AppManager.getAppManager().getResult(pkg + ","));
     }

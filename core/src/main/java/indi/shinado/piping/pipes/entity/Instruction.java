@@ -28,7 +28,7 @@ public class Instruction {
      * @return formatted value
      */
     public Instruction(String input){
-        int indexOfDot = input.lastIndexOf(".");
+        int indexOfDot = input.lastIndexOf(Keys.PIPE);
         String right = null;
         if (indexOfDot < 0) {
             right = input;
@@ -41,7 +41,7 @@ public class Instruction {
             }
         }
         right = input.substring(indexOfDot + 1, input.length());
-        String[] splitRight = right.split("-");
+        String[] splitRight = right.split(Keys.PARAMS);
         int splitLength = splitRight.length;
         if (splitLength > 0) {
             this.body = splitRight[0].trim();

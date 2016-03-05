@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Piping.iml" filepath="$PROJECT_DIR$/Piping.iml" />
+      <module fileurl="file://$PROJECT_DIR$/activeandroid/activeandroid.iml" filepath="$PROJECT_DIR$/activeandroid/activeandroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/dependency/dependency.iml" filepath="$PROJECT_DIR$/dependency/dependency.iml" />

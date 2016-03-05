@@ -3,6 +3,7 @@ package indi.shinado.piping.pipes.impl.action;
 import java.util.List;
 
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
+import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.impl.PipesLoader;
@@ -16,9 +17,9 @@ public class TaskPipe extends DefaultInputActionPipe{
     private static final String OPT_IDLE = "i";
 
     private static final String HELP = "Usage of " + NAME + "\n" +
-            "[application].kill to kill a running application\n" +
-            "kill -" + OPT_LS + " to list running processes\n" +
-            "kill -" + OPT_IDLE + " to print idle memories";
+            "[application]"+ Keys.PIPE +"kill to kill a running application\n" +
+            "kill " + Keys.PARAMS + OPT_LS + " to list running processes\n" +
+            "kill " + Keys.PARAMS + OPT_IDLE + " to print idle memories";
 
     private ProcessManager pm;
 

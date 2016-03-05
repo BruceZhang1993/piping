@@ -18,6 +18,7 @@ import java.util.HashMap;
 
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.Instruction;
+import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
 
@@ -122,7 +123,7 @@ public class ContactManager {
 	    
 	public Pipe getResult(String value){
 		String label = getName(value);
-		Pipe item = new Pipe( Pipe.BUILD_IN_ID_CONTACT, label, mTranslator.getName(label), value);
+		Pipe item = new Pipe(PipesLoader.ID_APPLICATION, label, mTranslator.getName(label), value);
 		item.setTypeIndex(Pipe.TYPE_SEARCHABLE);
 		return item;
 	}

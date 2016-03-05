@@ -11,17 +11,6 @@ public class Pipe implements Comparable<Pipe> {
 
     public static final int TYPE_ACTION = 10;
 
-    /**
-     * three basic type
-     */
-    public static final int BUILD_IN_ID_APP = 1;
-    public static final int BUILD_IN_ID_CONTACT = 2;
-    public static final int BUILD_IN_ID_INSTALL = 3;
-    public static final int BUILD_IN_ID_COPY = 4;
-    public static final int BUILD_IN_ID_SEARCH = 5;
-    public static final int BUILD_IN_ID_MIGHTY = 6;
-    public static final String INDICATOR = "-";
-
     private String displayName;
 
     private int id;
@@ -41,6 +30,8 @@ public class Pipe implements Comparable<Pipe> {
     private int frequency;
 
     private int typeIndex = TYPE_ACTION;
+
+    private boolean ignoreInput = false;
 
     public Pipe() {
 
@@ -165,6 +156,18 @@ public class Pipe implements Comparable<Pipe> {
 
     public void setFrequency(int frequency) {
         this.frequency = frequency;
+    }
+
+    public boolean ignoreInput() {
+        return ignoreInput;
+    }
+
+    /**
+     * when set true, the input pipe will not execute
+     * therefore it gets an empty string as input
+     */
+    public void setIgnoreInput(boolean ignoreInput) {
+        this.ignoreInput = ignoreInput;
     }
 
     @Override

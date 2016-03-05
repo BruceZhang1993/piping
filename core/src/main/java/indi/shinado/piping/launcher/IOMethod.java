@@ -6,8 +6,6 @@ import android.widget.TextView;
 
 public interface IOMethod {
 
-    public TextView getInputView();
-
     public ViewGroup getKeyboard();
 
 }

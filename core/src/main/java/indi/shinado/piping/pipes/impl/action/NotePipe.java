@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Instruction;
+import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.impl.PipesLoader;
@@ -18,10 +19,10 @@ public class NotePipe extends DefaultInputActionPipe {
     private static final String OPT_CLEAR = "c";
 
     private static final String HELP = "Usage of " + NAME + "\n" +
-            "[note].note to add a new note\n" +
-            "[index].note -" + OPT_RM + " to remove note by index\n" +
-            "note -" + OPT_LS + " to list all notes\n" +
-            "note -" + OPT_CLEAR + " to clear all notes";
+            "[note]"+ Keys.PIPE +"note to add a new note\n" +
+            "[index]"+ Keys.PIPE +"note " + Keys.PARAMS + OPT_RM + " to remove note by index\n" +
+            "note " + Keys.PARAMS + OPT_LS + " to list all notes\n" +
+            "note " + Keys.PARAMS + OPT_CLEAR + " to clear all notes";
 
     private ArrayList<String> notes = new ArrayList<>();
 

@@ -101,5 +101,7 @@
     <orderEntry type="library" exported="" scope="TEST" name="objenesis-2.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="mockable-android-23" level="project" />
     <orderEntry type="module" module-name="dependency" exported="" />
+    <orderEntry type="module" module-name="activeandroid" exported="" />
+    <orderEntry type="library" exported="" name="activeandroid-unspecified" level="project" />
   </component>
 </module>

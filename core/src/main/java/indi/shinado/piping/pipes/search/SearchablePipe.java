@@ -40,7 +40,7 @@ public abstract class SearchablePipe extends BasePipe {
         }
 
         if (length > 0) {
-            result = search(value);
+            result = search(value.body);
             push(result);
         } else if (length < 0) {
             for (int i = length; i < 0; i++) {
@@ -64,14 +64,13 @@ public abstract class SearchablePipe extends BasePipe {
      * when length == 1, fetch from map,
      * otherwise, get search from stack
      */
-    protected TreeSet<Pipe> search(Instruction value) {
+    protected TreeSet<Pipe> search(String body) {
         TreeSet<Pipe> some = new TreeSet<>();
-        String key = value.body;
-        if (key.length() == 1) {
-            ArrayList<Pipe> allItems = fetchItemsFromMap(key);
-            some = fulfill(allItems, key, value);
+        if (body.length() == 1) {
+            ArrayList<Pipe> allItems = fetchItemsFromMap(body);
+            some = fulfill(allItems, body);
         } else {
-            some = getResultFromStack(key);
+            some = getResultFromStack(body);
         }
         return some;
     }
@@ -83,7 +82,7 @@ public abstract class SearchablePipe extends BasePipe {
     /**
      * fulfill with key index and instruction
      */
-    protected TreeSet<Pipe> fulfill(ArrayList<Pipe> list, String input, Instruction value) {
+    protected TreeSet<Pipe> fulfill(ArrayList<Pipe> list, String input) {
         TreeSet<Pipe> set = new TreeSet<>();
         if (list == null) {
             return set;
@@ -91,41 +90,12 @@ public abstract class SearchablePipe extends BasePipe {
 
         //set key index for each item
         for (Pipe item : list) {
-            fulfill(item, input, value);
+            fulfill(item, input);
             set.add(item);
         }
         return set;
     }
 
-    protected void fulfill(Pipe item, String input, Instruction value){
-        int keyIndex = getKeyIndex(item, input);
-        item.setKeyIndex(keyIndex);
-        item.setInstruction(value);
-        //only set previous for the first item
-        //pass it on to next when shifting
-//            item.setPrevious(prev);
-    }
-
-    /**
-     * return the key index to be searched
-     * e.g. input "k"
-     * ["kakao", "talk"] -> 0
-     * ["we", "kite"] -> 1
-     * ["we", "chat"] -> 2
-     * so that "kakao talk" will come first
-     */
-    protected int getKeyIndex(Pipe item, String key) {
-        int i = 0;
-        //set key index
-        for (String str : item.getSearchableName().getNames()) {
-            if (str.startsWith(key)) {
-                break;
-            }
-            i++;
-        }
-
-        return i;
-    }
 
     protected TreeSet<Pipe> getResultFromStack(String key) {
         TreeSet<Pipe> some = new TreeSet<>();
