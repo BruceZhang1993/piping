@@ -10,6 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import indi.shinado.piping.launcher.impl.DeviceConsole;
 import indi.shinado.piping.launcher.impl.ConsoleHelper;
+import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.translator.EnglishTranslator;
 
@@ -39,10 +40,10 @@ public class Launcher {
     public void testSearch() {
         inputString("test");
         clear();
-        inputString("qq.test");
-        inputString("-ls");
+        inputString("qq"+ Keys.PIPE +"test");
+        inputString(Keys.PARAMS + "ls");
         clear();
-        inputString("test-ls");
+        inputString("test"+ Keys.PARAMS +"ls");
         clear();
 
         pressKey("k");
@@ -54,7 +55,7 @@ public class Launcher {
         pressKey(KEY_BACKSPACE);
         pressKey("k");
         pressKey("a");
-        pressKey(".");
+        pressKey(Keys.PIPE);
         pressKey("t");
         pressKey("e");
         pressKey("s");
@@ -63,7 +64,7 @@ public class Launcher {
 
         pressKey("k");
         pressKey("a");
-        pressKey(".");
+        pressKey(Keys.PIPE);
         pressKey("k");
         pressKey("a");
         pressKey(KEY_ENTER);
@@ -73,10 +74,19 @@ public class Launcher {
         pressKey(KEY_SHIFT);
         pressKey(KEY_SHIFT);
 
-        pressKey(".");
+        pressKey(Keys.PIPE);
         pressKey("k");
         pressKey("a");
         pressKey(KEY_SHIFT);
+        pressKey(KEY_ENTER);
+
+        pressKey("k");
+        pressKey("a");
+        pressKey(Keys.PIPE);
+        pressKey("k");
+        pressKey("a");
+        pressKey(Keys.PIPE);
+        pressKey("k");
         pressKey(KEY_ENTER);
     }
 
@@ -96,17 +106,22 @@ public class Launcher {
         if (key.length() == 1) {
             input(key);
         } else {
-            if (key.equals(KEY_BACKSPACE)) {
-                //EditView must have something
-                if (mCurrentInput.length() > 0) {
-                    mCurrentInput = mCurrentInput.substring(0, mCurrentInput.length()-1);
-                }
-            } else if (key.equals(KEY_SHIFT)) {
-                helper.onShift();
-            } else if (key.equals(KEY_SPACE)) {
-                input(key);
-            } else if (key.equals(KEY_ENTER)) {
-                helper.onEnter();
+            switch (key) {
+                case KEY_BACKSPACE:
+                    //EditView must have something
+                    if (mCurrentInput.length() > 0) {
+                        mCurrentInput = mCurrentInput.substring(0, mCurrentInput.length() - 1);
+                    }
+                    break;
+                case KEY_SHIFT:
+                    helper.onShift();
+                    break;
+                case KEY_SPACE:
+                    input(key);
+                    break;
+                case KEY_ENTER:
+                    helper.onEnter();
+                    break;
             }
         }
     }

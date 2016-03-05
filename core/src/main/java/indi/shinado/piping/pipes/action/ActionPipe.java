@@ -32,7 +32,8 @@ public abstract class ActionPipe extends BasePipe{
         if (input.isEmpty()){
             return null;
         }
-        Pipe result = getResult();
+        //create a new pipe
+        Pipe result = new Pipe(getResult());
         fulfill(result, input);
         if (!result.getSearchableName().contains(result.getInstruction().body)){
             return null;

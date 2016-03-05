@@ -29,18 +29,18 @@ public abstract class SearchablePipe extends BasePipe {
     public void search(String input, int length, SearchResultCallback callback) {
         TreeSet<Pipe> result = null;
         Instruction value = new Instruction(input);
-        //contains params
-        if (!value.isParamsEmpty()) {
-            callback.onSearchResult(null, input);
-            return;
-        }
-        if (value.isBodyEmpty()) {
-            callback.onSearchResult(null, input);
-            return;
-        }
+
+//        if (!value.isParamsEmpty()) {
+//            callback.onSearchResult(null, input);
+//            return;
+//        }
+//        if (value.isBodyEmpty()) {
+//            callback.onSearchResult(null, input);
+//            return;
+//        }
 
         if (length > 0) {
-            result = search(value.body);
+            result = search(input, value.body);
             push(result);
         } else if (length < 0) {
             for (int i = length; i < 0; i++) {
@@ -64,11 +64,11 @@ public abstract class SearchablePipe extends BasePipe {
      * when length == 1, fetch from map,
      * otherwise, get search from stack
      */
-    protected TreeSet<Pipe> search(String body) {
-        TreeSet<Pipe> some = new TreeSet<>();
+    protected TreeSet<Pipe> search(String input, String body) {
+        TreeSet<Pipe> some;
         if (body.length() == 1) {
             ArrayList<Pipe> allItems = fetchItemsFromMap(body);
-            some = fulfill(allItems, body);
+            some = fulfill(allItems, input);
         } else {
             some = getResultFromStack(body);
         }

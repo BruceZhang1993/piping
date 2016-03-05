@@ -76,6 +76,7 @@ public class ApplicationPipe extends FrequentPipe{
                     @Override
                     public void onAppChange(int flag, Pipe vo) {
                         if (flag == AppManager.OnAppChangeListener.FLAG_ADD) {
+                            vo.setBasePipe(ApplicationPipe.this);
                             putItemInMap(vo);
                             addFrequency(vo);
                         } else if (flag == AppManager.OnAppChangeListener.FLAG_REMOVE) {
