@@ -4,7 +4,7 @@ import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 
-public class TestDefaultInputActionPipe extends DefaultInputActionPipe{
+public abstract class TestDefaultInputActionPipe extends DefaultInputActionPipe{
 
     public TestDefaultInputActionPipe() {
         super(24);
@@ -38,11 +38,6 @@ public class TestDefaultInputActionPipe extends DefaultInputActionPipe{
     @Override
     public void onNoEmpty(Pipe rs, IInput input) {
         input.input("full");
-    }
-
-    @Override
-    public void acceptInput(Pipe result, String input) {
-
     }
 
 }

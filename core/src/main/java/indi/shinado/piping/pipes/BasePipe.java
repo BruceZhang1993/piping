@@ -43,13 +43,17 @@ public abstract class BasePipe {
             Pipe.PreviousPipes previous = rs.getPrevious();
             if (!previous.isEmpty()) {
                 Pipe prev = previous.get();
+                //create a new copy of previous
+                //since previous will be set null
+                //better not to get previous from rs
+                final Pipe.PreviousPipes newPrevious = new Pipe.PreviousPipes(previous);
                 if (rs.ignoreInput()){
-                    acceptInput(rs, "");
+                    acceptInput(rs, "", newPrevious);
                 }else{
                     prev.getBasePipe().execute(prev, new OutputCallback() {
                         @Override
                         public void onOutput(String input) {
-                            acceptInput(rs, input);
+                            acceptInput(rs, input, newPrevious);
                         }
                     }, true);
                 }
@@ -125,7 +129,7 @@ public abstract class BasePipe {
     /**
      * accept input from the successors of result
      */
-    public abstract void acceptInput(Pipe result, String input);
+    public abstract void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous);
 
     /**
      * get output for the next Pipe
@@ -137,14 +141,14 @@ public abstract class BasePipe {
     public abstract void load(AbsTranslator translator, OnItemsLoadedListener listener, int total);
 
     public interface OnItemsLoadedListener {
-        public void onItemsLoaded(int id, int total);
+        void onItemsLoaded(int id, int total);
     }
 
-    public static interface OutputCallback {
-        public void onOutput(String output);
+    public interface OutputCallback {
+        void onOutput(String output);
     }
 
     public interface SearchResultCallback{
-        public void onSearchResult(TreeSet<Pipe> results, String input);
+        void onSearchResult(TreeSet<Pipe> results, String input);
     }
 }

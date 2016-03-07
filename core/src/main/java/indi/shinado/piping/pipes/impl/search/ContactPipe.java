@@ -8,11 +8,12 @@ import android.support.v4.app.ActivityCompat;
 
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.FrequentPipe;
-import indi.shinado.piping.pipes.search.SearchablePipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 import indi.shinado.piping.util.android.ContactManager;
 
 public class ContactPipe extends FrequentPipe {
+
+    private ContactManager contactManager;
 
     public ContactPipe(int id) {
         super(id);
@@ -43,10 +44,8 @@ public class ContactPipe extends FrequentPipe {
 
     }
 
-    private ContactManager contactManager;
-
     @Override
-    public void acceptInput(Pipe rs, String input) {
+    public void acceptInput(Pipe rs, String input, Pipe.PreviousPipes previous) {
         String strUri = "smsto:" + rs.getExecutable();
         Uri uri = Uri.parse(strUri);
         Intent it = new Intent(Intent.ACTION_SENDTO, uri);

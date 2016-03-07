@@ -7,7 +7,6 @@ import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.impl.PipesLoader;
-import indi.shinado.piping.util.android.AppManager;
 import indi.shinado.piping.util.android.ProcessManager;
 
 public class TaskPipe extends DefaultInputActionPipe{
@@ -81,8 +80,8 @@ public class TaskPipe extends DefaultInputActionPipe{
     }
 
     @Override
-    public void acceptInput(Pipe result, String input) {
-        Pipe prev = result.getPrevious().get();
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
+        Pipe prev = previous.get();
         if (prev.getId() == PipesLoader.ID_APPLICATION) {
             if (pm == null){
                 pm = new ProcessManager(context);

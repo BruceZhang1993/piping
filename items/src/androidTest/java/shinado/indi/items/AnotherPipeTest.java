@@ -10,7 +10,6 @@ import indi.shinado.piping.pipes.search.translator.EnglishTranslator;
 
 public class AnotherPipeTest extends AndroidTestCase{
 
-    private Context context;
 
     private VirtualInput vi;
     private SystemConsole console = new SystemConsole();
@@ -18,7 +17,7 @@ public class AnotherPipeTest extends AndroidTestCase{
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        context = getContext();
+        Context context = getContext();
         ConsoleHelper helper = new ConsoleHelper(context, console, new PipesLoader(), new EnglishTranslator(context));
         vi = new VirtualInput(helper);
     }

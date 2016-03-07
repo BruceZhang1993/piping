@@ -37,10 +37,6 @@ public class HackerView {
     private String mCurrentLine = "";
 
     private boolean mBlocked = false;
-    /**
-     * user input
-     */
-    private String mInputText = "";
 
     /**
      * set true on start
@@ -63,7 +59,6 @@ public class HackerView {
 
     /**
      * type text in thread
-     * @param string
      */
     public void type(final String string) {
         new Thread() {
@@ -196,8 +191,6 @@ public class HackerView {
 
         /**
          * put string to the end of current line
-         *
-         * @param sth
          */
         private void appendCurrentLine(String sth) {
             mCurrentLine += sth;
@@ -302,7 +295,7 @@ public class HackerView {
             while (!mSystemReady) {
                 appendCurrentLine(".");
                 //clear ... if exists
-                mCurrentLine.replace("...", "");
+                mCurrentLine = mCurrentLine.replace("...", "");
                 try {
                     sleep(350);
                 } catch (InterruptedException e) {
@@ -350,6 +343,9 @@ public class HackerView {
                     break;
                 case WHAT_REPLACE_CURRENT_LINE:
                     helper.replaceCurrentLine((String) msg.obj);
+                    break;
+                default:
+                    //do nothing
                     break;
             }
         }

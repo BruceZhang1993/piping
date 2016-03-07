@@ -1,6 +1,5 @@
 package shinado.indi.vender.base;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,19 +11,17 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.shinado.piping.lock.LockService;
-
 import java.lang.ref.WeakReference;
 
 import indi.shinado.piping.feed.Feedable;
 import indi.shinado.piping.launcher.BaseLauncherView;
+import indi.shinado.piping.launcher.IOHelper;
+import indi.shinado.piping.launcher.IOMethod;
 import indi.shinado.piping.launcher.impl.ConsoleHelper;
 import indi.shinado.piping.launcher.impl.DeviceConsole;
 import indi.shinado.piping.launcher.impl.HackerView;
-import indi.shinado.piping.launcher.IOHelper;
-import indi.shinado.piping.launcher.IOMethod;
-import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.entity.Pipe;
+import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
 import indi.shinado.piping.util.android.AppManager;
 import shinado.indi.vender.R;

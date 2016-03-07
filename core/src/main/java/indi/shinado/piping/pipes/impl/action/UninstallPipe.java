@@ -49,8 +49,8 @@ public class UninstallPipe extends DefaultInputActionPipe{
     }
 
     @Override
-    public void acceptInput(Pipe result, String input) {
-        Pipe prev = result.getPrevious().get();
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
+        Pipe prev = previous.get();
         if (prev.getId() == PipesLoader.ID_APPLICATION) {
             AppManager.uninstall(context, input);
         } else {

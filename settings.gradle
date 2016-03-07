@@ -1,1 +1,1 @@
-include ':app', ':dla-lib', ':dependency', ':items', ':core', ':activeandroid'
+include ':app', ':dependency', ':items', ':core', ':activeandroid'

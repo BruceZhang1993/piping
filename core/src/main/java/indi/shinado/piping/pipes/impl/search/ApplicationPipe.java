@@ -5,7 +5,6 @@ import android.content.Intent;
 
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.FrequentPipe;
-import indi.shinado.piping.pipes.search.SearchablePipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 import indi.shinado.piping.util.android.AppManager;
 
@@ -34,7 +33,7 @@ public class ApplicationPipe extends FrequentPipe{
     }
 
     @Override
-    public void acceptInput(Pipe result, String input) {
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, input);
@@ -52,9 +51,7 @@ public class ApplicationPipe extends FrequentPipe{
     @Override
     protected void execute(Pipe rs) {
         String body = rs.getExecutable();
-        if (body.equals("android")) {
-            return;
-        } else if (body.equals("search")) {
+        if ("android".equals(body)) {
             return;
         }
         try {

@@ -1,18 +1,7 @@
 package indi.shinado.piping.pipes.action;
 
-import com.activeandroid.query.Select;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import csu.org.dependency.volley.Listener;
-import csu.org.dependency.volley.VolleyProvider;
-import indi.shinado.piping.download.DownloadImpl;
-import indi.shinado.piping.download.Downloadable;
-import indi.shinado.piping.launcher.Console;
 import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
-import indi.shinado.piping.pipes.entity.PipeEntity;
 import indi.shinado.piping.pipes.entity.SearchableName;
 
 public abstract class DefaultInputActionPipe extends ActionPipe {
@@ -123,7 +112,7 @@ public abstract class DefaultInputActionPipe extends ActionPipe {
     }
 
     public interface IInput{
-        public void input(String string);
+        void input(String string);
     }
 
 }

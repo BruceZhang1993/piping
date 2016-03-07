@@ -12,7 +12,6 @@ import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
-import indi.shinado.piping.util.CommonUtil;
 
 public class TranslatingPipe extends DefaultInputActionPipe {
 
@@ -65,7 +64,7 @@ public class TranslatingPipe extends DefaultInputActionPipe {
     }
 
     @Override
-    public void acceptInput(Pipe result, String input) {
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
         getConsole().input("install does not accept input");
     }
 
@@ -73,7 +72,7 @@ public class TranslatingPipe extends DefaultInputActionPipe {
         getConsole().blockInput();
         int salt = new Random().nextInt();
         String key = APP_ID + q + salt + KEY;
-        String sign = MD5(key);
+        String sign = getMD5(key);
 
         new VolleyProvider().handleData(String.format(URL, q, ""+salt, sign), null, Result.class,
                 new Listener.Response<Result>() {
@@ -84,7 +83,8 @@ public class TranslatingPipe extends DefaultInputActionPipe {
                             StringBuilder result = new StringBuilder("Translation for " + q + "\n");
                             for (Result.TransResult r : obj.trans_result) {
                                 try {
-                                    result.append(new String(r.dst.getBytes(), "UTF-8") + "\n");
+                                    result.append(new String(r.dst.getBytes(), "UTF-8"));
+                                    result.append("\n");
                                 } catch (UnsupportedEncodingException e) {
                                     e.printStackTrace();
                                 }
@@ -103,16 +103,16 @@ public class TranslatingPipe extends DefaultInputActionPipe {
                 });
     }
 
-    private static String MD5(String sourceStr) {
+    private static String getMD5(String sourceStr) {
         String result = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(sourceStr.getBytes());
             byte b[] = md.digest();
             int i;
-            StringBuffer buf = new StringBuffer("");
-            for (int offset = 0; offset < b.length; offset++) {
-                i = b[offset];
+            StringBuffer buf = new StringBuffer();
+            for (byte aB : b) {
+                i = aB;
                 if (i < 0)
                     i += 256;
                 if (i < 16)
@@ -121,7 +121,7 @@ public class TranslatingPipe extends DefaultInputActionPipe {
             }
             result = buf.toString();
         } catch (NoSuchAlgorithmException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return result;
     }

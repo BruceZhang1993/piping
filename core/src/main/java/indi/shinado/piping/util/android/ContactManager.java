@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import indi.shinado.piping.pipes.entity.Pipe;
-import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
@@ -138,10 +137,11 @@ public class ContactManager {
 	}
 
 	public interface OnContactChangeListener{
-		public void onContactChange();
+		void onContactChange();
 	}
 	private ArrayList<OnContactChangeListener> onContactChangeListener =
-			new ArrayList<OnContactChangeListener>();;
+			new ArrayList<>();
+
 	public void addOnContactChangeListener(OnContactChangeListener onAppChangeListener) {
 		this.onContactChangeListener.add(onAppChangeListener);
 	}

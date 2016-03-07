@@ -2,16 +2,12 @@ package com.shinado.piping;
 
 import android.content.Context;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.TreeSet;
-
-import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.search.SearchablePipe;
@@ -66,7 +62,7 @@ public class TestContactPipe extends SearchablePipe {
     }
 
     @Override
-    public void acceptInput(Pipe result, String input) {
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
         getConsole().input(result.getDisplayName() + " accepting input:" + input);
     }
 

@@ -2,7 +2,6 @@ package indi.shinado.piping.pipes.search;
 
 import java.util.TreeSet;
 
-import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
 
 public abstract class FrequentPipe extends SearchablePipe {

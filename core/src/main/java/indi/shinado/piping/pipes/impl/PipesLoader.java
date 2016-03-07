@@ -1,7 +1,6 @@
 package indi.shinado.piping.pipes.impl;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.activeandroid.query.Select;
 
@@ -12,14 +11,13 @@ import java.util.List;
 
 import dalvik.system.DexClassLoader;
 import indi.shinado.piping.GlobalDefs;
-import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.launcher.Console;
+import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.IPipesLoader;
-import indi.shinado.piping.pipes.entity.Pipe;
+import indi.shinado.piping.pipes.entity.PipeEntity;
 import indi.shinado.piping.pipes.impl.action.AppInfoPipe;
 import indi.shinado.piping.pipes.impl.action.CopyPipe;
 import indi.shinado.piping.pipes.impl.action.InstallPipe;
-import indi.shinado.piping.pipes.entity.PipeEntity;
 import indi.shinado.piping.pipes.impl.action.NotePipe;
 import indi.shinado.piping.pipes.impl.action.SearchItemPipe;
 import indi.shinado.piping.pipes.impl.action.TaskPipe;

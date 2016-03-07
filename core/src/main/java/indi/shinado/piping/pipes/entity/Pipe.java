@@ -215,7 +215,16 @@ public class Pipe implements Comparable<Pipe> {
         private int pointer;
 
         public PreviousPipes(){
+            //default
+        }
 
+        public PreviousPipes(PreviousPipes prev){
+            if (prev == null){
+                return;
+            }
+            this.previous = new TreeSet<>();
+            this.previous.addAll(prev.getPrevious());
+            this.pointer = prev.getPointer();
         }
 
         public PreviousPipes(TreeSet<Pipe> previous, int pointer){

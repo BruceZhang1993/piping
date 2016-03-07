@@ -8,8 +8,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import indi.shinado.piping.launcher.impl.DeviceConsole;
 import indi.shinado.piping.launcher.impl.ConsoleHelper;
+import indi.shinado.piping.launcher.impl.DeviceConsole;
 import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.translator.EnglishTranslator;

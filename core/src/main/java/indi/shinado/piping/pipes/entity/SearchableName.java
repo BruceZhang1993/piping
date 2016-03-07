@@ -1,6 +1,6 @@
 package indi.shinado.piping.pipes.entity;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SearchableName {
 
@@ -19,7 +19,7 @@ public class SearchableName {
     }
 
     public String toString(){
-        return name.toString();
+        return Arrays.toString(name);
     }
 
     /**

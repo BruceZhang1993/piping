@@ -87,10 +87,11 @@ public class ConsoleHelper implements IPipeManager{
     @Override
     public void addNewPipe(PipeEntity entity){
         entity.save();
+        console.blockInput();
         BasePipe pipe = mLoader.load(entity, mContext, console, mTranslator, new BasePipe.OnItemsLoadedListener() {
             @Override
             public void onItemsLoaded(int id, int total) {
-
+                console.releaseInput();
             }
         });
         pipe.setPipeManager(this);

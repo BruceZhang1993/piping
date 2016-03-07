@@ -7,7 +7,6 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/dependency/dependency.iml" filepath="$PROJECT_DIR$/dependency/dependency.iml" />
-      <module fileurl="file://$PROJECT_DIR$/dla-lib/dla-lib.iml" filepath="$PROJECT_DIR$/dla-lib/dla-lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/items/items.iml" filepath="$PROJECT_DIR$/items/items.iml" />
     </modules>
   </component>

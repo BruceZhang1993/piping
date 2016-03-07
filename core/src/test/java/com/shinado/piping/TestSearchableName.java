@@ -1,12 +1,9 @@
 package com.shinado.piping;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import indi.shinado.piping.pipes.entity.SearchableName;
-import indi.shinado.piping.pipes.search.translator.AbsTranslator;
-import indi.shinado.piping.pipes.search.translator.EnglishTranslator;
 
 public class TestSearchableName {
 

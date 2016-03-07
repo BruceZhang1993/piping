@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.Instruction;
+import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
@@ -84,8 +84,7 @@ public class AppManager {
     }
 
     private ResolveInfo getInfo(int index) {
-        ResolveInfo info = (ResolveInfo) mActivityMap.values().toArray()[index];
-        return info;
+        return (ResolveInfo) mActivityMap.values().toArray()[index];
     }
 
     public String getAppName(int index) {
@@ -127,7 +126,7 @@ public class AppManager {
 
     public void launch(String value) {
         String[] split = value.split(",");
-        ResolveInfo info = null;
+        ResolveInfo info;
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                 Intent.FLAG_ACTIVITY_NO_ANIMATION |
@@ -184,7 +183,7 @@ public class AppManager {
 
     private ResolveInfo getResolveByValue(String value) {
         String[] split = value.split(",");
-        ResolveInfo info = null;
+        ResolveInfo info;
         if (split[0].isEmpty()) {
             info = getResolveByActivity(split[1]);
         } else {
@@ -220,15 +219,14 @@ public class AppManager {
     }
 
     public interface OnAppChangeListener {
-        public int FLAG_REMOVE = 1;
-        public int FLAG_ADD = 2;
+        int FLAG_REMOVE = 1;
+        int FLAG_ADD = 2;
 
-        public void onAppChange(int flag, Pipe vo);
+        void onAppChange(int flag, Pipe vo);
     }
 
     private ArrayList<OnAppChangeListener> onAppChangeListener =
-            new ArrayList<OnAppChangeListener>();
-    ;
+            new ArrayList<>();
 
     public void addOnAppChangeListener(OnAppChangeListener onAppChangeListener) {
         this.onAppChangeListener.add(onAppChangeListener);

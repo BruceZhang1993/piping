@@ -7,8 +7,6 @@ import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
-import indi.shinado.piping.pipes.impl.PipesLoader;
-import indi.shinado.piping.util.android.AppManager;
 
 public class NotePipe extends DefaultInputActionPipe {
 
@@ -72,7 +70,9 @@ public class NotePipe extends DefaultInputActionPipe {
                 StringBuilder sb = new StringBuilder();
                 int i = 0;
                 for (String note : notes) {
-                    sb.append(i++ + "." + note);
+                    sb.append(i++);
+                    sb.append(".");
+                    sb.append(note);
                     sb.append("\n");
                 }
                 input.input(sb.toString());
@@ -104,8 +104,8 @@ public class NotePipe extends DefaultInputActionPipe {
     }
 
     @Override
-    public void acceptInput(Pipe result, String input) {
-        Pipe prev = result.getPrevious().get();
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
+        Pipe prev = previous.get();
         getConsole().input("Warning: this note is taken with the input from " + prev.getDisplayName() + ". Is that what you really want?");
         notes.add(input);
     }

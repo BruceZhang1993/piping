@@ -38,7 +38,7 @@ public class InstallPipe extends DefaultInputActionPipe{
     }
 
     @Override
-    public void acceptInput(Pipe result, String input) {
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
         getConsole().input("install does not accept input");
     }
 
@@ -98,12 +98,16 @@ public class InstallPipe extends DefaultInputActionPipe{
         params.put("option", option);
         params.put("name", value.pre);
 
-        if (option.equals(OPT_LS)) {
-            requestList(params, input);
-        } else if (option.equals(OPT_M)){
-            requestInstall(params, input);
-        } else {
-            input.input(HELP);
+        switch (option) {
+            case OPT_LS:
+                requestList(params, input);
+                break;
+            case OPT_M:
+                requestInstall(params, input);
+                break;
+            default:
+                input.input(HELP);
+                break;
         }
     }
 
@@ -149,7 +153,8 @@ public class InstallPipe extends DefaultInputActionPipe{
         sb.append("List of pipes:\n");
         int i=1;
         for (PipeEntity f : rs.list) {
-            sb.append(i + ". ");
+            sb.append(i);
+            sb.append(". ");
             sb.append(f.name);
             sb.append(" -- by ");
             sb.append(f.author);

@@ -8,7 +8,7 @@ import indi.shinado.piping.pipes.entity.SearchableName;
 
 public class SearchItemPipe extends ActionPipe {
 
-    Pipe mResult;
+    private Pipe mResult;
 
     public SearchItemPipe(int id){
         super(id);
@@ -20,8 +20,8 @@ public class SearchItemPipe extends ActionPipe {
     }
 
     @Override
-    public void acceptInput(Pipe result, String input) {
-        TreeSet<Pipe> previous = result.getPrevious().getAll();
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes prev) {
+        TreeSet<Pipe> previous = prev.getAll();
         StringBuilder sb = new StringBuilder();
         for (Pipe item : previous) {
             sb.append(item.getDisplayName());

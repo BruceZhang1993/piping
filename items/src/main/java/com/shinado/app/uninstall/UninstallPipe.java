@@ -1,6 +1,7 @@
 package com.shinado.app.uninstall;
 
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
+import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.impl.PipesLoader;
@@ -10,10 +11,11 @@ public class UninstallPipe extends DefaultInputActionPipe{
 
     private static final String NAME = "$uninstall";
     private static final String HELP = "Usage of " + NAME + "\n" +
-            "[application].uninstall to uninstall a certain application";
+            "[application]"+ Keys.PIPE +"uninstall to uninstall a certain application";
 
     public UninstallPipe(int id) {
         super(id);
+        mResult.setIgnoreInput(true);
     }
 
     @Override
@@ -47,12 +49,19 @@ public class UninstallPipe extends DefaultInputActionPipe{
     }
 
     @Override
-    public void acceptInput(Pipe result, String input) {
-        Pipe prev = result.getPrevious().get();
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
+        Pipe prev = previous.get();
         if (prev.getId() == PipesLoader.ID_APPLICATION) {
             AppManager.uninstall(context, input);
         } else {
-            getConsole().input(prev.getDisplayName() + " is not an application");
+            if (prev.getTypeIndex() == Pipe.TYPE_ACTION){
+                boolean b = getPipeManager().removePipe(prev.getId());
+                if (!b){
+                    getConsole().input("Unable to uninstall pipe.");
+                }
+            }else {
+                getConsole().input(prev.getDisplayName() + " is neither an application or an action");
+            }
         }
     }
 }

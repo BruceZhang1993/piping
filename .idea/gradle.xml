@@ -13,7 +13,6 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/dependency" />
-            <option value="$PROJECT_DIR$/dla-lib" />
             <option value="$PROJECT_DIR$/items" />
           </set>
         </option>
@@ -24,7 +23,6 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/dependency" />
-            <option value="$PROJECT_DIR$/dla-lib" />
             <option value="$PROJECT_DIR$/items" />
           </set>
         </option>

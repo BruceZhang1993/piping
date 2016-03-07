@@ -8,7 +8,7 @@ import indi.shinado.piping.pipes.entity.SearchableName;
 
 public class CopyPipe extends ActionPipe {
 
-    Pipe mResult;
+    private Pipe mResult;
 
     public CopyPipe(int id){
         super(id);
@@ -20,7 +20,7 @@ public class CopyPipe extends ActionPipe {
     }
 
     @Override
-    public void acceptInput(Pipe result, String input) {
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
         copyToClipboard(context, input);
         getConsole().input("copied to clipboard");
     }
@@ -28,6 +28,7 @@ public class CopyPipe extends ActionPipe {
     private void copyToClipboard(Context context, String text){
         int sdk = android.os.Build.VERSION.SDK_INT;
         if(sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            @SuppressWarnings("deprecation")
             android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             clipboard.setText(text);
         } else {

@@ -24,11 +24,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".base.LockView"/>
-
-        <service android:name="com.shinado.piping.lock.LockService"/>
-
-
     </application>
 
 </manifest>

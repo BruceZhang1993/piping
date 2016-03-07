@@ -4,7 +4,6 @@ import java.util.TreeSet;
 
 import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.entity.Pipe;
-import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
 public abstract class ActionPipe extends BasePipe{

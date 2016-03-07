@@ -2,6 +2,8 @@ package shinado.indi.items;
 
 import android.content.Context;
 
+import com.shinado.translate.TranslatingPipe;
+
 import java.util.ArrayList;
 
 import indi.shinado.piping.launcher.Console;
@@ -10,13 +12,8 @@ import indi.shinado.piping.pipes.IPipesLoader;
 import indi.shinado.piping.pipes.entity.PipeEntity;
 import indi.shinado.piping.pipes.search.SearchablePipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
-import com.shinado.translate.TranslatingPipe;
 
 public class PipesLoader implements IPipesLoader {
-
-    public PipesLoader(){
-
-    }
 
     @Override
     public ArrayList<BasePipe> load(Context context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener) {
