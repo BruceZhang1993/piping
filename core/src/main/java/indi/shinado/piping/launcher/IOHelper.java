@@ -19,7 +19,6 @@ public class IOHelper {
     public static final String KEY_PARAMS = "param";
     public static final String KEY_PIPE = "pipe";
 
-
     private boolean blockInput = false;
     private Preferences mPreferences;
     private Vibrator mVib;
@@ -41,6 +40,12 @@ public class IOHelper {
         setOnKeyboardListener(keyboard);
         setSpecialKeys(keyboard);
         mConsoleHelper = helper;
+        mConsoleHelper.setOnHistoryListener(new ConsoleHelper.OnHistoryListener() {
+            @Override
+            public void onHistoryInput(String history) {
+                mUserInput = history;
+            }
+        });
     }
 
     public void blockInput(){

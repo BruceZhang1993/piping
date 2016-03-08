@@ -3,6 +3,7 @@ package shinado.indi.vender.base;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -26,7 +27,7 @@ import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
 import indi.shinado.piping.util.android.AppManager;
 import shinado.indi.vender.R;
 
-public class HackerLauncher extends BaseLauncherView implements IOMethod, DeviceConsole, Feedable {
+public class HackerLauncher extends BaseLauncherView implements IOMethod, DeviceConsole, Feedable{
 
     private ScrollView mScrollView;
     private ViewGroup mKeyboard;
@@ -172,6 +173,19 @@ public class HackerLauncher extends BaseLauncherView implements IOMethod, Device
         mIOHelper.clearInput();
         mConsoleHelper.reset();
         mConsoleHelper.forceShow(AppManager.getAppManager().getResult(pkg + ","));
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                mConsoleHelper.onUpArrow();
+                return true;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                mConsoleHelper.onDownArrow();
+                return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     static class KeyboardHandler extends Handler {

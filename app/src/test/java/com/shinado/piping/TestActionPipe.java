@@ -29,8 +29,8 @@ public class TestActionPipe extends ActionPipe{
     }
 
     @Override
-    public void acceptInput(Pipe result, String input) {
-        getConsole().input(result.getDisplayName() + " accepting input:" + input);
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
+        callback.onOutput(result.getDisplayName() + " accepting input:" + input);
     }
 
     @Override

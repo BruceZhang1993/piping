@@ -62,8 +62,8 @@ public class TestContactPipe extends SearchablePipe {
     }
 
     @Override
-    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
-        getConsole().input(result.getDisplayName() + " accepting input:" + input);
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
+        callback.onOutput(result.getDisplayName() + " accepting input:" + input);
     }
 
     @Override

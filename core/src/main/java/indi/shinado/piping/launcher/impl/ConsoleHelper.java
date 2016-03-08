@@ -30,10 +30,12 @@ public class ConsoleHelper implements IPipeManager{
 
     private ArrayList<BasePipe> mPipes = new ArrayList<>();
     private ArrayList<String> mHistory = new ArrayList<>();
+    private int mHistoryPointer = 0;
 
     private TreeSet<Pipe> mResults = new TreeSet<>();
     private int mCurrentSelection = 0;
     private String mCurrentInput = "";
+    private OnHistoryListener mOnHistoryListener;
 
     public ConsoleHelper(Context context, final DeviceConsole console, final IPipesLoader loader, AbsTranslator translator) {
         this.console = console;
@@ -143,9 +145,38 @@ public class ConsoleHelper implements IPipeManager{
         Pipe current = passPreviousToNext();
         if (current != null) {
             console.onShift(current);
-        }else {
-//            onUserInput();
         }
+    }
+
+    public void onUpArrow(){
+        if (!mHistory.isEmpty()){
+            if (--mHistoryPointer < 0){
+                mHistoryPointer = mHistory.size() - 1;
+            }
+
+            onHistory();
+        }
+    }
+
+    public void onDownArrow(){
+        if (!mHistory.isEmpty()){
+            if (++mHistoryPointer >= mHistory.size()){
+                mHistoryPointer = 0;
+            }
+
+            onHistory();
+        }
+    }
+
+    private void onHistory(){
+        String history = mHistory.get(mHistoryPointer);
+        int before = mCurrentInput.length();
+
+        if(mOnHistoryListener != null){
+            mOnHistoryListener.onHistoryInput(history);
+        }
+        reset();
+        onUserInput(history, before, history.length());
     }
 
     /**
@@ -184,8 +215,9 @@ public class ConsoleHelper implements IPipeManager{
             current.getBasePipe().startExecution(current);
             current.setPrevious(null);
         }
-        reset();
         mHistory.add(mCurrentInput);
+        mHistoryPointer = mHistory.size();
+        reset();
     }
 
     private Pipe getCurrent() {
@@ -200,5 +232,12 @@ public class ConsoleHelper implements IPipeManager{
         return it.next();
     }
 
+    public void setOnHistoryListener(OnHistoryListener mOnHistoryListener) {
+        this.mOnHistoryListener = mOnHistoryListener;
+    }
+
+    public interface OnHistoryListener{
+        void onHistoryInput(String history);
+    }
 
 }

@@ -12,9 +12,10 @@ import indi.shinado.piping.pipes.entity.Pipe;
 public abstract class SearchablePipe extends BasePipe {
 
     private OnItemsLoadedListener mOnItemsLoadedListener;
-    protected HashMap<String, ArrayList<Pipe>> allItemMap = new HashMap<>();
+//    protected HashMap<String, ArrayList<Pipe>> allItemMap = new HashMap<>();
     protected Stack<TreeSet<Pipe>> resultStack =
             new Stack<>();
+    protected HashMap<String, TreeSet<Pipe>> resultMap = new HashMap<>();
 
     public SearchablePipe(int id) {
         super(id);
@@ -38,23 +39,8 @@ public abstract class SearchablePipe extends BasePipe {
 //            return;
 //        }
 
-        if (length > 0) {
-            result = search(input, value.body);
-            push(result);
-        } else if (length < 0) {
-            for (int i = length; i < 0; i++) {
-                if (!resultStack.isEmpty()) {
-                    pop();
-                }
-            }
-            if (!resultStack.empty()) {
-                result = peek();
-            }
-        } else {
-            if (!resultStack.empty()) {
-                result = peek();
-            }
-        }
+        result = search(value.body);
+
         callback.onSearchResult(result, input);
     }
 
@@ -63,25 +49,25 @@ public abstract class SearchablePipe extends BasePipe {
      * when length == 1, fetch from map,
      * otherwise, get search from stack
      */
-    protected TreeSet<Pipe> search(String input, String body) {
-        TreeSet<Pipe> some;
-        if (body.length() == 1) {
-            ArrayList<Pipe> allItems = fetchItemsFromMap(body);
-            some = fulfill(allItems, input);
-        } else {
-            some = getResultFromStack(body);
-        }
-        return some;
-    }
+//    protected TreeSet<Pipe> search(String input, String body) {
+//        TreeSet<Pipe> some;
+//        if (body.length() == 1) {
+//            ArrayList<Pipe> allItems = fetchItemsFromMap(body);
+//            some = fulfill(allItems, input);
+//        } else {
+//            some = getResultFromStack(body);
+//        }
+//        return some;
+//    }
 
-    protected ArrayList<Pipe> fetchItemsFromMap(String key) {
-        return allItemMap.get(key);
-    }
+//    protected ArrayList<Pipe> fetchItemsFromMap(String key) {
+//        return allItemMap.get(key);
+//    }
 
     /**
      * fulfill with key index and instruction
      */
-    protected TreeSet<Pipe> fulfill(ArrayList<Pipe> list, String input) {
+    protected TreeSet<Pipe> fulfill(TreeSet<Pipe> list, String input) {
         TreeSet<Pipe> set = new TreeSet<>();
         if (list == null) {
             return set;
@@ -95,6 +81,54 @@ public abstract class SearchablePipe extends BasePipe {
         return set;
     }
 
+    protected TreeSet<Pipe> search(String body){
+        String key = getKey(body);
+        if (key == null){
+            //get nothing
+            return new TreeSet<>();
+        }else{
+            TreeSet<Pipe> result = search(key, body);
+            result = fulfill(result, body);
+            return result;
+        }
+    }
+
+    private TreeSet<Pipe> search(String key, String body){
+        TreeSet<Pipe> result = new TreeSet<>();
+        TreeSet<Pipe> all = resultMap.get(key);
+        if (body.equals(key)){
+            return all;
+        }
+
+        //search
+        for (Pipe pipe : all){
+            if (pipe.getSearchableName().contains(body)){
+                result.add(pipe);
+            }
+        }
+        //put in the map
+        resultMap.put(body, result);
+        return result;
+    }
+
+    /**
+     * get the key to get from map
+     * @param body
+     * @return null if get nothing
+     */
+    protected String getKey(String body) {
+        TreeSet<Pipe> result = resultMap.get(body);
+        if (result == null){
+            if (body.length() > 1){
+                body = body.substring(0, body.length() - 1);
+                return getKey(body);
+            }else {
+                return null;
+            }
+        }else {
+            return body;
+        }
+    }
 
     protected TreeSet<Pipe> getResultFromStack(String key) {
         TreeSet<Pipe> some = new TreeSet<>();
@@ -111,12 +145,13 @@ public abstract class SearchablePipe extends BasePipe {
         return some;
     }
 
+    //TODO
     protected void removeItemInMap(Pipe vo) {
         String[] name = vo.getSearchableName().getNames();
         for (String n : name) {
             for (int i = 0; i < n.length(); i++) {
                 String c = n.charAt(i) + "";
-                ArrayList<Pipe> list = allItemMap.get(c);
+                ArrayList<Pipe> list = null;//allItemMap.get(c);
                 if (list == null) {
                     continue;
                 }
@@ -126,32 +161,33 @@ public abstract class SearchablePipe extends BasePipe {
     }
 
     /**
-     * ["face", "book"] = > ["f" -> "face", "b" -> "book"]
+     * ["face", "book"] = > ["f" -> "facebook", "b" -> "facebook"]
      */
     protected void putItemInMap(Pipe vo) {
         String[] name = vo.getSearchableName().getNames();
         for (String n : name) {
             String c = n.charAt(0) + "";
-            ArrayList<Pipe> list = allItemMap.get(c);
+            TreeSet<Pipe> list = resultMap.get(c);//allItemMap.get(c);
             if (list == null) {
-                list = new ArrayList<>();
-                allItemMap.put(c, list);
+                list = new TreeSet<>();
+                resultMap.put(c, list);
+//                allItemMap.put(c, list);
             }
             list.add(vo);
         }
     }
 
-    protected void push(TreeSet<Pipe> some) {
-        resultStack.push(some);
-    }
-
-    protected TreeSet<Pipe> peek() {
-        return resultStack.peek();
-    }
-
-    protected TreeSet<Pipe> pop() {
-        return resultStack.pop();
-    }
+//    protected void push(TreeSet<Pipe> some) {
+//        resultStack.push(some);
+//    }
+//
+//    protected TreeSet<Pipe> peek() {
+//        return resultStack.peek();
+//    }
+//
+//    protected TreeSet<Pipe> pop() {
+//        return resultStack.pop();
+//    }
 
 
 }

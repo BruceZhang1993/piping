@@ -12,6 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.TreeSet;
 
 import indi.shinado.piping.pipes.entity.Instruction;
+import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.search.SearchablePipe;
@@ -74,7 +75,7 @@ public class TestAppPipe extends SearchablePipe {
     }
 
     @Override
-    public void acceptInput(Pipe result, String input) {
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
         getConsole().input(result.getDisplayName() + " accepting input:" + input);
     }
 
@@ -90,58 +91,53 @@ public class TestAppPipe extends SearchablePipe {
 
     @Test
     public void testSearch() {
-        TreeSet<Pipe> results = search(new Instruction(""));
+        TreeSet<Pipe> results = search("");
         assertEquals(new int[]{}, results);
 
-        results = search(new Instruction("k"));
-        push(results);
-        assertEquals(new int[]{2, 1, 4, 3, 5}, results);
-
-        results = search(new Instruction("ka"));
-        push(results);
-        assertEquals(new int[]{2, 1, 4, 5}, results);
-
-        results = search(new Instruction("kak"));
-        push(results);
+        results = search("kakao");
         assertEquals(new int[]{2, 1}, results);
 
-        results = search(new Instruction("kaki"));
-        push(results);
-        assertEquals(new int[]{}, results);
-
-        //"kak"
-        pop();
-        assertEquals(new int[]{2, 1}, peek());
-
-        //"ka"
-        pop();
-        assertEquals(new int[]{2, 1, 4, 5}, peek());
-
-        //"k"
-        pop();
-        assertEquals(new int[]{2, 1, 4, 3, 5}, peek());
-
-        results = search(new Instruction("k."));
-        push(results);
-        assertEquals(new int[]{}, results);
-
-        results = search(new Instruction("k.k"));
-        push(results);
+        results = search("k");
         assertEquals(new int[]{2, 1, 4, 3, 5}, results);
+
+        results = search("ka");
+        assertEquals(new int[]{2, 1, 4, 5}, results);
+
+        results = search("kak");
+        assertEquals(new int[]{2, 1}, results);
+
+        results = search("kaki");
+        assertEquals(new int[]{}, results);
+
+        results = search("kak");
+        assertEquals(new int[]{2, 1}, results);
+
+        results = search("ka");
+        assertEquals(new int[]{2, 1, 4, 5}, results);
+
+        results = search("k");
+        assertEquals(new int[]{2, 1, 4, 3, 5}, results);
+
+        results = search("k" + Keys.PIPE);
+        assertEquals(new int[]{}, results);
+
+        results = search("kak");
+        assertEquals(new int[]{2, 1}, results);
+
+//        results = search("k" + Keys.PIPE + "k");
+//        assertEquals(new int[]{2, 1, 4, 3, 5}, results);
 
     }
 
     @Test
     public void testSearch2() {
-        TreeSet<Pipe> results = search(new Instruction(""));
+        TreeSet<Pipe> results = search("");
         assertEquals(new int[]{}, results);
 
-        results = search(new Instruction("i"));
-        push(results);
+        results = search("i");
         assertEquals(new int[]{8, 9}, results);
 
-        results = search(new Instruction("in"));
-        push(results);
+        results = search("in");
         assertEquals(new int[]{8, 9}, results);
 
     }

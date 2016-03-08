@@ -90,6 +90,13 @@ public class Launcher {
         pressKey(KEY_ENTER);
     }
 
+    @Test
+    public void testHistory(){
+        helper.onUserInput("kakao", 0, 5);
+        clear();
+        helper.onUserInput("google", 0, 6);
+    }
+
     private void inputString(String string){
         for (int i=0; i<string.length(); i++){
             char c = string.charAt(i);

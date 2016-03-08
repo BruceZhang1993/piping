@@ -20,24 +20,5 @@ public abstract class TestDefaultInputActionPipe extends DefaultInputActionPipe{
         return new SearchableName(new String[]{"test"});
     }
 
-    @Override
-    public void onEmpty(Pipe rs, IInput input) {
-        input.input("empty");
-    }
-
-    @Override
-    public void onParamsEmpty(Pipe rs, IInput input) {
-        input.input("params empty");
-    }
-
-    @Override
-    public void onPreEmpty(Pipe rs, IInput input) {
-        input.input("pre empty");
-    }
-
-    @Override
-    public void onNoEmpty(Pipe rs, IInput input) {
-        input.input("full");
-    }
 
 }

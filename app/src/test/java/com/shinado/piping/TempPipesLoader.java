@@ -23,9 +23,20 @@ public class TempPipesLoader implements IPipesLoader {
 
         TestDefaultInputActionPipe defaultPipe = new TestDefaultInputActionPipe() {
             @Override
-            public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
+            public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
                 //do nothing
             }
+
+            @Override
+            public void onParamsEmpty(Pipe rs, OutputCallback callback) {
+                //do nothing
+            }
+
+            @Override
+            public void onParamsNotEmpty(Pipe rs, OutputCallback callback) {
+                //do nothing
+            }
+
         };
         pipes.add(defaultPipe);
         register(defaultPipe, context, console, translator, listener, 2);
