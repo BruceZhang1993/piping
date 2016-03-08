@@ -10,24 +10,24 @@ public class CopyPipe extends ActionPipe {
 
     private Pipe mResult;
 
-    public CopyPipe(int id){
+    public CopyPipe(int id) {
         super(id);
         mResult = new Pipe();
         mResult.setId(id);
-        mResult.setDisplayName("$copy");
-        mResult.setSearchableName(new SearchableName(new String[]{"co", "py"}));
+        mResult.setDisplayName("$clipboard");
+        mResult.setSearchableName(new SearchableName(new String[]{"clip", "board"}));
         mResult.setBasePipe(this);
     }
 
     @Override
-    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
         copyToClipboard(context, input);
-        getConsole().input("copied to clipboard");
+        callback.onOutput(input);
     }
 
-    private void copyToClipboard(Context context, String text){
+    private void copyToClipboard(Context context, String text) {
         int sdk = android.os.Build.VERSION.SDK_INT;
-        if(sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+        if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
             @SuppressWarnings("deprecation")
             android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             clipboard.setText(text);
@@ -40,7 +40,9 @@ public class CopyPipe extends ActionPipe {
 
     @Override
     public void getOutput(Pipe result, OutputCallback callback) {
-        callback.onOutput("error, cannot get output from cp");
+        @SuppressWarnings("deprecation")
+        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        callback.onOutput(clipboard.getText().toString());
     }
 
     @Override
@@ -50,7 +52,7 @@ public class CopyPipe extends ActionPipe {
 
     @Override
     public void execute(Pipe result) {
-        getConsole().input(".cp must take an application or contact");
+        getConsole().input("$clipboard must take input or as output");
     }
 
 }

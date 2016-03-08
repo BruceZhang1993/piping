@@ -26,6 +26,7 @@ public class NotePipe extends DefaultInputActionPipe {
 
     public NotePipe(int id) {
         super(id);
+
     }
 
     @Override
@@ -39,29 +40,20 @@ public class NotePipe extends DefaultInputActionPipe {
     }
 
     @Override
-    public void onEmpty(Pipe rs, IInput input) {
-        input.input(HELP);
+    public void onParamsEmpty(Pipe rs, OutputCallback callback) {
+        callback.onOutput(HELP);
     }
 
     @Override
-    public void onParamsEmpty(Pipe rs, IInput input) {
-        addNewNote(rs.getInstruction(), input);
-    }
-
-    private void addNewNote(Instruction ins, IInput input) {
-        notes.add(ins.pre);
-    }
-
-    @Override
-    public void onPreEmpty(Pipe rs, IInput input) {
+    public void onParamsNotEmpty(Pipe rs, OutputCallback callback) {
         String[] params = rs.getInstruction().params;
         if (params.length > 1) {
-            input.input("Warning:" + NAME + " takes only one param, ignoring the rests.");
+            callback.onOutput("Warning:" + NAME + " takes only one param, ignoring the rests.");
         }
 
         switch (params[0]) {
             case OPT_RM:
-                input.input("-rm must take index of items");
+                callback.onOutput("-rm must take index of items");
                 break;
             case OPT_CLEAR:
                 notes.clear();
@@ -75,38 +67,48 @@ public class NotePipe extends DefaultInputActionPipe {
                     sb.append(note);
                     sb.append("\n");
                 }
-                input.input(sb.toString());
+                callback.onOutput(sb.toString());
+                break;
+            default:
+                callback.onOutput(HELP);
                 break;
         }
     }
 
-    @Override
-    public void onNoEmpty(Pipe rs, IInput input) {
-        String[] params = rs.getInstruction().params;
-        if (params.length > 1) {
-            input.input("Warning:" + NAME + " takes only one param, ignoring the rests.");
-        }
-
-        if (params[0].equals(OPT_RM)){
-            try {
-                int index = Integer.parseInt(params[0]);
-                if (index >= notes.size() || index < 0) {
-                    input.input("Index out of range, size " + notes.size());
-                } else {
-                    notes.remove(index);
-                }
-            } catch (NumberFormatException e) {
-                input.input("Arguments take only number");
-            }
-        }else {
-            input.input(HELP);
-        }
+    private void addNewNote(String note) {
+        notes.add(note);
     }
 
     @Override
-    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
-        Pipe prev = previous.get();
-        getConsole().input("Warning: this note is taken with the input from " + prev.getDisplayName() + ". Is that what you really want?");
-        notes.add(input);
+    public void acceptInput(Pipe rs, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
+        if (previous != null){
+            Pipe prev = previous.get();
+            callback.onOutput("Get input from " + prev.getDisplayName() + ".");
+        }
+
+        Instruction value = rs.getInstruction();
+        if (!value.isParamsEmpty()) {
+            String[] params = rs.getInstruction().params;
+            if (params.length > 1) {
+                callback.onOutput("Warning:" + NAME + " takes only one param, ignoring the rests.");
+            }
+
+            if (params[0].equals(OPT_RM)) {
+                try {
+                    int index = Integer.parseInt(params[0]);
+                    if (index >= notes.size() || index < 0) {
+                        callback.onOutput("Index out of range, size " + notes.size());
+                    } else {
+                        notes.remove(index);
+                    }
+                } catch (NumberFormatException e) {
+                    callback.onOutput("Arguments take only number");
+                }
+            } else {
+                callback.onOutput(HELP);
+            }
+        }else {
+            addNewNote(input);
+        }
     }
 }

@@ -28,6 +28,7 @@ public class ConsoleHelper implements IPipeManager{
     private Context mContext;
     private AbsTranslator mTranslator;
 
+    private ArrayList<BasePipe> mPipes = new ArrayList<>();
     private ArrayList<String> mHistory = new ArrayList<>();
 
     private TreeSet<Pipe> mResults = new TreeSet<>();
@@ -40,8 +41,8 @@ public class ConsoleHelper implements IPipeManager{
         this.mContext = context;
         this.mTranslator = translator;
 
-        ArrayList<BasePipe> pipes = new ArrayList<>();
-        pipes.addAll(loader.load(context, console, translator, new SearchablePipe.OnItemsLoadedListener() {
+        mPipes = new ArrayList<>();
+        mPipes.addAll(loader.load(context, console, translator, new SearchablePipe.OnItemsLoadedListener() {
 
             private int loadedItemsCount = 0;
 
@@ -54,8 +55,8 @@ public class ConsoleHelper implements IPipeManager{
         }));
 
         mSearcher = new PipeSearcher();
-        mSearcher.addPipes(pipes);
-        for (BasePipe pipe : pipes){
+        mSearcher.addPipes(mPipes);
+        for (BasePipe pipe : mPipes){
             pipe.setPipeManager(this);
         }
 
@@ -109,6 +110,11 @@ public class ConsoleHelper implements IPipeManager{
         }
     }
 
+    @Override
+    public ArrayList<BasePipe> getAllPipes() {
+        return mPipes;
+    }
+
     private boolean inDatabase(int id){
         PipeEntity search = new Select().from(PipeEntity.class).where("cId = ?", id).executeSingle();
         return (search != null);
@@ -137,6 +143,8 @@ public class ConsoleHelper implements IPipeManager{
         Pipe current = passPreviousToNext();
         if (current != null) {
             console.onShift(current);
+        }else {
+//            onUserInput();
         }
     }
 

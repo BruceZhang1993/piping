@@ -17,6 +17,7 @@ import indi.shinado.piping.pipes.IPipesLoader;
 import indi.shinado.piping.pipes.entity.PipeEntity;
 import indi.shinado.piping.pipes.impl.action.AppInfoPipe;
 import indi.shinado.piping.pipes.impl.action.CopyPipe;
+import indi.shinado.piping.pipes.impl.action.HelpPipe;
 import indi.shinado.piping.pipes.impl.action.InstallPipe;
 import indi.shinado.piping.pipes.impl.action.NotePipe;
 import indi.shinado.piping.pipes.impl.action.SearchItemPipe;
@@ -24,6 +25,7 @@ import indi.shinado.piping.pipes.impl.action.TaskPipe;
 import indi.shinado.piping.pipes.impl.action.UninstallPipe;
 import indi.shinado.piping.pipes.impl.search.ApplicationPipe;
 import indi.shinado.piping.pipes.impl.search.ContactPipe;
+import indi.shinado.piping.pipes.impl.search.DirectoryPipe;
 import indi.shinado.piping.pipes.search.SearchablePipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
@@ -36,13 +38,15 @@ public class PipesLoader implements IPipesLoader {
         ArrayList<BasePipe> pipes = new ArrayList<>();
         pipes.add(new ContactPipe(ID_CONTACT));
         pipes.add(new ApplicationPipe(ID_APPLICATION));
-        pipes.add(new CopyPipe(3));
-        pipes.add(new InstallPipe(4));
+        pipes.add(new InstallPipe(3));
+        pipes.add(new CopyPipe(4));
         pipes.add(new AppInfoPipe(5));
         pipes.add(new UninstallPipe(6));
         pipes.add(new NotePipe(7));
         pipes.add(new TaskPipe(8));
         pipes.add(new SearchItemPipe(9));
+        pipes.add(new DirectoryPipe(10));
+        pipes.add(new HelpPipe(11));
 
         for (BasePipe basePipe : pipes){
             register(basePipe, context, console, translator, listener, pipes.size());

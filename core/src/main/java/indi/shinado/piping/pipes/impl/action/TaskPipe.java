@@ -37,20 +37,15 @@ public class TaskPipe extends DefaultInputActionPipe{
     }
 
     @Override
-    public void onEmpty(Pipe rs, IInput input) {
-        input.input(HELP);
+    public void onParamsEmpty(Pipe rs, OutputCallback callback) {
+        callback.onOutput(HELP);
     }
 
     @Override
-    public void onParamsEmpty(Pipe rs, IInput input) {
-        input.input(HELP);
-    }
-
-    @Override
-    public void onPreEmpty(Pipe rs, IInput input) {
+    public void onParamsNotEmpty(Pipe rs, OutputCallback callback) {
         String[] params = rs.getInstruction().params;
         if (params.length > 1) {
-            input.input("Warning:" + NAME + " takes only one param, ignoring the rests.");
+            callback.onOutput("Warning:" + NAME + " takes only one param, ignoring the rests.");
         }
 
         switch (params[0]){
@@ -63,34 +58,36 @@ public class TaskPipe extends DefaultInputActionPipe{
                     sb.append(running);
                     sb.append("\n");
                 }
-                input.input(sb.toString());
+                callback.onOutput(sb.toString());
                 break;
             case OPT_IDLE:
-                input.input("idle:" + pm.getMemoSize());
+                callback.onOutput("idle:" + pm.getMemoSize());
                 break;
             default:
-                input.input(HELP);
+                callback.onOutput(HELP);
                 break;
         }
     }
 
     @Override
-    public void onNoEmpty(Pipe rs, IInput input) {
-        input.input(HELP);
-    }
-
-    @Override
-    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
-        Pipe prev = previous.get();
-        if (prev.getId() == PipesLoader.ID_APPLICATION) {
-            if (pm == null){
-                pm = new ProcessManager(context);
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
+        if (!result.getInstruction().isParamsEmpty()){
+            callback.onOutput("Parameters ignored.");
+        }
+        if (previous == null){
+            callback.onOutput("No application found");
+        }else{
+            Pipe prev = previous.get();
+            if (prev.getId() == PipesLoader.ID_APPLICATION) {
+                if (pm == null){
+                    pm = new ProcessManager(context);
+                }
+                String value = prev.getExecutable();
+                String split[] = value.split(",");
+                pm.killProcess(split[0]);
+            } else {
+                callback.onOutput(prev.getDisplayName() + " is not an application");
             }
-            String value = prev.getExecutable();
-            String split[] = value.split(",");
-            pm.killProcess(split[0]);
-        } else {
-            getConsole().input(prev.getDisplayName() + " is not an application");
         }
     }
 }

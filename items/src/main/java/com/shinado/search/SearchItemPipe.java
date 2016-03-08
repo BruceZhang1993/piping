@@ -20,14 +20,21 @@ public class SearchItemPipe extends ActionPipe {
     }
 
     @Override
-    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes prev) {
-        TreeSet<Pipe> previous = prev.getAll();
-        StringBuilder sb = new StringBuilder();
-        for (Pipe item : previous) {
-            sb.append(item.getDisplayName());
-            sb.append("\n");
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
+        if (!result.getInstruction().isParamsEmpty()){
+            callback.onOutput("Parameters ignored.");
         }
-        getConsole().input(sb.toString());
+        if (previous == null){
+            callback.onOutput("No items found");
+        }else {
+            TreeSet<Pipe> all = previous.getAll();
+            StringBuilder sb = new StringBuilder();
+            for (Pipe item : all) {
+                sb.append(item.getDisplayName());
+                sb.append("\n");
+            }
+            callback.onOutput(sb.toString());
+        }
     }
 
     @Override

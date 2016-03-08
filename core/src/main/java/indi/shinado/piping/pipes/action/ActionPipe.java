@@ -41,7 +41,6 @@ public abstract class ActionPipe extends BasePipe{
         return result;
     }
 
-
     @Override
     public void load(AbsTranslator translator, OnItemsLoadedListener listener, int total){
         listener.onItemsLoaded(getId(), total);
@@ -52,5 +51,7 @@ public abstract class ActionPipe extends BasePipe{
      */
     protected abstract Pipe getResult();
 
-
+    public String getDisplayName(){
+        return getResult().getDisplayName();
+    }
 }

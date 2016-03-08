@@ -45,7 +45,7 @@ public class ContactPipe extends FrequentPipe {
     }
 
     @Override
-    public void acceptInput(Pipe rs, String input, Pipe.PreviousPipes previous) {
+    public void acceptInput(Pipe rs, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
         String strUri = "smsto:" + rs.getExecutable();
         Uri uri = Uri.parse(strUri);
         Intent it = new Intent(Intent.ACTION_SENDTO, uri);

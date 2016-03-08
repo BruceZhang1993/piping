@@ -38,8 +38,37 @@ public class InstallPipe extends DefaultInputActionPipe{
     }
 
     @Override
-    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
-        getConsole().input("install does not accept input");
+    public void acceptInput(Pipe rs, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
+        if (previous != null){
+            Pipe prev = previous.get();
+            callback.onOutput("Get input from " + prev.getDisplayName());
+        }
+
+        Instruction value = rs.getInstruction();
+        HashMap<String, String> params = new HashMap<>();
+
+        params.put("name", input);
+        if (!value.isParamsEmpty()){
+            if (value.params.length > 1) {
+                callback.onOutput("$install only takes one param, ignoring the rest");
+            }
+            String option = value.params[0];
+            params.put("option", option);
+
+            switch (option) {
+                case OPT_LS:
+                    requestList(params, callback);
+                    break;
+                case OPT_M:
+                    requestInstall(params, callback);
+                    break;
+                default:
+                    callback.onOutput(HELP);
+                    break;
+            }
+        }else{
+            requestInstall(params, callback);
+        }
     }
 
     @Override
@@ -53,65 +82,37 @@ public class InstallPipe extends DefaultInputActionPipe{
     }
 
     @Override
-    public void onEmpty(Pipe rs, DefaultInputActionPipe.IInput input) {
-        input.input(HELP);
-    }
-
-    @Override
-    public void onParamsEmpty(Pipe rs, DefaultInputActionPipe.IInput input) {
-        HashMap<String, String> params = new HashMap<>();
-        params.put("name", rs.getInstruction().pre);
-        requestInstall(params, input);
-    }
-
-    @Override
-    public void onPreEmpty(Pipe rs, DefaultInputActionPipe.IInput input) {
+    public void onParamsNotEmpty(Pipe rs, OutputCallback callback) {
         Instruction value = rs.getInstruction();
         HashMap<String, String> params = new HashMap<>();
 
         if (value.params.length > 1) {
-            input.input("$install only takes one param, ignoring the rest");
+            callback.onOutput("$install only takes one param, ignoring the rest");
         }
         String option = value.params[0];
         params.put("option", option);
 
         if (option.equals(OPT_M)){
-            input.input("The content cannot be null for -m option");
+            callback.onOutput("The content cannot be null for -m option");
         }else {
             if (option.equals(OPT_LS)) {
-                requestList(params, input);
+                requestList(params, callback);
             }else {
-                input.input(HELP);
+                callback.onOutput(HELP);
             }
         }
     }
 
     @Override
-    public void onNoEmpty(Pipe rs, DefaultInputActionPipe.IInput input) {
-        Instruction value = rs.getInstruction();
+    public void onParamsEmpty(Pipe rs, OutputCallback callback) {
+        callback.onOutput(HELP);
+
         HashMap<String, String> params = new HashMap<>();
-
-        if (value.params.length > 1) {
-            input.input("$install only takes one param, ignoring the rest");
-        }
-        String option = value.params[0];
-        params.put("option", option);
-        params.put("name", value.pre);
-
-        switch (option) {
-            case OPT_LS:
-                requestList(params, input);
-                break;
-            case OPT_M:
-                requestInstall(params, input);
-                break;
-            default:
-                input.input(HELP);
-                break;
-        }
+        params.put("name", rs.getInstruction().pre);
+        requestInstall(params, callback);
     }
 
-    private void requestInstall(HashMap<String, String> params, final IInput input) {
+    private void requestInstall(HashMap<String, String> params, final OutputCallback callback) {
         new VolleyProvider().handleData(URL_INSTALL, params, PipeEntity.class,
                 new Listener.Response<PipeEntity>() {
 
@@ -120,18 +121,18 @@ public class InstallPipe extends DefaultInputActionPipe{
                         getConsole().releaseInput();
                         if (obj != null) {
                             if (!exist(obj)) {
-                                if (input instanceof Console) {
-                                    input.input("Item " + obj.name + "found, not to be installed.");
+                                if (callback == getConsoleCallback()) {
+                                    callback.onOutput("Item " + obj.name + "found, not to be installed.");
                                 } else {
                                     mLoader.addToQueue(obj);
                                     mLoader.start();
                                 }
                             } else {
-                                input.input("Item " + obj.name + " already exists.");
+                                callback.onOutput("Item " + obj.name + " already exists.");
                             }
 
                         } else {
-                            input.input("Item not found");
+                            callback.onOutput("Item not found");
                         }
                     }
 
@@ -143,7 +144,7 @@ public class InstallPipe extends DefaultInputActionPipe{
                 new Listener.Error() {
                     @Override
                     public void onError(String msg) {
-                        input.input(msg);
+                        callback.onOutput(msg);
                     }
                 });
     }
@@ -163,20 +164,20 @@ public class InstallPipe extends DefaultInputActionPipe{
         return sb.toString();
     }
 
-    private void requestList(HashMap<String, String> params, final IInput input) {
+    private void requestList(HashMap<String, String> params, final OutputCallback callback) {
         new VolleyProvider().handleData(URL_LIST, params, Result.class,
                 new Listener.Response<Result>() {
 
                     @Override
                     public void onResponse(Result obj) {
                         String msg = constructMessage(obj);
-                        input.input(msg);
+                        callback.onOutput(msg);
                     }
                 },
                 new Listener.Error() {
                     @Override
                     public void onError(String msg) {
-                        input.input(msg);
+                        callback.onOutput(msg);
                     }
                 });
     }

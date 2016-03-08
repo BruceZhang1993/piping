@@ -19,6 +19,14 @@ public abstract class BasePipe {
 
     protected IPipeManager pipeManager;
 
+    private OutputCallback mConsoleCallback = new OutputCallback() {
+        @Override
+        public void onOutput(String output) {
+            getConsole().releaseInput();
+            getConsole().input(output);
+        }
+    };
+
     public BasePipe(int id){
         this.id = id;
     }
@@ -28,7 +36,7 @@ public abstract class BasePipe {
     }
 
     public void startExecution(Pipe item) {
-        execute(item, null, false);
+        execute(item, mConsoleCallback, false);
     }
 
     /**
@@ -37,7 +45,7 @@ public abstract class BasePipe {
      *
      * @param hasNext if true, execute this item and get output for the next one.
      */
-    private void execute(final Pipe rs, OutputCallback callback, boolean hasNext) {
+    private void execute(final Pipe rs, final OutputCallback callback, boolean hasNext) {
         Instruction instruction = rs.getInstruction();
         if (!instruction.isPreEmpty()) {
             Pipe.PreviousPipes previous = rs.getPrevious();
@@ -48,22 +56,26 @@ public abstract class BasePipe {
                 //better not to get previous from rs
                 final Pipe.PreviousPipes newPrevious = new Pipe.PreviousPipes(previous);
                 if (rs.ignoreInput()){
-                    acceptInput(rs, "", newPrevious);
+                    acceptInput(rs, "", newPrevious, callback);
                 }else{
                     prev.getBasePipe().execute(prev, new OutputCallback() {
                         @Override
                         public void onOutput(String input) {
-                            acceptInput(rs, input, newPrevious);
+                            acceptInput(rs, input, newPrevious, callback);
                         }
                     }, true);
                 }
-                return;
+            }else{
+                //when pre is not empty
+                //take it, the plain text as input
+                acceptInput(rs, instruction.pre, null, callback);
             }
-        }
-        if (!hasNext) {
-            execute(rs);
-        } else {
-            getOutput(rs, callback);
+        }else{
+            if (!hasNext) {
+                execute(rs);
+            } else {
+                getOutput(rs, callback);
+            }
         }
     }
 
@@ -116,6 +128,10 @@ public abstract class BasePipe {
         this.context = context;
     }
 
+    public OutputCallback getConsoleCallback(){
+        return mConsoleCallback;
+    }
+
     /**
      * @param input user input
      * @param length the length of the input change, e.g.
@@ -128,14 +144,25 @@ public abstract class BasePipe {
 
     /**
      * accept input from the successors of result
+     * when this is called, pre is not empty
+     * @param result this pipe
+     * @param input  input from previous
+     * @param previous the previous items. input would be plain text from user input when it is null
+     * @param callback use callback.onOutput() to input text of execution
      */
-    public abstract void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous);
+    public abstract void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback);
 
     /**
      * get output for the next Pipe
+     * @param result this pipe
+     * @param callback use callback.onOutput() to input text of execution
      */
     public abstract void getOutput(Pipe result, OutputCallback callback);
 
+    /**
+     * execute with no previous
+     * @param rs
+     */
     protected abstract void execute(Pipe rs);
 
     public abstract void load(AbsTranslator translator, OnItemsLoadedListener listener, int total);

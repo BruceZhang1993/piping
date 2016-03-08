@@ -32,6 +32,11 @@ public class TranslatingPipe extends DefaultInputActionPipe {
     }
 
     @Override
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
+        requestTranslation(input, callback);
+    }
+
+    @Override
     public String getDisplayName() {
         return NAME;
     }
@@ -42,33 +47,18 @@ public class TranslatingPipe extends DefaultInputActionPipe {
     }
 
     @Override
-    public void onEmpty(Pipe rs, IInput input) {
-        input.input(HELP);
+    public void onParamsNotEmpty(Pipe rs, OutputCallback callback) {
+        callback.onOutput("You got to translate something, dude");
+        callback.onOutput(HELP);
     }
 
     @Override
-    public void onParamsEmpty(Pipe rs, IInput input) {
-        requestTranslation(rs.getInstruction().pre, input);
+    public void onParamsEmpty(Pipe rs, OutputCallback callback) {
+        callback.onOutput("You got to translate something, dude");
+        callback.onOutput(HELP);
     }
 
-    @Override
-    public void onPreEmpty(Pipe rs, IInput input) {
-        input.input("You got to translate something, dude");
-        input.input(HELP);
-    }
-
-    @Override
-    public void onNoEmpty(Pipe rs, IInput input) {
-        input.input(NAME + " does not take params, ignoring");
-        requestTranslation(rs.getInstruction().pre, input);
-    }
-
-    @Override
-    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
-        getConsole().input("install does not accept input");
-    }
-
-    private void requestTranslation(final String q, final IInput input) {
+    private void requestTranslation(final String q, final OutputCallback callback) {
         getConsole().blockInput();
         int salt = new Random().nextInt();
         String key = APP_ID + q + salt + KEY;
@@ -89,16 +79,16 @@ public class TranslatingPipe extends DefaultInputActionPipe {
                                     e.printStackTrace();
                                 }
                             }
-                            input.input(result.toString());
+                            callback.onOutput(result.toString());
                         } else {
-                            input.input("error");
+                            callback.onOutput("error");
                         }
                     }
                 },
                 new Listener.Error() {
                     @Override
                     public void onError(String msg) {
-                        input.input(msg);
+                        callback.onOutput(msg);
                     }
                 });
     }
@@ -110,7 +100,7 @@ public class TranslatingPipe extends DefaultInputActionPipe {
             md.update(sourceStr.getBytes());
             byte b[] = md.digest();
             int i;
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             for (byte aB : b) {
                 i = aB;
                 if (i < 0)

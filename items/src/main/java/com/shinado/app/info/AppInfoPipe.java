@@ -28,32 +28,29 @@ public class AppInfoPipe extends DefaultInputActionPipe{
     }
 
     @Override
-    public void onEmpty(Pipe rs, IInput input) {
-        input.input(HELP);
+    public void onParamsEmpty(Pipe rs, OutputCallback callback) {
+        callback.onOutput(HELP);
     }
 
     @Override
-    public void onParamsEmpty(Pipe rs, IInput input) {
-        input.input(HELP);
+    public void onParamsNotEmpty(Pipe rs, OutputCallback callback) {
+        callback.onOutput(HELP);
     }
 
     @Override
-    public void onPreEmpty(Pipe rs, IInput input) {
-        input.input(HELP);
-    }
-
-    @Override
-    public void onNoEmpty(Pipe rs, IInput input) {
-        input.input(HELP);
-    }
-
-    @Override
-    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
-        Pipe prev = previous.get();
-        if (prev.getId() == PipesLoader.ID_APPLICATION) {
-            AppManager.info(context, input);
-        } else {
-            getConsole().input(prev.getDisplayName() + " is not an application");
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
+        if (!result.getInstruction().isParamsEmpty()){
+            callback.onOutput("Parameters ignored.");
+        }
+        if (previous == null){
+            callback.onOutput("Application not found.");
+        }else{
+            Pipe prev = previous.get();
+            if (prev.getId() == PipesLoader.ID_APPLICATION) {
+                AppManager.info(context, input);
+            } else {
+                callback.onOutput(prev.getDisplayName() + " is not an application");
+            }
         }
     }
 }

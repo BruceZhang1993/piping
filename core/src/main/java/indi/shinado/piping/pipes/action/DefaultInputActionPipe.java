@@ -23,28 +23,20 @@ public abstract class DefaultInputActionPipe extends ActionPipe {
 
     @Override
     public void getOutput(Pipe result, OutputCallback callback) {
-        execute(result, new CallbackInput(callback));
+        execute(result, callback);
     }
 
     @Override
     protected void execute(Pipe rs) {
-        execute(rs, mConsoleInput);
+        execute(rs, getConsoleCallback());
     }
 
-    private void execute(Pipe rs, IInput input){
+    private void execute(Pipe rs, OutputCallback callback){
         Instruction value = rs.getInstruction();
-        if (value.isEmpty()) {
-            onEmpty(rs, input);
-        } else {
-            if (value.isParamsEmpty()) {
-                onParamsEmpty(rs, input);
-            } else {
-                if (value.isPreEmpty()) {
-                    onPreEmpty(rs, input);
-                } else {
-                    onNoEmpty(rs, input);
-                }
-            }
+        if (value.isParamsEmpty()){
+            onParamsEmpty(rs, callback);
+        }else {
+            onParamsNotEmpty(rs, callback);
         }
     }
 
@@ -60,60 +52,18 @@ public abstract class DefaultInputActionPipe extends ActionPipe {
     public abstract SearchableName getSearchable();
 
     /**
-     * when user input is empty, which contains no special characters, as "." or "-"
+     * when pre and params are both empty
      * e.g.
-     * ""
-     * "ab"
+     * "b"
      */
-    public abstract void onEmpty(Pipe rs, IInput input);
-
-    /**
-     * when params from user input is empty, while pre is not
-     * e.g.
-     * "a.b"
-     */
-    public abstract void onParamsEmpty(Pipe rs, IInput input);
+    public abstract void onParamsEmpty(Pipe rs, OutputCallback callback);
 
     /**
      * when pre from user input is empty, while params is not
      * e.g.
-     * "a -b"
+     * "b -c"
      */
-    public abstract void onPreEmpty(Pipe rs, IInput input);
-
-    /**
-     * when neither pre nor params from user input is empty
-     * e.g.
-     * "a.b -c"
-     */
-    public abstract void onNoEmpty(Pipe rs, IInput input);
-
-    protected IInput mConsoleInput = new IInput() {
-        @Override
-        public void input(String string) {
-            getConsole().input(string);
-            getConsole().releaseInput();
-        }
-    };
-
-    private class CallbackInput implements IInput{
-
-        public OutputCallback callback;
-
-        public CallbackInput(OutputCallback callback){
-            this.callback = callback;
-        }
-
-        @Override
-        public void input(String string) {
-            callback.onOutput(string);
-            getConsole().releaseInput();
-        }
-    }
-
-    public interface IInput{
-        void input(String string);
-    }
+    public abstract void onParamsNotEmpty(Pipe rs, OutputCallback callback);
 
 }
 

@@ -33,7 +33,7 @@ public class ApplicationPipe extends FrequentPipe{
     }
 
     @Override
-    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous) {
+    public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, input);
