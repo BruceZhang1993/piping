@@ -19,11 +19,11 @@ You can also install pipes in pipe store, to extend the functionality of Piping:
 
 ## More pipes
 
-Click here to see more demostration of pipes.
+Click [here](https://github.com/shinado/piping/wiki/5.-How-Piping-save-your-life) to see more demonstration of pipes.
 
 ## Contribute to pipe store
 
-You can easily write pipes and submit onto pipe store. Click here for more information. 
+You can easily write pipes and submit onto pipe store. Click [here](https://github.com/shinado/piping/wiki) for more information.
 
 ## Copyright
 
