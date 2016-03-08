@@ -1,6 +1,5 @@
 package com.shinado.example;
 
-import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;

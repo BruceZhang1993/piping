@@ -70,11 +70,10 @@ public class TranslatingPipe extends DefaultInputActionPipe {
                     @Override
                     public void onResponse(Result obj) {
                         if (obj != null) {
-                            StringBuilder result = new StringBuilder("Translation for " + q + "\n");
+                            StringBuilder result = new StringBuilder();
                             for (Result.TransResult r : obj.trans_result) {
                                 try {
                                     result.append(new String(r.dst.getBytes(), "UTF-8"));
-                                    result.append("\n");
                                 } catch (UnsupportedEncodingException e) {
                                     e.printStackTrace();
                                 }

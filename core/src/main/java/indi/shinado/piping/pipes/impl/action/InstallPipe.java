@@ -9,7 +9,6 @@ import csu.org.dependency.volley.Listener;
 import csu.org.dependency.volley.VolleyProvider;
 import indi.shinado.piping.download.DownloadImpl;
 import indi.shinado.piping.download.Downloadable;
-import indi.shinado.piping.launcher.Console;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Keys;
@@ -122,10 +121,10 @@ public class InstallPipe extends DefaultInputActionPipe{
                         if (obj != null) {
                             if (!exist(obj)) {
                                 if (callback == getConsoleCallback()) {
-                                    callback.onOutput("Item " + obj.name + "found, not to be installed.");
-                                } else {
                                     mLoader.addToQueue(obj);
                                     mLoader.start();
+                                } else {
+                                    callback.onOutput("Item " + obj.name + " found, not to be installed.");
                                 }
                             } else {
                                 callback.onOutput("Item " + obj.name + " already exists.");

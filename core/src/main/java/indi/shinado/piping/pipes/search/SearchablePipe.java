@@ -28,7 +28,6 @@ public abstract class SearchablePipe extends BasePipe {
     @Override
     public void search(String input, int length, SearchResultCallback callback) {
         TreeSet<Pipe> result = null;
-        Instruction value = new Instruction(input);
 
 //        if (!value.isParamsEmpty()) {
 //            callback.onSearchResult(null, input);
@@ -39,7 +38,7 @@ public abstract class SearchablePipe extends BasePipe {
 //            return;
 //        }
 
-        result = search(value.body);
+        result = search(input);
 
         callback.onSearchResult(result, input);
     }
@@ -81,14 +80,16 @@ public abstract class SearchablePipe extends BasePipe {
         return set;
     }
 
-    protected TreeSet<Pipe> search(String body){
+    protected TreeSet<Pipe> search(String input){
+        Instruction value = new Instruction(input);
+        String body = value.body;
         String key = getKey(body);
         if (key == null){
             //get nothing
             return new TreeSet<>();
         }else{
             TreeSet<Pipe> result = search(key, body);
-            result = fulfill(result, body);
+            result = fulfill(result, input);
             return result;
         }
     }

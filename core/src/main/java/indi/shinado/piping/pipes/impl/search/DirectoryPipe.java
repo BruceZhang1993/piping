@@ -1,7 +1,5 @@
 package indi.shinado.piping.pipes.impl.search;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Environment;
 
 import java.io.File;
