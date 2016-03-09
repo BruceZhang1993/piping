@@ -160,6 +160,9 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
             case KeyEvent.KEYCODE_VOLUME_DOWN:
                 mConsoleHelper.onDownArrow();
                 return true;
+            case KeyEvent.KEYCODE_MENU:
+                mConsoleHelper.onShift();
+                return true;
         }
         return super.onKeyDown(keyCode, event);
     }

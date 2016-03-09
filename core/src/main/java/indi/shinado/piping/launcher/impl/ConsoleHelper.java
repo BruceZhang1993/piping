@@ -68,7 +68,6 @@ public class ConsoleHelper implements IPipeManager{
             public void onResultChange(TreeSet<Pipe> results, String input, Pipe.PreviousPipes previous) {
                 System.out.println("get results from input:" + input + ", size:" + results.size());
                 mResults.addAll(results);
-                mCurrentInput = input;
 
                 if (!mResults.isEmpty()) {
                     console.displayResult(mResults.first());
@@ -136,6 +135,7 @@ public class ConsoleHelper implements IPipeManager{
     }
 
     public void onUserInput(String input, int before, int count) {
+        mCurrentInput = input;
         mResults.clear();
         mSearcher.search(input, before, count, mCurrentSelection);
         mCurrentSelection = 0;
@@ -207,17 +207,22 @@ public class ConsoleHelper implements IPipeManager{
         return getCurrent();
     }
 
-    //
     public void onEnter() {
+        addToHistory();
         Pipe current = getCurrent();
         if (current != null) {
             console.onEnter(current);
             current.getBasePipe().startExecution(current);
             current.setPrevious(null);
         }
-        mHistory.add(mCurrentInput);
-        mHistoryPointer = mHistory.size();
         reset();
+    }
+
+    private void addToHistory(){
+        if (!mCurrentInput.isEmpty()){
+            mHistory.add(mCurrentInput);
+            mHistoryPointer = mHistory.size();
+        }
     }
 
     private Pipe getCurrent() {

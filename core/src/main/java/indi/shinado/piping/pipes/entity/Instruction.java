@@ -8,15 +8,13 @@ package indi.shinado.piping.pipes.entity;
  */
 public class Instruction {
 
+    public String input;
+
     public String pre;
 
     public String body;
 
     public String[] params;
-
-    public Instruction(){
-
-    }
 
     /**
      * return formatted value from user input.
@@ -28,6 +26,7 @@ public class Instruction {
      * @return formatted value
      */
     public Instruction(String input){
+        this.input = input;
         int indexOfDot = input.lastIndexOf(Keys.PIPE);
         String right = null;
         if (indexOfDot < 0) {

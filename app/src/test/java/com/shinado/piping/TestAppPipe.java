@@ -123,8 +123,8 @@ public class TestAppPipe extends SearchablePipe {
         results = search("kak");
         assertEquals(new int[]{2, 1}, results);
 
-//        results = search("k" + Keys.PIPE + "k");
-//        assertEquals(new int[]{2, 1, 4, 3, 5}, results);
+        results = search("k " + Keys.PIPE + "k");
+        assertEquals(new int[]{2, 1, 4, 3, 5}, results);
 
     }
 

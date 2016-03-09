@@ -79,10 +79,16 @@ public class PipeSearcher {
         @Override
         public void onSearchResult(TreeSet<Pipe> results, String input) {
             if (results != null && results.size() != 0){
-                mResults.addAll(results);
+                //create a new copy of results
+                //to avoid dead nesting
+                for (Pipe pipe : results){
+                    mResults.add(new Pipe(pipe));
+                }
+//                mResults.addAll(results);
             }
+
             if (++recallTimes == mBasePipes.size()){
-                removeFirstPreviousInResult();
+                removeFirstPreviousInResult(mResults, mPrevious.get());
                 setPreviousForFirstResult();
                 notifyResultChange(mResults, input, mPrevious);
             }
@@ -98,11 +104,10 @@ public class PipeSearcher {
         }
 
         //remove the result that matches the previous
-        private void removeFirstPreviousInResult(){
-            if(!mResults.isEmpty()){
-                Pipe display = mPrevious.get();
-                if (display != null){
-                    mResults.remove(display);
+        private void removeFirstPreviousInResult(TreeSet<Pipe> result, Pipe prev){
+            if(!result.isEmpty()){
+                if (prev != null){
+                    result.remove(prev);
                 }
             }
         }

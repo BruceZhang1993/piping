@@ -23,9 +23,15 @@ public class TestValue {
         Assert.assertEquals(1, value.params.length);
         Assert.assertEquals("ls", value.params[0]);
 
-
         value = getValue(".trans");
         Assert.assertEquals(true, value.isEmpty());
+
+        value = getValue("what .trans");
+        Assert.assertEquals(false, value.isEmpty());
+        Assert.assertEquals(true, value.isParamsEmpty());
+        Assert.assertEquals(false, value.isPreEmpty());
+        Assert.assertEquals("what ", value.pre);
+        Assert.assertEquals("trans", value.body);
 
         value = getValue("what.trans");
         Assert.assertEquals(false, value.isEmpty());

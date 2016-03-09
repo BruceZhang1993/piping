@@ -82,6 +82,7 @@ public class Launcher {
 
         pressKey("k");
         pressKey("a");
+        pressKey(" ");
         pressKey(Keys.PIPE);
         pressKey("k");
         pressKey("a");
@@ -128,6 +129,7 @@ public class Launcher {
                     break;
                 case KEY_ENTER:
                     helper.onEnter();
+                    clear();
                     break;
             }
         }

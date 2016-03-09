@@ -54,6 +54,7 @@ public class InputMethodIOHelper implements IOHelper{
             @Override
             public void onHistoryInput(String history) {
                 mInputTextView.setText(history);
+                mInputTextView.setSelection(mInputTextView.getText().toString().length());
             }
         });
 
