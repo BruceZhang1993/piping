@@ -14,14 +14,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/input"
-                android:imeOptions="actionGo"
-                android:inputType="textNoSuggestions"
-                android:background="@color/transparent"
-                android:layout_width="1dp"
-                android:layout_height="1dp" />
-
             <TextView
                 android:id="@+id/status_time_tv"
                 android:text="12:12"
@@ -59,11 +51,26 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:paddingBottom="10dp"
-                android:id="@+id/displayText"
-                style="@style/geek"
-                android:text="Hello world" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:paddingBottom="10dp"
+                    android:id="@+id/displayText"
+                    style="@style/geek"
+                    android:text="Hello world" />
+
+                <EditText
+                    android:id="@+id/input"
+                    android:imeOptions="actionGo"
+                    android:inputType="textNoSuggestions"
+                    android:background="@color/transparent"
+                    android:layout_width="1dp"
+                    android:layout_height="1dp" />
+
+            </LinearLayout>
 
         </ScrollView>
 
