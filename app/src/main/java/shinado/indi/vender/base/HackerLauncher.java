@@ -64,11 +64,10 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     private void initViews() {
         mScrollView = (ScrollView) this.findViewById(R.id.scrollView);
         TextView console = (TextView) this.findViewById(R.id.displayText);
-        console.setOnTouchListener(new View.OnTouchListener() {
+        console.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
                 mIOHelper.restartInput();
-                return true;
             }
         });
         mHackerView = new HackerView(console, this);
