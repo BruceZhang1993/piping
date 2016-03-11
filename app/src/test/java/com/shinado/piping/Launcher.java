@@ -179,6 +179,12 @@ public class Launcher {
         }
 
         @Override
+        public void clear() {
+            System.out.println("clear");
+
+        }
+
+        @Override
         public void onEnter(Pipe pipe) {
             System.out.println("enter:" + pipe.getDisplayName());
         }

@@ -105,6 +105,11 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     }
 
     @Override
+    public void clear() {
+        mHackerView.clear();
+    }
+
+    @Override
     public void onEnter(Pipe pipe) {
         //add new line
         mHackerView.appendNewLine();

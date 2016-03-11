@@ -151,9 +151,9 @@ public class InstallPipe extends DefaultInputActionPipe{
     private String constructMessage(Result rs) {
         StringBuilder sb = new StringBuilder();
         sb.append("List of pipes:\n");
-        int i=1;
+        int i=0;
         for (PipeEntity f : rs.list) {
-            sb.append(i);
+            sb.append(i++);
             sb.append(". ");
             sb.append(f.name);
             sb.append(" -- by ");

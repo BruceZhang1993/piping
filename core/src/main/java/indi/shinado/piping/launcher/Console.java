@@ -2,12 +2,14 @@ package indi.shinado.piping.launcher;
 
 public interface Console {
 
-    public void input(String string);
+    void input(String string);
 
-    public void replaceCurrentLine(String line);
+    void replaceCurrentLine(String line);
 
-    public void blockInput();
+    void blockInput();
 
-    public void releaseInput();
+    void releaseInput();
+
+    void clear();
 
 }

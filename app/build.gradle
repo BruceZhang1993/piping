@@ -14,7 +14,7 @@ android {
         minSdkVersion project.ext.mMinSdkVersion
         targetSdkVersion project.ext.mTargetSdkVersion
 
-        applicationId "shinado.indi.vender"
+        applicationId "shinado.indi.piping"
         versionCode 1
         versionName "1.0"
     }
@@ -24,6 +24,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 
     testOptions {
         unitTests.returnDefaultValues = true

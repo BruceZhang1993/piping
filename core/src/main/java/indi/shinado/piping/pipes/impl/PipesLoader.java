@@ -16,6 +16,7 @@ import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.IPipesLoader;
 import indi.shinado.piping.pipes.entity.PipeEntity;
 import indi.shinado.piping.pipes.impl.action.AppInfoPipe;
+import indi.shinado.piping.pipes.impl.action.ClearPipe;
 import indi.shinado.piping.pipes.impl.action.CopyPipe;
 import indi.shinado.piping.pipes.impl.action.HelpPipe;
 import indi.shinado.piping.pipes.impl.action.InstallPipe;
@@ -45,8 +46,9 @@ public class PipesLoader implements IPipesLoader {
         pipes.add(new NotePipe(7));
         pipes.add(new TaskPipe(8));
         pipes.add(new SearchItemPipe(9));
-        pipes.add(new DirectoryPipe(10));
+//        pipes.add(new DirectoryPipe(10));
         pipes.add(new HelpPipe(11));
+        pipes.add(new ClearPipe(12));
 
         for (BasePipe basePipe : pipes){
             register(basePipe, context, console, translator, listener, pipes.size());

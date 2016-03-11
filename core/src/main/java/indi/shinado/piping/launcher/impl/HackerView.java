@@ -5,11 +5,17 @@ import android.os.Message;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
+import java.util.Arrays;
 
 import indi.shinado.piping.launcher.Console;
 import indi.shinado.piping.util.CommonUtil;
 
 public class HackerView {
+
+    private final String[] INIT_TEXT = {"wsp_stp_auth_build.bui",
+            "Account:******",
+            "Password:***************",
+            "Access granted"};
 
     /**
      * tick_
@@ -187,6 +193,17 @@ public class HackerView {
         return mHandlerHelper;
     }
 
+    public void clear() {
+        mPreviousLines = new StringBuffer();
+        for (String str : INIT_TEXT){
+            mPreviousLines.append(str);
+            mPreviousLines.append("\n");
+        }
+        mPreviousLines.append("\n");
+        mCurrentLine = "";
+        mConsole.setText(mPreviousLines.toString() + mCurrentLine);
+    }
+
     private class HandlerHelper {
 
         /**
@@ -252,11 +269,6 @@ public class HackerView {
     }
 
     private class InitTextingThread extends Thread {
-
-        private final String[] INIT_TEXT = {"wsp_stp_auth_build.bui",
-                "Account:******",
-                "Password:***************",
-                "Access granted"};
 
         @Override
         public void run() {

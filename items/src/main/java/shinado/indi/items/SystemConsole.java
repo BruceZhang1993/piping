@@ -30,6 +30,11 @@ public class SystemConsole  implements DeviceConsole {
     }
 
     @Override
+    public void clear() {
+        log("clear");
+    }
+
+    @Override
     public void onSystemReady() {
         log("onSystemReady");
     }
