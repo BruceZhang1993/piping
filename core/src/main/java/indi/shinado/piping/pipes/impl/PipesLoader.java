@@ -35,7 +35,7 @@ public class PipesLoader implements IPipesLoader {
     public static final int ID_APPLICATION = 2;
     public static final int ID_CONTACT = 1;
 
-    public ArrayList<BasePipe> loadFromLocal(Context context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener){
+    public ArrayList<BasePipe> loadFromLocal(Context context){
         ArrayList<BasePipe> pipes = new ArrayList<>();
         pipes.add(new ContactPipe(ID_CONTACT));
         pipes.add(new ApplicationPipe(ID_APPLICATION));
@@ -50,9 +50,6 @@ public class PipesLoader implements IPipesLoader {
         pipes.add(new HelpPipe(11));
         pipes.add(new ClearPipe(12));
 
-        for (BasePipe basePipe : pipes){
-            register(basePipe, context, console, translator, listener, pipes.size());
-        }
         return pipes;
     }
 
@@ -66,12 +63,11 @@ public class PipesLoader implements IPipesLoader {
         basePipe.load(translator, listener, total);
     }
 
-    public ArrayList<BasePipe> loadFromStorage(Context context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener){
+    public ArrayList<BasePipe> loadFromStorage(Context context){
         ArrayList<BasePipe> pipes = new ArrayList<>();
         List<PipeEntity> entities = new Select().all().from(PipeEntity.class).execute();
         for (PipeEntity p : entities) {
             BasePipe pipe = loadFromStorage(context, p);
-            register(pipe, context, console, translator, listener, -1);
             pipes.add(pipe);
         }
         return pipes;
@@ -80,8 +76,12 @@ public class PipesLoader implements IPipesLoader {
     @Override
     public ArrayList<BasePipe> load(Context context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener) {
         ArrayList<BasePipe> pipes = new ArrayList<>();
-        pipes.addAll(loadFromLocal(context, console, translator, listener));
-        pipes.addAll(loadFromStorage(context, console, translator, listener));
+        pipes.addAll(loadFromLocal(context));
+        pipes.addAll(loadFromStorage(context));
+
+        for (BasePipe basePipe : pipes){
+            register(basePipe, context, console, translator, listener, pipes.size());
+        }
         return pipes;
     }
 

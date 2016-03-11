@@ -5,15 +5,15 @@ import indi.shinado.piping.pipes.entity.Pipe;
 
 public interface DeviceConsole extends Console {
 
-    public void onSystemReady();
+    void onSystemReady();
 
-    public void displayResult(Pipe pipe);
+    void displayResult(Pipe pipe);
 
-    public void displayPrevious(Pipe pipe);
+    void displayPrevious(Pipe pipe);
 
-    public void onEnter(Pipe pipe);
+    void onEnter(Pipe pipe);
 
-    public void onShift(Pipe pipe);
+    void onShift(Pipe pipe);
 
-    public void onNothing();
+    void onNothing();
 }

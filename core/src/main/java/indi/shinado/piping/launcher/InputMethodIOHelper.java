@@ -80,6 +80,8 @@ public class InputMethodIOHelper implements IOHelper{
 
     @Override
     public void startInput() {
+        //wait till initiated
+        while (mInputMethodManager == null);
         mInputMethodManager.showSoftInput(mInputTextView, InputMethodManager.SHOW_IMPLICIT);
     }
 

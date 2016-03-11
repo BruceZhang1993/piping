@@ -69,7 +69,7 @@ public class DataPipe extends DefaultInputActionPipe{
             }
 
             Class[] arg  = new Class[1];
-            argClasses[0]   = boolean.class;
+            arg[0]   = boolean.class;
 
             try{
                 Method method = cmClass.getMethod("setMobileDataEnabled", arg);

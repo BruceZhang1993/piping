@@ -10,17 +10,17 @@ public interface IOHelper {
     /**
      * dang dang dang~ dang~dang~~dang~~~dang dang dang dang dang dang dang dang dang dang dang dang~~dangdangdangdangdangdangdang~~~
      */
-    public void connect(Context context, View view, ConsoleHelper helper);
+    void connect(Context context, View view, ConsoleHelper helper);
 
-    public void blockInput();
+    void blockInput();
 
-    public void releaseInput();
+    void releaseInput();
 
-    public void clearInput();
+    void clearInput();
 
-    public String getCurrentUserInput();
+    String getCurrentUserInput();
 
-    public void startInput();
+    void startInput();
 
-    public void restartInput();
+    void restartInput();
 }
