@@ -2,19 +2,23 @@
 
 ## What is Piping
 
-  Launch different. No more sliding, no more looking. Type whatever you want. Wait a second, it's more than you think. You can put two things together to make things a lot easier, like, sending Maya's profile to Play:
-  ![pipe](https://cloud.githubusercontent.com/assets/3215337/13378016/ddd69eee-de2f-11e5-9ed8-96e2e53d9545.gif)
+  Launch different. No more sliding, no more looking. Type whatever you want. Wait a second, it's more than you think. You can put two things together to make things a lot easier, like, sending Maya's profile to Play:  
+  
+  ![pipe](https://cloud.githubusercontent.com/assets/3215337/13378016/ddd69eee-de2f-11e5-9ed8-96e2e53d9545.gif)  
 
   If you have no idea what it really is, please read on.
 
-  With Piping, you can launch applications like this:
-  ![app](https://cloud.githubusercontent.com/assets/3215337/13377995/07b66204-de2f-11e5-9a6e-c4400de85c8a.gif)
+  With Piping, you can launch applications like this:  
+  
+  ![app](https://cloud.githubusercontent.com/assets/3215337/13377995/07b66204-de2f-11e5-9a6e-c4400de85c8a.gif)  
 
-  Call someone like this:
-  ![call](https://cloud.githubusercontent.com/assets/3215337/13377996/07e0dd54-de2f-11e5-8b42-02c8272e828c.gif)
+  Call someone like this:  
+  
+  ![call](https://cloud.githubusercontent.com/assets/3215337/13377996/07e0dd54-de2f-11e5-8b42-02c8272e828c.gif)  
 
-  You can also install pipes in pipe store, to extend the functionality of Piping:
-  ![install](https://cloud.githubusercontent.com/assets/3215337/13378141/50e23ac4-de35-11e5-87f2-a377f980bae6.gif)
+  You can also install pipes in pipe store, to extend the functionality of Piping:  
+  
+  ![install](https://cloud.githubusercontent.com/assets/3215337/13378141/50e23ac4-de35-11e5-87f2-a377f980bae6.gif)  
 
 ## More pipes
 
