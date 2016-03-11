@@ -1,4 +1,5 @@
 
+<div style="text-align:center"><img src="https://cloud.githubusercontent.com/assets/3215337/13703624/5d95c1ae-e7d2-11e5-8568-d90c50b9f93d.png" /></div>
 
 ## What is Piping
 
