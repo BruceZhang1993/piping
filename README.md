@@ -29,6 +29,10 @@ Click [here](https://github.com/shinado/piping/wiki/5.-How-Piping-save-your-life
 
 You can easily write pipes and submit onto pipe store. Click [here](https://github.com/shinado/piping/wiki) for more information.
 
+## Download
+
+Try it yourself in [play store](https://play.google.com/store/apps/details?id=shinado.indi.piping).
+
 ## Copyright
 
 Copyright (C) 2016 shinado <shinado023@gmail.com>
