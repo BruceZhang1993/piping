@@ -5,7 +5,6 @@ import android.os.Message;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
-import java.util.Arrays;
 
 import indi.shinado.piping.launcher.Console;
 import indi.shinado.piping.util.CommonUtil;

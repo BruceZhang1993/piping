@@ -1,7 +1,5 @@
 package indi.shinado.piping.pipes.impl.action;
 
-import android.content.Context;
-
 import indi.shinado.piping.pipes.action.ActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;

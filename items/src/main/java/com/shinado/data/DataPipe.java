@@ -5,7 +5,6 @@ import android.net.ConnectivityManager;
 
 import java.lang.reflect.Method;
 
-import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;

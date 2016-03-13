@@ -26,7 +26,6 @@ import indi.shinado.piping.pipes.impl.action.TaskPipe;
 import indi.shinado.piping.pipes.impl.action.UninstallPipe;
 import indi.shinado.piping.pipes.impl.search.ApplicationPipe;
 import indi.shinado.piping.pipes.impl.search.ContactPipe;
-import indi.shinado.piping.pipes.impl.search.DirectoryPipe;
 import indi.shinado.piping.pipes.search.SearchablePipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 

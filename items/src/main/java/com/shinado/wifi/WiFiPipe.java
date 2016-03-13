@@ -2,7 +2,6 @@ package com.shinado.wifi;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
-import android.widget.Toast;
 
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
