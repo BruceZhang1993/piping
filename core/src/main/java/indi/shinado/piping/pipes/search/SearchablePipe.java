@@ -117,15 +117,11 @@ public abstract class SearchablePipe extends BasePipe {
 
     //TODO
     protected void removeItemInMap(Pipe vo) {
-        String[] name = vo.getSearchableName().getNames();
-        for (String n : name) {
-            for (int i = 0; i < n.length(); i++) {
-                String c = n.charAt(i) + "";
-                ArrayList<Pipe> list = null;//allItemMap.get(c);
-                if (list == null) {
-                    continue;
+        for (TreeSet<Pipe> results : resultMap.values()){
+            for (Pipe result : results){
+                if (result == vo){
+                    results.remove(result);
                 }
-                list.remove(vo);
             }
         }
     }

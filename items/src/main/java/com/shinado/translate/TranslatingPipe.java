@@ -78,8 +78,10 @@ public class TranslatingPipe extends DefaultInputActionPipe {
                                     e.printStackTrace();
                                 }
                             }
+                            getConsole().releaseInput();
                             callback.onOutput(result.toString());
                         } else {
+                            getConsole().releaseInput();
                             callback.onOutput("error");
                         }
                     }
@@ -87,6 +89,7 @@ public class TranslatingPipe extends DefaultInputActionPipe {
                 new Listener.Error() {
                     @Override
                     public void onError(String msg) {
+                        getConsole().releaseInput();
                         callback.onOutput(msg);
                     }
                 });

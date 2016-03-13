@@ -37,9 +37,12 @@ public class SamplePipe extends DefaultInputActionPipe{
         new Thread(){
             public void run(){
                 //do something for long time
+                //do remember to call releaseInput() after blockInput()
                 if (callback == getConsoleCallback()){
+                    getConsole().releaseInput();
                     callback.onOutput("This will be displayed in the terminal");
                 }else{
+                    getConsole().releaseInput();
                     callback.onOutput("This will be taken as input for next pipe");
                 }
             }

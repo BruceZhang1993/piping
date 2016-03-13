@@ -22,7 +22,7 @@ public abstract class BasePipe {
     private OutputCallback mConsoleCallback = new OutputCallback() {
         @Override
         public void onOutput(String output) {
-            getConsole().releaseInput();
+//            getConsole().releaseInput();
             getConsole().input(output);
         }
     };
@@ -61,6 +61,7 @@ public abstract class BasePipe {
                     prev.getBasePipe().execute(prev, new OutputCallback() {
                         @Override
                         public void onOutput(String input) {
+//                            getConsole().releaseInput();
                             acceptInput(rs, input, newPrevious, callback);
                         }
                     }, true);
