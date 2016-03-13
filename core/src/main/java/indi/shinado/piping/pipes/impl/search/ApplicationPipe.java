@@ -2,6 +2,10 @@ package indi.shinado.piping.pipes.impl.search;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+
+import java.util.List;
 
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.FrequentPipe;
@@ -34,13 +38,26 @@ public class ApplicationPipe extends FrequentPipe{
 
     @Override
     public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, input);
+
+        PackageManager pm = context.getPackageManager();
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, input);
+
+        //looking for shareable apps
+        List<ResolveInfo> list = pm.queryIntentActivities(sharingIntent, 0);
         String[] split = result.getExecutable().split(",");
-        sendIntent.setComponent(new ComponentName(split[0], split[1]));
-        sendIntent.setType("text/plain");
-        context.startActivity(sendIntent);
+        String pkg = split[0];
+        for (ResolveInfo info : list){
+            if (pkg.equals(info.activityInfo.packageName)){
+                sharingIntent.setComponent(new ComponentName(split[0], info.activityInfo.name));
+                context.startActivity(sharingIntent);
+                return;
+            }
+        }
+
+        sharingIntent.setComponent(new ComponentName(split[0], split[1]));
+        context.startActivity(sharingIntent);
     }
 
     @Override
@@ -66,9 +83,11 @@ public class ApplicationPipe extends FrequentPipe{
     }
 
     private void refreshAppMessage(final AbsTranslator translator, final OnItemsLoadedListener listener, final int total) {
+        appManager = AppManager.getAppManager(context, translator);
+        appManager.registerReceiver();
         new Thread() {
             public void run() {
-                appManager = AppManager.getAppManager(context, translator);
+                appManager.loadApps();
                 appManager.addOnAppChangeListener(new AppManager.OnAppChangeListener() {
                     @Override
                     public void onAppChange(int flag, Pipe vo) {
@@ -93,6 +112,7 @@ public class ApplicationPipe extends FrequentPipe{
 
     }
 
+    @Override
     public void destroy() {
         if (appManager == null) {
             return;

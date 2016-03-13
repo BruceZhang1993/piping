@@ -1,6 +1,8 @@
 package indi.shinado.piping.launcher;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -10,19 +12,24 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
+
 import indi.shinado.piping.launcher.impl.ConsoleHelper;
 
 public class InputMethodIOHelper implements IOHelper{
 
     private InputMethodManager mInputMethodManager;
-    private boolean blockInput = false;
     private EditText mInputTextView;
     private Context mContext;
+    private InputTextHandler mHandler;
+    private boolean mBlockInput = false;
+    private HandlerHelper mHandlerHelper = new HandlerHelper();
 
     @Override
     public void connect(Context context, View view, final ConsoleHelper helper) {
         mInputTextView = (EditText) view;
         this.mContext = context;
+        mHandler = new InputTextHandler(this);
         mInputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         mInputTextView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -41,12 +48,14 @@ public class InputMethodIOHelper implements IOHelper{
         mInputTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
+                if (mBlockInput){
+                    return true;
+                }
                 if (actionId == EditorInfo.IME_ACTION_GO) {
                     helper.onEnter();
-                    handled = true;
+                    return true;
                 }
-                return handled;
+                return false;
             }
         });
 
@@ -60,12 +69,40 @@ public class InputMethodIOHelper implements IOHelper{
 
     }
 
+    private HandlerHelper getHandlerHelper(){
+        return mHandlerHelper;
+    }
+
     public void blockInput(){
-        this.blockInput = true;
+        mBlockInput = true;
+        if (mHandler == null){
+            return;
+        }
+        mHandler.obtainMessage(InputTextHandler.WHAT_BLOCK).sendToTarget();
     }
 
     public void releaseInput(){
-        this.blockInput = false;
+        mBlockInput = false;
+        if (mHandler == null){
+            return;
+        }
+        mHandler.obtainMessage(InputTextHandler.WHAT_RELEASE).sendToTarget();
+    }
+
+    private class HandlerHelper{
+
+        private void blockInput(){
+            if (mInputTextView != null){
+                mInputTextView.setEnabled(false);
+            }
+        }
+
+        private void releaseInput(){
+            if (mInputTextView != null){
+                mInputTextView.setEnabled(true);
+            }
+        }
+
     }
 
     @Override
@@ -90,4 +127,28 @@ public class InputMethodIOHelper implements IOHelper{
         startInput();
     }
 
+    static class InputTextHandler extends Handler{
+
+        static final int WHAT_BLOCK = 1;
+        static final int WHAT_RELEASE = 2;
+
+        private WeakReference<InputMethodIOHelper> ref;
+
+        public InputTextHandler(InputMethodIOHelper helper) {
+            ref = new WeakReference<>(helper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            HandlerHelper helper = ref.get().getHandlerHelper();
+            switch (msg.what){
+                case WHAT_BLOCK:
+                    helper.blockInput();
+                    break;
+                case WHAT_RELEASE:
+                    helper.releaseInput();
+                    break;
+            }
+        }
+    }
 }

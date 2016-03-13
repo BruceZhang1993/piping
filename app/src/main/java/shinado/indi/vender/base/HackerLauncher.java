@@ -53,6 +53,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     public void onDestroy() {
         super.onDestroy();
         mHackerView.stop();
+        mConsoleHelper.destroy();
 //        stopService(new Intent(this, LockService.class));
     }
 

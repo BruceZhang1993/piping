@@ -51,8 +51,9 @@ public class AppManager {
         }
         this.context = context;
         pm = context.getPackageManager();
-        loadApps();
+    }
 
+    public void registerReceiver(){
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_PACKAGE_ADDED);
         filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
@@ -60,7 +61,7 @@ public class AppManager {
         context.registerReceiver(mReceiver, filter);
     }
 
-    private void loadApps() {
+    public void loadApps() {
         Log.d(TAG, "start loading apps");
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -249,9 +250,6 @@ public class AppManager {
         context.startActivity(intent);
     }
 
-    /**
-     *
-     */
     public void destroy() {
         if (mTranslator != null) {
             mTranslator.destroy();

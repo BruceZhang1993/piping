@@ -116,6 +116,15 @@ public class ConsoleHelper implements IPipeManager{
         return mPipes;
     }
 
+    @Override
+    public void destroy() {
+        for (BasePipe pipe : mPipes){
+            if (pipe instanceof SearchablePipe){
+                ((SearchablePipe) pipe).destroy();
+            }
+        }
+    }
+
     private boolean inDatabase(int id){
         PipeEntity search = new Select().from(PipeEntity.class).where("cId = ?", id).executeSingle();
         return (search != null);

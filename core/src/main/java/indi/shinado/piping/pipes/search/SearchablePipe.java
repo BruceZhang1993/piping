@@ -12,7 +12,6 @@ import indi.shinado.piping.pipes.entity.Pipe;
 public abstract class SearchablePipe extends BasePipe {
 
     private OnItemsLoadedListener mOnItemsLoadedListener;
-//    protected HashMap<String, ArrayList<Pipe>> allItemMap = new HashMap<>();
     protected Stack<TreeSet<Pipe>> resultStack =
             new Stack<>();
     protected HashMap<String, TreeSet<Pipe>> resultMap = new HashMap<>();
@@ -27,41 +26,12 @@ public abstract class SearchablePipe extends BasePipe {
      */
     @Override
     public void search(String input, int length, SearchResultCallback callback) {
-        TreeSet<Pipe> result = null;
-
-//        if (!value.isParamsEmpty()) {
-//            callback.onSearchResult(null, input);
-//            return;
-//        }
-//        if (value.isBodyEmpty()) {
-//            callback.onSearchResult(null, input);
-//            return;
-//        }
+        TreeSet<Pipe> result;
 
         result = search(input);
 
         callback.onSearchResult(result, input);
     }
-
-    /**
-     * search when length > 0
-     * when length == 1, fetch from map,
-     * otherwise, get search from stack
-     */
-//    protected TreeSet<Pipe> search(String input, String body) {
-//        TreeSet<Pipe> some;
-//        if (body.length() == 1) {
-//            ArrayList<Pipe> allItems = fetchItemsFromMap(body);
-//            some = fulfill(allItems, input);
-//        } else {
-//            some = getResultFromStack(body);
-//        }
-//        return some;
-//    }
-
-//    protected ArrayList<Pipe> fetchItemsFromMap(String key) {
-//        return allItemMap.get(key);
-//    }
 
     /**
      * fulfill with key index and instruction
@@ -114,7 +84,6 @@ public abstract class SearchablePipe extends BasePipe {
 
     /**
      * get the key to get from map
-     * @param body
      * @return null if get nothing
      */
     protected String getKey(String body) {
@@ -178,17 +147,6 @@ public abstract class SearchablePipe extends BasePipe {
         }
     }
 
-//    protected void push(TreeSet<Pipe> some) {
-//        resultStack.push(some);
-//    }
-//
-//    protected TreeSet<Pipe> peek() {
-//        return resultStack.peek();
-//    }
-//
-//    protected TreeSet<Pipe> pop() {
-//        return resultStack.pop();
-//    }
-
+    public abstract void destroy();
 
 }

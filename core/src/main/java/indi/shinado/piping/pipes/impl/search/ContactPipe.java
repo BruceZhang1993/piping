@@ -20,6 +20,11 @@ public class ContactPipe extends FrequentPipe {
     }
 
     @Override
+    public void destroy() {
+        //do nothing
+    }
+
+    @Override
     public void load(final AbsTranslator translator, final OnItemsLoadedListener listener, final int total) {
         new Thread() {
             public void run() {

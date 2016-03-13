@@ -40,4 +40,5 @@ public abstract class FrequentPipe extends SearchablePipe {
             frequentItems.add(vo);
         }
     }
+
 }

@@ -6,9 +6,11 @@ import indi.shinado.piping.pipes.entity.PipeEntity;
 
 public interface IPipeManager {
 
-    public void addNewPipe(PipeEntity entity);
+    void addNewPipe(PipeEntity entity);
 
-    public boolean removePipe(int id);
+    boolean removePipe(int id);
 
-    public ArrayList<BasePipe> getAllPipes();
+    ArrayList<BasePipe> getAllPipes();
+
+    void destroy();
 }
