@@ -48,14 +48,12 @@ public class TranslatingPipe extends DefaultInputActionPipe {
 
     @Override
     public void onParamsNotEmpty(Pipe rs, OutputCallback callback) {
-        callback.onOutput("You got to translate something, dude");
-        callback.onOutput(HELP);
+        callback.onOutput("You got to translate something, dude\n" + HELP);
     }
 
     @Override
     public void onParamsEmpty(Pipe rs, OutputCallback callback) {
-        callback.onOutput("You got to translate something, dude");
-        callback.onOutput(HELP);
+        callback.onOutput("You got to translate something, dude\n" + HELP);
     }
 
     private void requestTranslation(final String q, final OutputCallback callback) {
