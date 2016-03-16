@@ -164,7 +164,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         //clear input
         mIOHelper.clearInput();
         mConsoleHelper.reset();
-        mConsoleHelper.forceShow(AppManager.getAppManager().getResult(pkg + ","));
+        mConsoleHelper.forceShow(pkg, msg);
     }
 
     @Override

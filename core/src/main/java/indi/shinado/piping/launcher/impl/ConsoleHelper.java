@@ -15,6 +15,8 @@ import indi.shinado.piping.pipes.IPipesLoader;
 import indi.shinado.piping.pipes.PipeSearcher;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.PipeEntity;
+import indi.shinado.piping.pipes.impl.PipesLoader;
+import indi.shinado.piping.pipes.impl.search.ApplicationPipe;
 import indi.shinado.piping.pipes.search.SearchablePipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
@@ -135,9 +137,11 @@ public class ConsoleHelper implements IPipeManager{
         return (search != null);
     }
 
-    public void forceShow(Pipe item){
+    public void forceShow(String pkg, String msg){
+        Pipe item = getPipe(pkg);
         mResults.clear();
         mResults.add(item);
+        console.input(msg);
         console.displayResult(item);
     }
 
@@ -263,6 +267,15 @@ public class ConsoleHelper implements IPipeManager{
         if (mCurrent != null){
             mCurrent.getBasePipe().intercept();
         }
+    }
+
+    private Pipe getPipe(String pkg){
+        for (BasePipe pipe : mPipes){
+           if (pipe instanceof ApplicationPipe){
+               return ((ApplicationPipe)pipe).getByPackageName(pkg);
+           }
+        }
+        return null;
     }
 
     public interface OnHistoryListener{

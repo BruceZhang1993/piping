@@ -7,6 +7,7 @@ import android.content.pm.ResolveInfo;
 
 import java.util.List;
 
+import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.FrequentPipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
@@ -119,5 +120,12 @@ public class ApplicationPipe extends FrequentPipe{
         }
         appManager.destroy();
         appManager = null;
+    }
+
+    public Pipe getByPackageName(String pkg){
+        Pipe item = appManager.getResult(pkg + ",");
+        item.setBasePipe(this);
+        item.setInstruction(new Instruction(""));
+        return item;
     }
 }
