@@ -129,9 +129,10 @@ public class AppManager {
         String[] split = value.split(",");
         ResolveInfo info;
         Intent intent = new Intent();
+        //with FLAG_ACTIVITY_MULTIPLE_TASK, QQLite would not launch occasionally
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                Intent.FLAG_ACTIVITY_NO_ANIMATION |
-                Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                Intent.FLAG_ACTIVITY_NO_ANIMATION  /** | Intent.FLAG_ACTIVITY_MULTIPLE_TASK **/
+        );
 
         if (split[0].isEmpty() && !split[1].isEmpty()) {
             info = getResolveByActivity(split[1]);
