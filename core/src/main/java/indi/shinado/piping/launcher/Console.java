@@ -12,4 +12,7 @@ public interface Console {
 
     void clear();
 
+    //introduced from version 3
+    void intercept();
+
 }

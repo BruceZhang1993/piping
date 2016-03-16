@@ -6,6 +6,7 @@ import com.shinado.app.info.AppInfoPipe;
 import com.shinado.app.task.TaskPipe;
 import com.shinado.app.uninstall.UninstallPipe;
 import com.shinado.copy.CopyPipe;
+import com.shinado.diary.DiaryPipe;
 import com.shinado.example.SamplePipe;
 import com.shinado.note.NotePipe;
 import com.shinado.search.SearchItemPipe;
@@ -40,6 +41,7 @@ public class PipesLoader implements IPipesLoader {
         pipes.add(new NotePipe(7));
         pipes.add(new TaskPipe(8));
         pipes.add(new SearchItemPipe(9));
+        pipes.add(new DiaryPipe(10));
         pipes.add(new TranslatingPipe(100));
 
         for (BasePipe basePipe : pipes){

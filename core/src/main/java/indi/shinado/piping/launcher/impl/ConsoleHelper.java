@@ -33,6 +33,11 @@ public class ConsoleHelper implements IPipeManager{
     private int mHistoryPointer = 0;
 
     private TreeSet<Pipe> mResults = new TreeSet<>();
+
+    //introduced in version 3
+    //to receive interception
+    private Pipe mCurrent;
+
     private int mCurrentSelection = 0;
     private String mCurrentInput = "";
     private OnHistoryListener mOnHistoryListener;
@@ -223,6 +228,7 @@ public class ConsoleHelper implements IPipeManager{
             console.onEnter(current);
             current.getBasePipe().startExecution(current);
             current.setPrevious(null);
+            mCurrent = current;
         }
         reset();
     }
@@ -248,6 +254,15 @@ public class ConsoleHelper implements IPipeManager{
 
     public void setOnHistoryListener(OnHistoryListener mOnHistoryListener) {
         this.mOnHistoryListener = mOnHistoryListener;
+    }
+
+    //introduced from version 3
+    public void intercept() {
+        console.intercept();
+
+        if (mCurrent != null){
+            mCurrent.getBasePipe().intercept();
+        }
     }
 
     public interface OnHistoryListener{

@@ -1,10 +1,13 @@
 package indi.shinado.piping.pipes.impl.action;
 
 import com.activeandroid.query.Select;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import csu.org.dependency.volley.DefaultApplication;
 import csu.org.dependency.volley.Listener;
 import csu.org.dependency.volley.VolleyProvider;
 import indi.shinado.piping.download.DownloadImpl;
@@ -111,7 +114,18 @@ public class InstallPipe extends DefaultInputActionPipe{
         requestInstall(params, callback);
     }
 
+    @Override
+    public void intercept() {
+        DefaultApplication.getInstance().getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
+            @Override
+            public boolean apply(Request<?> request) {
+                return true;
+            }
+        });
+    }
+
     private void requestInstall(HashMap<String, String> params, final OutputCallback callback) {
+        getConsole().blockInput();
         new VolleyProvider().handleData(URL_INSTALL, params, PipeEntity.class,
                 new Listener.Response<PipeEntity>() {
 
@@ -143,6 +157,7 @@ public class InstallPipe extends DefaultInputActionPipe{
                 new Listener.Error() {
                     @Override
                     public void onError(String msg) {
+                        getConsole().releaseInput();
                         callback.onOutput(msg);
                     }
                 });
@@ -164,18 +179,21 @@ public class InstallPipe extends DefaultInputActionPipe{
     }
 
     private void requestList(HashMap<String, String> params, final OutputCallback callback) {
+        getConsole().blockInput();
         new VolleyProvider().handleData(URL_LIST, params, Result.class,
                 new Listener.Response<Result>() {
 
                     @Override
                     public void onResponse(Result obj) {
                         String msg = constructMessage(obj);
+                        getConsole().releaseInput();
                         callback.onOutput(msg);
                     }
                 },
                 new Listener.Error() {
                     @Override
                     public void onError(String msg) {
+                        getConsole().releaseInput();
                         callback.onOutput(msg);
                     }
                 });

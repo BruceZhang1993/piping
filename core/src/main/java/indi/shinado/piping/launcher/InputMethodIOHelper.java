@@ -75,18 +75,18 @@ public class InputMethodIOHelper implements IOHelper{
 
     public void blockInput(){
         mBlockInput = true;
-//        if (mHandler == null){
-//            return;
-//        }
-//        mHandler.obtainMessage(InputTextHandler.WHAT_BLOCK).sendToTarget();
+        if (mHandler == null){
+            return;
+        }
+        mHandler.obtainMessage(InputTextHandler.WHAT_BLOCK).sendToTarget();
     }
 
     public void releaseInput(){
         mBlockInput = false;
-//        if (mHandler == null){
-//            return;
-//        }
-//        mHandler.obtainMessage(InputTextHandler.WHAT_RELEASE).sendToTarget();
+        if (mHandler == null){
+            return;
+        }
+        mHandler.obtainMessage(InputTextHandler.WHAT_RELEASE).sendToTarget();
     }
 
     private class HandlerHelper{

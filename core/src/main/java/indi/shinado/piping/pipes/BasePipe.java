@@ -97,15 +97,20 @@ public abstract class BasePipe {
      * ["we", "chat"] -> 2
      * so that "kakao talk" will come first
      */
-    protected int getKeyIndex(Pipe item, String key) {
+    public int getKeyIndex(Pipe item, String key) {
         int i = 0;
         //set key index
         for (String str : item.getSearchableName().getNames()) {
             if (str.startsWith(key)) {
                 break;
             }
+            if (key.startsWith(str)){
+                i = getKeyIndex(item, key.replace(str, ""));
+                break;
+            }
             i++;
         }
+
 
         return i;
     }
@@ -167,6 +172,13 @@ public abstract class BasePipe {
     protected abstract void execute(Pipe rs);
 
     public abstract void load(AbsTranslator translator, OnItemsLoadedListener listener, int total);
+
+    //added in 2016--03-16
+    //intercept
+    //since version 3
+    public  void intercept(){
+
+    }
 
     public interface OnItemsLoadedListener {
         void onItemsLoaded(int id, int total);

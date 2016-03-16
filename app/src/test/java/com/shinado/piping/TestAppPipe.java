@@ -44,6 +44,10 @@ public class TestAppPipe extends SearchablePipe {
         add("candy", translator, 7);
         add("$install", new String[]{"ins", "tall"}, 8);
         add("uninstall", new String[]{"un", "ins", "tall"}, 9);
+        add("lanya", new String[]{"lan", "ya"}, 10);
+        add("langyisiting", new String[]{"lang", "yi", "si", "ting"}, 11);
+        add("message", new String[]{"me", "s", "sa", "ge"}, 12);
+        add("themes", new String[]{"t", "h", "e", "me", "s"}, 13);
 
         new Thread() {
             public void run() {
@@ -147,5 +151,10 @@ public class TestAppPipe extends SearchablePipe {
         for (Pipe item : actual) {
             Assert.assertEquals(expected[i++], item.getId());
         }
+    }
+
+    @Override
+    public void destroy() {
+
     }
 }

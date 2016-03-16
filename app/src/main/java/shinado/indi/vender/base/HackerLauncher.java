@@ -68,6 +68,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
             @Override
             public void onClick(View v) {
                 mIOHelper.restartInput();
+                mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
             }
         });
         mHackerView = new HackerView(console, this);
@@ -107,6 +108,11 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     @Override
     public void clear() {
         mHackerView.clear();
+    }
+
+    @Override
+    public void intercept() {
+        releaseInput();
     }
 
     @Override
@@ -158,17 +164,26 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
-            case KeyEvent.KEYCODE_VOLUME_UP:
-                mConsoleHelper.onUpArrow();
-                return true;
-            case KeyEvent.KEYCODE_VOLUME_DOWN:
-                mConsoleHelper.onDownArrow();
-                return true;
             case KeyEvent.KEYCODE_MENU:
                 mConsoleHelper.onShift();
                 return true;
+            case KeyEvent.KEYCODE_BACK:
+                mConsoleHelper.onUpArrow();
+                return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void resume(boolean flag) {
+        if (!flag){
+            mConsoleHelper.intercept();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        return;
     }
 
 }

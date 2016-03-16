@@ -80,4 +80,9 @@ public class TestContactPipe extends SearchablePipe {
     public void doNothing(){
 
     }
+
+    @Override
+    public void destroy() {
+
+    }
 }
