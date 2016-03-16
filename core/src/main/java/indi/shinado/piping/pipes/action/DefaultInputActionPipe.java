@@ -1,5 +1,9 @@
 package indi.shinado.piping.pipes.action;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+
+import csu.org.dependency.volley.DefaultApplication;
 import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
@@ -29,6 +33,11 @@ public abstract class DefaultInputActionPipe extends ActionPipe {
     @Override
     protected void execute(Pipe rs) {
         execute(rs, getConsoleCallback());
+    }
+
+    @Override
+    public void intercept() {
+        DefaultApplication.getInstance().getRequestQueue().cancelAll(DefaultApplication.TAG);
     }
 
     private void execute(Pipe rs, OutputCallback callback){

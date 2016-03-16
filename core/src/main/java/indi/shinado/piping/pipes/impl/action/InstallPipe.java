@@ -114,16 +114,6 @@ public class InstallPipe extends DefaultInputActionPipe{
         requestInstall(params, callback);
     }
 
-    @Override
-    public void intercept() {
-        DefaultApplication.getInstance().getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
-            @Override
-            public boolean apply(Request<?> request) {
-                return true;
-            }
-        });
-    }
-
     private void requestInstall(HashMap<String, String> params, final OutputCallback callback) {
         getConsole().blockInput();
         new VolleyProvider().handleData(URL_INSTALL, params, PipeEntity.class,

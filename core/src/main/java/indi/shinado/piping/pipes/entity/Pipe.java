@@ -175,10 +175,10 @@ public class Pipe implements Comparable<Pipe> {
     @Override
     public int compareTo(@NonNull Pipe another) {
         //search results always ahead of action
-        int compare = another.typeIndex - typeIndex;
+//        int compare = another.typeIndex - typeIndex;
         //same type
-        if (compare == 0) {
-            compare = keyIndex - another.keyIndex;
+//        if (compare == 0) {
+            int compare = keyIndex - another.keyIndex;
 
             //same key index
             if (compare == 0) {
@@ -189,7 +189,7 @@ public class Pipe implements Comparable<Pipe> {
                     compare = another.getDisplayName().compareTo(displayName);
                 }
             }
-        }
+//        }
         return compare;
     }
 

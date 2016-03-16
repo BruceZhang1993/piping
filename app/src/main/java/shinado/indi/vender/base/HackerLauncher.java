@@ -1,6 +1,7 @@
 package shinado.indi.vender.base;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ScrollView;
@@ -68,7 +69,12 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
             @Override
             public void onClick(View v) {
                 mIOHelper.restartInput();
-                mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                    }
+                }, 800);
             }
         });
         mHackerView = new HackerView(console, this);
