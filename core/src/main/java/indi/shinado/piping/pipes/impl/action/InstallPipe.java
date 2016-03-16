@@ -108,10 +108,6 @@ public class InstallPipe extends DefaultInputActionPipe{
     @Override
     public void onParamsEmpty(Pipe rs, OutputCallback callback) {
         callback.onOutput(HELP);
-
-        HashMap<String, String> params = new HashMap<>();
-        params.put("name", rs.getInstruction().pre);
-        requestInstall(params, callback);
     }
 
     private void requestInstall(HashMap<String, String> params, final OutputCallback callback) {

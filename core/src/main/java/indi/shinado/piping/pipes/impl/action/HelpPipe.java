@@ -40,8 +40,12 @@ public class HelpPipe extends DefaultInputActionPipe{
     }
 
     private void help(OutputCallback callback){
-        StringBuilder sb = new StringBuilder("Simply search your application or contact.\n");
-        sb.append("You can also type these instructions below to find more information:\n");
+        StringBuilder sb = new StringBuilder("Simply search your application or contact.\n")
+                .append("To switch results, hig MENU button.\n")
+                .append("To check history, hit BACK button.\n")
+                .append("To intercept, hit HOME button.\n")
+                .append("To display notifications on the terminal, please enable Piping in Accessibility\n")
+                .append("You can also type these instructions below to find more information:\n");
         ArrayList<BasePipe> pipes = getPipeManager().getAllPipes();
         for (BasePipe pipe : pipes){
             if (pipe instanceof ActionPipe){
