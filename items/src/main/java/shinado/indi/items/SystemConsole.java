@@ -35,6 +35,11 @@ public class SystemConsole  implements DeviceConsole {
     }
 
     @Override
+    public void intercept() {
+
+    }
+
+    @Override
     public void onSystemReady() {
         log("onSystemReady");
     }
