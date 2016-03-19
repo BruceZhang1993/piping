@@ -1,7 +1,6 @@
 package com.shinado.snake;
 
 import java.util.LinkedList;
-import java.util.Queue;
 
 public class Snake {
 
@@ -14,6 +13,11 @@ public class Snake {
         body.add(new Point(0, 1));
         body.add(new Point(0, 2));
         body.add(new Point(0, 3));
+    }
+
+    private Snake(Snake another){
+        this.direction = another.direction;
+        this.body = another.body;
     }
 
     public void up(){
@@ -48,9 +52,11 @@ public class Snake {
      *
      * @return the last step
      */
-    public Point crawl(){
-        body.poll();
+    public Point crawl(Point dot){
         Point next = getNextStep();
+        if (!next.equals(dot)){
+            body.poll();
+        }
 
         body.add(next);
         return next;
@@ -71,10 +77,8 @@ public class Snake {
         return next;
     }
 
-    public void eat(Point dot){
-        if (dot.equals(getNextStep())){
-            body.add(dot);
-        }
+    public Point getTail(){
+        return body.peek();
     }
 
     public boolean isPointPartOfBody(Point point){
@@ -94,5 +98,8 @@ public class Snake {
         UP, DOWN, LEFT, RIGHT
     }
 
+    public Snake clone(){
+        return new Snake(this);
+    }
 
 }
