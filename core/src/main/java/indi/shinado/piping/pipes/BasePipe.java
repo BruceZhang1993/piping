@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.TreeSet;
 
 import indi.shinado.piping.launcher.Console;
+import indi.shinado.piping.launcher.InputCallback;
 import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
@@ -18,6 +19,8 @@ public abstract class BasePipe {
     protected Console console;
 
     protected IPipeManager pipeManager;
+
+    protected InputCallback mInputCallback;
 
     private OutputCallback mConsoleCallback = new OutputCallback() {
         @Override
@@ -114,12 +117,23 @@ public abstract class BasePipe {
 
         return i;
     }
+
     public IPipeManager getPipeManager() {
         return pipeManager;
     }
 
     public void setPipeManager(IPipeManager pipeManager) {
         this.pipeManager = pipeManager;
+    }
+
+    //introduce from version 3
+    public InputCallback getInputCallback() {
+        return mInputCallback;
+    }
+
+    //introduce from version 3
+    public void setInputCallback(InputCallback mInputCallback) {
+        this.mInputCallback = mInputCallback;
     }
 
     public Console getConsole() {
@@ -167,7 +181,6 @@ public abstract class BasePipe {
 
     /**
      * execute with no previous
-     * @param rs
      */
     protected abstract void execute(Pipe rs);
 

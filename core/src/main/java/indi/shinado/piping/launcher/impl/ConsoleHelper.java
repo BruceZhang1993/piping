@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import indi.shinado.piping.launcher.InputCallback;
 import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.IPipeManager;
 import indi.shinado.piping.pipes.IPipesLoader;
@@ -43,6 +44,7 @@ public class ConsoleHelper implements IPipeManager{
     private int mCurrentSelection = 0;
     private String mCurrentInput = "";
     private OnHistoryListener mOnHistoryListener;
+    private ArrayList<InputCallback> mInputCallbacks = new ArrayList<>();
 
     public ConsoleHelper(Context context, final DeviceConsole console, final IPipesLoader loader, AbsTranslator translator) {
         this.console = console;
@@ -67,6 +69,10 @@ public class ConsoleHelper implements IPipeManager{
         mSearcher.addPipes(mPipes);
         for (BasePipe pipe : mPipes){
             pipe.setPipeManager(this);
+            InputCallback callback = pipe.getInputCallback();
+            if (callback != null){
+                mInputCallbacks.add(callback);
+            }
         }
 
         mSearcher.setOnResultChangeListener(new PipeSearcher.OnResultChangeListener() {
@@ -152,11 +158,25 @@ public class ConsoleHelper implements IPipeManager{
         mSearcher.clearPrevious();
     }
 
+    /**
+     *
+     * @param input the current string in the console
+     */
     public void onUserInput(String input, int before, int count) {
         mCurrentInput = input;
         mResults.clear();
         mSearcher.search(input, before, count, mCurrentSelection);
         mCurrentSelection = 0;
+    }
+
+    /**
+     *
+     * @param character the current input
+     */
+    public void onInput(String character){
+        for (InputCallback callback : mInputCallbacks){
+            callback.onInput(character);
+        }
     }
 
     public void onShift() {

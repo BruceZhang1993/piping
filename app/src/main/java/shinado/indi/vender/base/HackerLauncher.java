@@ -11,6 +11,7 @@ import indi.shinado.piping.feed.Feedable;
 import indi.shinado.piping.launcher.BaseLauncherView;
 import indi.shinado.piping.launcher.IOHelper;
 import indi.shinado.piping.launcher.IOHelperFactory;
+import indi.shinado.piping.launcher.InputCallback;
 import indi.shinado.piping.launcher.impl.ConsoleHelper;
 import indi.shinado.piping.launcher.impl.DeviceConsole;
 import indi.shinado.piping.launcher.impl.HackerView;
@@ -33,6 +34,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     private ConsoleHelper mConsoleHelper;
 
     private IOHelper mIOHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

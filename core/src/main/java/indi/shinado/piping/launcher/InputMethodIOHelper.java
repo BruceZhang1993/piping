@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -34,6 +35,7 @@ public class InputMethodIOHelper implements IOHelper{
         mInputTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
             @Override
@@ -48,6 +50,9 @@ public class InputMethodIOHelper implements IOHelper{
         mInputTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (event != null){
+                    helper.onInput(event.getCharacters());
+                }
                 if (mBlockInput){
                     return true;
                 }
@@ -94,12 +99,16 @@ public class InputMethodIOHelper implements IOHelper{
         private void blockInput(){
             if (mInputTextView != null){
                 mInputTextView.setEnabled(false);
+                mInputTextView.setFocusable(false);
+                mInputTextView.setInputType(InputType.TYPE_NULL);
             }
         }
 
         private void releaseInput(){
             if (mInputTextView != null){
                 mInputTextView.setEnabled(true);
+                mInputTextView.setFocusableInTouchMode(true);
+                mInputTextView.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
             }
         }
 
