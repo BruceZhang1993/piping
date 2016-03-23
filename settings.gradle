@@ -1,1 +1,1 @@
-include ':app', ':dependency', ':items', ':core', ':activeandroid'
+include ':app', ':dependency', ':items', ':core', ':activeandroid', ':annotation', ':compiler'

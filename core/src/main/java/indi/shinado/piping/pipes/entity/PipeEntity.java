@@ -41,6 +41,9 @@ public class PipeEntity extends Model implements Downloadable{
     @Column(name = "cClassName")
     public String className;
 
+    @Column(name = "cVersion")
+    public int targetVersion;
+
     @Override
     public String getUrl() {
         return url;

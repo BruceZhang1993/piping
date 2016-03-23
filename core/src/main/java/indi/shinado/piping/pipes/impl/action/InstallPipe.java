@@ -12,6 +12,7 @@ import csu.org.dependency.volley.Listener;
 import csu.org.dependency.volley.VolleyProvider;
 import indi.shinado.piping.download.DownloadImpl;
 import indi.shinado.piping.download.Downloadable;
+import indi.shinado.piping.pipes.SystemInfo;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Keys;
@@ -50,6 +51,7 @@ public class InstallPipe extends DefaultInputActionPipe{
         HashMap<String, String> params = new HashMap<>();
 
         params.put("name", input);
+        params.put("version", ""+new SystemInfo(context).getVersionCode());
         if (!value.isParamsEmpty()){
             if (value.params.length > 1) {
                 callback.onOutput("$install only takes one param, ignoring the rest");
@@ -93,6 +95,7 @@ public class InstallPipe extends DefaultInputActionPipe{
         }
         String option = value.params[0];
         params.put("option", option);
+        params.put("version", ""+new SystemInfo(context).getVersionCode());
 
         if (option.equals(OPT_M)){
             callback.onOutput("The content cannot be null for -m option");

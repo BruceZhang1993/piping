@@ -1,5 +1,7 @@
 package indi.shinado.piping.launcher;
 
+import com.shinado.annotation.TargetVersion;
+
 public interface Console {
 
     void input(String string);
@@ -12,7 +14,7 @@ public interface Console {
 
     void clear();
 
-    //introduced from version 3
+    @TargetVersion(3)
     void intercept();
 
 }

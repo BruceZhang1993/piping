@@ -2,6 +2,8 @@ package indi.shinado.piping.pipes;
 
 import android.content.Context;
 
+import com.shinado.annotation.TargetVersion;
+
 import java.util.TreeSet;
 
 import indi.shinado.piping.launcher.Console;
@@ -126,12 +128,12 @@ public abstract class BasePipe {
         this.pipeManager = pipeManager;
     }
 
-    //introduce from version 3
+    @TargetVersion(3)
     public InputCallback getInputCallback() {
         return mInputCallback;
     }
 
-    //introduce from version 3
+    @TargetVersion(3)
     public void setInputCallback(InputCallback mInputCallback) {
         this.mInputCallback = mInputCallback;
     }

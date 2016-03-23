@@ -1,15 +1,14 @@
 package com.shinado.snake;
 
+import com.shinado.annotation.TargetVersion;
+
 import indi.shinado.piping.launcher.InputCallback;
-import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 
-/**
- * Target version 3
- */
-public class SnakePipe extends DefaultInputActionPipe implements Console{
+@TargetVersion(3)
+public class SnakePipe extends DefaultInputActionPipe implements Console {
 
     private final String UP = "8";
     private final String DOWN = "2";
@@ -22,7 +21,6 @@ public class SnakePipe extends DefaultInputActionPipe implements Console{
         super(id);
         game = new Game();
         game.create(new Maze(1, 1)/**TODO**/, new Snake(), this);
-        //
         setInputCallback(mInputCallback);
     }
 
@@ -59,7 +57,7 @@ public class SnakePipe extends DefaultInputActionPipe implements Console{
     private InputCallback mInputCallback = new InputCallback() {
         @Override
         public void onInput(String character) {
-            switch (character){
+            switch (character) {
                 case UP:
                     game.getSnake().up();
                     break;

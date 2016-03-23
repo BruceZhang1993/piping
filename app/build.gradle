@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion project.ext.mCompileSdkVersion
@@ -37,4 +37,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     testCompile "org.mockito:mockito-core:1.+"
     compile project(':core')
+    apt project(':compiler')
 }
