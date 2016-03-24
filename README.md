@@ -3,7 +3,9 @@
 
 ## What is Piping
 
-  Launch different. No more sliding, no more looking. Type whatever you want. Wait a second, it's more than you think. You can put two things together to make things a lot easier, like, sending Maya's profile to Play:  
+  Piping is a terminal-like Android Launcher. You can search applications, contacts, etc. 
+  
+  Wait a second, it's more than you think. You can put two things together to make things a lot easier, like, sending Maya's profile to Play:  
   
   ![pipe](https://cloud.githubusercontent.com/assets/3215337/13378016/ddd69eee-de2f-11e5-9ed8-96e2e53d9545.gif)  
 
