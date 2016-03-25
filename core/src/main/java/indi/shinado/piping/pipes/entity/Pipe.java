@@ -31,6 +31,7 @@ public class Pipe implements Comparable<Pipe> {
 
     private int frequency;
 
+    //deprecated,
     private int typeIndex = TYPE_ACTION;
 
     private boolean ignoreInput = false;

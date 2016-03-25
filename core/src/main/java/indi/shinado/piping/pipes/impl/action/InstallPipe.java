@@ -157,11 +157,11 @@ public class InstallPipe extends DefaultInputActionPipe{
         sb.append("List of pipes:\n");
         int i=0;
         for (PipeEntity f : rs.list) {
-            sb.append(i++);
+            sb.append("\n").append(i++);
             sb.append(". ").append(f.name);
             sb.append(" -- by ").append(f.author);
             sb.append(", ").append(f.size).append("\n");
-            sb.append(f.introduction);
+            sb.append("--").append(f.introduction);
             sb.append("\n");
         }
         return sb.toString();

@@ -13,53 +13,39 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.util.Log;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
+import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
+import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
 
-public class AppManager {
+public class AppManager extends SearchableItemManager{
 
-    private AbsTranslator mTranslator;
     private static final String TAG = "App@Manager";
 
-    public static AppManager getAppManager(Context context, AbsTranslator translator) {
-        if (appManager == null) {
+    private HashMap<String, ResolveInfo> mActivityMap = new HashMap<>();
+    private HashMap<String, ResolveInfo> mPackageMap = new HashMap<>();
+    private PackageManager pm;
+    private static AppManager appManager;
+
+    AppManager(Context context, AbsTranslator translator) {
+        super(context, translator);
+        pm = context.getPackageManager();
+    }
+
+    public static AppManager getInstance(Context context, AbsTranslator translator){
+        if (appManager == null){
             appManager = new AppManager(context, translator);
         }
         return appManager;
     }
 
-    public static AppManager getAppManager(){
-        return appManager;
-    }
-
-    private static AppManager appManager;
-    private Context context;
-
-    private HashMap<String, ResolveInfo> mActivityMap = new HashMap<>();
-    private HashMap<String, ResolveInfo> mPackageMap = new HashMap<>();
-    private PackageManager pm;
-
-    private AppManager(Context context, AbsTranslator translator) {
-        if (mTranslator == null) {
-            mTranslator = translator;
-        }
-        this.context = context;
-        pm = context.getPackageManager();
-    }
-
-    public void registerReceiver(){
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
-        filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
-        filter.addDataScheme("package");
-        context.registerReceiver(mReceiver, filter);
-    }
 
     public void loadApps() {
         Log.d(TAG, "start loading apps");
@@ -161,7 +147,7 @@ public class AppManager {
 
         if (onAppChangeListener != null) {
             for (OnAppChangeListener l : onAppChangeListener) {
-                l.onAppChange(OnAppChangeListener.FLAG_ADD, getResult(app.packageName + ","));
+                l.onAppChange(OnAppChangeListener.FLAG_ADD, getResult(app.packageName + ",", true));
             }
         }
     }
@@ -169,18 +155,43 @@ public class AppManager {
     public Pipe getResult(int idx) {
         ResolveInfo info = getInfo(idx);
 
-        return getResult(info);
+        return getResult(info, true);
     }
 
     /**
      * "packageName,activityName"
      */
-    private Pipe getResult(ResolveInfo info) {
+    private Pipe getResult(ResolveInfo info, boolean searchableNamRequired) {
         String value = info.activityInfo.packageName + "," + info.activityInfo.name;
         String label = info.loadLabel(pm).toString();
-        Pipe item = new Pipe(PipesLoader.ID_APPLICATION, label, mTranslator.getName(label), value);
-        item.setTypeIndex(Pipe.TYPE_SEARCHABLE);
+        Pipe item;
+        if (searchableNamRequired) {
+            AbsTranslator translator = getTranslator();
+            item = new Pipe(PipesLoader.ID_APPLICATION, label, translator.getName(label), value);
+        } else {
+            item = new Pipe(PipesLoader.ID_APPLICATION, label, new SearchableName(new String[]{}), value);
+        }
         return item;
+    }
+
+    public Pipe getResult(String value, boolean searchableNamRequired) {
+        ResolveInfo info = getResolveByValue(value);
+
+        if (info == null) {
+            return new Pipe(PipesLoader.ID_APPLICATION, new Instruction(value));
+        } else {
+            value = info.activityInfo.packageName + "," + info.activityInfo.name;
+            String label = info.loadLabel(pm).toString();
+            Pipe item;
+            if (searchableNamRequired) {
+                AbsTranslator translator = getTranslator();
+                item = new Pipe(PipesLoader.ID_APPLICATION, label, translator.getName(label), value);
+            } else {
+                item = new Pipe(PipesLoader.ID_APPLICATION, label, new SearchableName(new String[]{}), value);
+            }
+            return item;
+        }
+
     }
 
     private ResolveInfo getResolveByValue(String value) {
@@ -195,18 +206,6 @@ public class AppManager {
         return info;
     }
 
-    public Pipe getResult(String value) {
-        ResolveInfo info = getResolveByValue(value);
-
-        if (info == null) {
-            return new Pipe(PipesLoader.ID_APPLICATION, new Instruction(value));
-        } else {
-            value = info.activityInfo.packageName + "," + info.activityInfo.name;
-            String label = info.loadLabel(pm).toString();
-            return new Pipe(PipesLoader.ID_APPLICATION, label, mTranslator.getName(label), value);
-        }
-
-    }
 
     private void onUninstall(String packageName) {
         ResolveInfo info = getResolveByPackage(packageName);
@@ -215,7 +214,7 @@ public class AppManager {
         mActivityMap.remove(info.activityInfo.name);
         if (onAppChangeListener != null) {
             for (OnAppChangeListener l : onAppChangeListener) {
-                l.onAppChange(OnAppChangeListener.FLAG_REMOVE, getResult(info));
+                l.onAppChange(OnAppChangeListener.FLAG_REMOVE, getResult(packageName, false));
             }
         }
     }
@@ -251,11 +250,17 @@ public class AppManager {
         context.startActivity(intent);
     }
 
-    public void destroy() {
-        if (mTranslator != null) {
-            mTranslator.destroy();
-        }
-        appManager = null;
+    @Override
+    public void register() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        filter.addDataScheme("package");
+        context.registerReceiver(mReceiver, filter);
+    }
+
+    @Override
+    public void unregister() {
         context.unregisterReceiver(mReceiver);
     }
 
@@ -278,4 +283,5 @@ public class AppManager {
             }
         }
     };
+
 }

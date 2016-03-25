@@ -84,8 +84,8 @@ public class ApplicationPipe extends FrequentPipe{
     }
 
     private void refreshAppMessage(final AbsTranslator translator, final OnItemsLoadedListener listener, final int total) {
-        appManager = AppManager.getAppManager(context, translator);
-        appManager.registerReceiver();
+        appManager = AppManager.getInstance(context, translator);
+        appManager.register();
         new Thread() {
             public void run() {
                 appManager.loadApps();
@@ -123,7 +123,7 @@ public class ApplicationPipe extends FrequentPipe{
     }
 
     public Pipe getByPackageName(String pkg){
-        Pipe item = appManager.getResult(pkg + ",");
+        Pipe item = appManager.getResult(pkg + ",", true);
         item.setBasePipe(this);
         item.setInstruction(new Instruction(""));
         return item;

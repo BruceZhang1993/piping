@@ -21,29 +21,34 @@ import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
 
-public class ContactManager {
+public class ContactManager extends SearchableItemManager {
 
-	private AbsTranslator mTranslator;
 	private static final String TAG = "Contact@Manager";
 	private static final String[] PHONES_PROJECTION = new String[] {
 	    Phone.CONTACT_ID, Phone.DISPLAY_NAME, Phone.NUMBER, Phone.PHOTO_ID};
 	private HashMap<String, Contact> map;
+	private static ContactManager contactManager;
 
-	public static ContactManager getContactManager(Context context, AbsTranslator translator){
-		if(contactManager == null){
+	ContactManager(Context context, AbsTranslator translator){
+		super(context, translator);
+		refreshContacts();
+	}
+
+	public static ContactManager getInstance(Context context, AbsTranslator translator){
+		if (contactManager == null){
 			contactManager = new ContactManager(context, translator);
 		}
 		return contactManager;
 	}
-	private static ContactManager contactManager;
-	private Context context;
 
-	private ContactManager(Context context, AbsTranslator translator){
-		if (this.mTranslator == null){
-			this.mTranslator = translator;
-		}
-		this.context = context;
-		refreshContacts();
+	@Override
+	public void register() {
+
+	}
+
+	@Override
+	void unregister() {
+
 	}
 
 	//TODO what are you nong sha nie
@@ -122,18 +127,13 @@ public class ContactManager {
 	    
 	public Pipe getResult(String value){
 		String label = getName(value);
-		Pipe item = new Pipe(PipesLoader.ID_APPLICATION, label, mTranslator.getName(label), value);
+		Pipe item = new Pipe(PipesLoader.ID_APPLICATION, label, getTranslator().getName(label), value);
 		item.setTypeIndex(Pipe.TYPE_SEARCHABLE);
 		return item;
 	}
 	
 	public int getContactCount(){
 		return map.size();
-	}
-
-	public void destroy() {
-		mTranslator.destroy();
-		contactManager = null;
 	}
 
 	public interface OnContactChangeListener{

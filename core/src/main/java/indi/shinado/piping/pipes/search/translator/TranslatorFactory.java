@@ -8,10 +8,9 @@ public class TranslatorFactory {
 
     /**
      *
-     * @param count the count of usage
      * @return
      */
-    public static AbsTranslator getTranslator(Context context, int count){
+    public static AbsTranslator getTranslator(Context context){
         if (context == null){
             //for test
             return new EnglishTranslator(null);
@@ -20,7 +19,7 @@ public class TranslatorFactory {
 //        Locale current = context.getResources().getConfiguration().locale;
 //        String displayLanguage = current.getDisplayLanguage();
 //        if (displayLanguage.equals(Locale.CHINESE.getDisplayLanguage())){
-            return new ChineseTranslator(context, count);
+            return new ChineseTranslator(context);
 //        }
 //        return new EnglishTranslator(context);
         }

@@ -44,7 +44,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         mIOHelper = new IOHelperFactory().getInstance();
         initViews();
 
-        mConsoleHelper = new ConsoleHelper(this, this, new PipesLoader(), TranslatorFactory.getTranslator(this, 2));
+        mConsoleHelper = new ConsoleHelper(this, this, new PipesLoader(), TranslatorFactory.getTranslator(this));
         mIOHelper.connect(this, /*findViewById(R.id.keyboard)*/ findViewById(R.id.input), mConsoleHelper);
 
         setupStatusBar();

@@ -10,11 +10,9 @@ import indi.shinado.piping.pipes.search.translator.chinese.PinyinHelper;
 public class ChineseTranslator extends EnglishTranslator{
 
     PinyinHelper helper;
-    private int mCount = 0;
 
-    public ChineseTranslator(final Context context, int count){
+    public ChineseTranslator(final Context context){
         super(context);
-        mCount = count;
         new Thread(){
             @Override
             public void run() {
@@ -37,12 +35,10 @@ public class ChineseTranslator extends EnglishTranslator{
     @Override
     public void destroy() {
         super.destroy();
-        if (--mCount == 0){
             if (helper != null){
                 helper.destroy();
                 helper = null;
             }
-        }
     }
 
     @Override
