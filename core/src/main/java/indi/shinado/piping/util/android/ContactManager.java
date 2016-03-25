@@ -9,6 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.text.TextUtils;
@@ -29,10 +31,15 @@ public class ContactManager extends SearchableItemManager {
 	private static final String[] PHONES_PROJECTION = new String[] {
 	    Phone.CONTACT_ID, Phone.DISPLAY_NAME, Phone.NUMBER, Phone.PHOTO_ID};
 	private HashMap<String, Contact> map;
+	private Handler mHandler;
 	private static ContactManager contactManager;
 
 	ContactManager(Context context, AbsTranslator translator){
 		super(context, translator);
+		HandlerThread hanlerThread = new HandlerThread("");
+		hanlerThread.start();
+		mHandler = new Handler(hanlerThread.getLooper());
+		hanlerThread.quit();
 		refreshContacts();
 	}
 
@@ -45,16 +52,16 @@ public class ContactManager extends SearchableItemManager {
 
 	@Override
 	public void register() {
-		context.getContentResolver().registerContentObserver(
-				ContactsContract.Contacts.CONTENT_URI, true, mObserver);
+//		context.getContentResolver().registerContentObserver(
+//				ContactsContract.Contacts.CONTENT_URI, true, mObserver);
 	}
 
 	@Override
 	void unregister() {
-		context.getContentResolver().unregisterContentObserver(mObserver);
+//		context.getContentResolver().unregisterContentObserver(mObserver);
 	}
 
-	private ContentObserver mObserver = new ContentObserver(new Handler()) {
+	private ContentObserver mObserver = new ContentObserver(mHandler) {
 
 		@Override
 		public void onChange(boolean selfChange) {
@@ -63,15 +70,9 @@ public class ContactManager extends SearchableItemManager {
 		}
 
 	};
-	//TODO what are you nong sha nie
+
 	private Contact getContact(String tel){
 		Contact c = map.get(tel);
-		if(c == null){
-			c = map.get(tel.replace("+86", ""));
-			if(c == null){
-				c = map.get("+86"+tel);
-			}
-		}
 		return c;
 	}
 	
@@ -94,6 +95,7 @@ public class ContactManager extends SearchableItemManager {
 	}
 	
 	private void onContactUpdate(){
+		Log.d(TAG, "update contact");
 		refreshContacts();
 		if(onContactChangeListener != null){
 			for(OnContactChangeListener l:onContactChangeListener){

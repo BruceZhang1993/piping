@@ -30,9 +30,13 @@ public abstract class SearchableItemManager {
         return translator;
     }
 
-    public abstract void register();
+    abstract void register();
 
     abstract void unregister();
+
+    public void start(){
+        register();
+    }
 
     public void destroy(){
         unregister();

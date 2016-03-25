@@ -85,7 +85,7 @@ public class ApplicationPipe extends FrequentPipe{
 
     private void refreshAppMessage(final AbsTranslator translator, final OnItemsLoadedListener listener, final int total) {
         appManager = AppManager.getInstance(context, translator);
-        appManager.register();
+        appManager.start();
         new Thread() {
             public void run() {
                 appManager.loadApps();

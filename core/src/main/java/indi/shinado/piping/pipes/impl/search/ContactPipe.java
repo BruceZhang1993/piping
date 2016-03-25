@@ -39,7 +39,7 @@ public class ContactPipe extends FrequentPipe {
                     }
                 }
                 contactManager = ContactManager.getInstance(context, translator);
-                contactManager.register();
+                contactManager.start();
                 contactManager.addOnContactChangeListener(new ContactManager.OnContactChangeListener() {
                     @Override
                     public void onContactChange() {
