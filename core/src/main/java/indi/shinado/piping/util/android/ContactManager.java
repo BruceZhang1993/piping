@@ -3,10 +3,12 @@ package indi.shinado.piping.util.android;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.text.TextUtils;
@@ -43,14 +45,24 @@ public class ContactManager extends SearchableItemManager {
 
 	@Override
 	public void register() {
-
+		context.getContentResolver().registerContentObserver(
+				ContactsContract.Contacts.CONTENT_URI, true, mObserver);
 	}
 
 	@Override
 	void unregister() {
-
+		context.getContentResolver().unregisterContentObserver(mObserver);
 	}
 
+	private ContentObserver mObserver = new ContentObserver(new Handler()) {
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			onContactUpdate();
+		}
+
+	};
 	//TODO what are you nong sha nie
 	private Contact getContact(String tel){
 		Contact c = map.get(tel);
@@ -81,7 +93,7 @@ public class ContactManager extends SearchableItemManager {
 		return null;
 	}
 	
-	public void onContactUpdate(){
+	private void onContactUpdate(){
 		refreshContacts();
 		if(onContactChangeListener != null){
 			for(OnContactChangeListener l:onContactChangeListener){

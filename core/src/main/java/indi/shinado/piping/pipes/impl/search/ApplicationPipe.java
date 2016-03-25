@@ -115,11 +115,10 @@ public class ApplicationPipe extends FrequentPipe{
 
     @Override
     public void destroy() {
-        if (appManager == null) {
-            return;
+        if (appManager != null){
+            appManager.destroy();
+            appManager = null;
         }
-        appManager.destroy();
-        appManager = null;
     }
 
     public Pipe getByPackageName(String pkg){
