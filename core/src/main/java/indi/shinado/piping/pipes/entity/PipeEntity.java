@@ -48,7 +48,7 @@ public class PipeEntity extends Model implements Downloadable{
     public String size;
 
     @Column(name = "cIntro")
-    public int introduction;
+    public String introduction;
 
     @Override
     public String getUrl() {
