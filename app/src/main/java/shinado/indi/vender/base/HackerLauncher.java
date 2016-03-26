@@ -1,11 +1,17 @@
 package shinado.indi.vender.base;
 
+import android.app.WallpaperManager;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import java.io.IOException;
 
 import indi.shinado.piping.feed.Feedable;
 import indi.shinado.piping.launcher.BaseLauncherView;
@@ -18,6 +24,7 @@ import indi.shinado.piping.launcher.impl.HackerView;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
+import indi.shinado.piping.settings.Preferences;
 import indi.shinado.piping.util.android.AppManager;
 import shinado.indi.vender.R;
 
@@ -25,6 +32,8 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
     private ScrollView mScrollView;
     private HackerView mHackerView;
+    private View wallpaper;
+    private TextView consoleTextView;
 
     /**
      * user input
@@ -34,7 +43,6 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     private ConsoleHelper mConsoleHelper;
 
     private IOHelper mIOHelper;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +73,10 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     }
 
     private void initViews() {
+        wallpaper = this.findViewById(R.id.background);
         mScrollView = (ScrollView) this.findViewById(R.id.scrollView);
-        TextView console = (TextView) this.findViewById(R.id.displayText);
-        console.setOnClickListener(new View.OnClickListener() {
+        consoleTextView = (TextView) this.findViewById(R.id.displayText);
+        consoleTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mIOHelper.restartInput();
@@ -79,7 +88,14 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
                 }, 800);
             }
         });
-        mHackerView = new HackerView(console, this);
+        consoleTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                selectWallpaper();
+                return true;
+            }
+        });
+        mHackerView = new HackerView(consoleTextView, this);
         mHackerView.init();
     }
 
@@ -180,6 +196,16 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
                 return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public View getBackgroundView() {
+        return wallpaper;
+    }
+
+    @Override
+    public TextView getConsoleTextView() {
+        return consoleTextView;
     }
 
     @Override

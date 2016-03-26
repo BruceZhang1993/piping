@@ -199,6 +199,7 @@ public abstract class BasePipe {
         void onItemsLoaded(int id, int total);
     }
 
+    //added since version 3
     public interface OutputCallback {
         void onOutput(String output);
     }

@@ -11,7 +11,6 @@ import indi.shinado.piping.pipes.entity.Pipe;
 
 public abstract class SearchablePipe extends BasePipe {
 
-    private OnItemsLoadedListener mOnItemsLoadedListener;
     protected Stack<TreeSet<Pipe>> resultStack =
             new Stack<>();
     protected HashMap<String, TreeSet<Pipe>> resultMap = new HashMap<>();

@@ -1,15 +1,24 @@
 package indi.shinado.piping.launcher;
 
 import android.app.Activity;
+import android.app.WallpaperManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import indi.shinado.piping.feed.BarService;
 import indi.shinado.piping.feed.FeedHelper;
 import indi.shinado.piping.feed.Feedable;
+import indi.shinado.piping.settings.Preferences;
 import indi.shinado.piping.statusbar.BatteryStatusBar;
 import indi.shinado.piping.statusbar.ConnectionStatusBar;
 import indi.shinado.piping.statusbar.StatusBar;
@@ -22,20 +31,58 @@ public abstract class BaseLauncherView extends Activity{
 	private ArrayList<StatusBar> mStatusBars = new ArrayList<>();
 	private Intent mBarService;
 	private FeedHelper feedHelper;
+	protected Preferences mPref;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mPref = new Preferences(this);
+		initWallpaper();
 		mBarService = new Intent(this, BarService.class);
 		startService(mBarService);
+		IntentFilter filter = new IntentFilter(Intent.ACTION_WALLPAPER_CHANGED);
+		registerReceiver(mWallpaperSetReceiver, filter);
 	}
 
 	@Override
 	public void onDestroy(){
         super.onDestroy();
 		stopService(mBarService);
+		unregisterReceiver(mWallpaperSetReceiver);
 		destroy();
 	}
+
+	private void initWallpaper(){
+		if (mPref.isWallpaperSet()){
+			setWallpaper();
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	private void setWallpaper(){
+		WallpaperManager wallpaperManager
+				= WallpaperManager.getInstance(getApplicationContext());
+		Drawable drawable = wallpaperManager.getDrawable();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			getBackgroundView().setBackground(drawable);
+		}else {
+			getBackgroundView().setBackgroundDrawable(drawable);
+		}
+	}
+
+	public void selectWallpaper(){
+		Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
+		startActivity(Intent.createChooser(intent, "Select Wallpaper"));
+	}
+
+	private BroadcastReceiver mWallpaperSetReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			mPref.setWallpaper(true);
+			setWallpaper();
+		}
+	};
+
 
 	public ArrayList<StatusBar> addStatusable(Statusable statusable){
 		loadLocalStatusBar(statusable);
@@ -97,12 +144,7 @@ public abstract class BaseLauncherView extends Activity{
         
 		flag = true;
 	}
-	
-	@Override
-	public void onStop(){
-        super.onStop();
-	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode,KeyEvent event) {
 		switch (keyCode) {
@@ -114,4 +156,7 @@ public abstract class BaseLauncherView extends Activity{
 		return super.onKeyDown(keyCode, event);
 	}
 
+	public abstract View getBackgroundView();
+
+	public abstract TextView getConsoleTextView();
 }

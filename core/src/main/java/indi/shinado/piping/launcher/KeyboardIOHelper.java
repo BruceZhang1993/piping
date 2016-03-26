@@ -42,7 +42,7 @@ public class KeyboardIOHelper implements IOHelper{
         if (context != null) {
             mVib = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         }
-        mPreferences = new Preferences();
+        mPreferences = new Preferences(context);
         mKeyboard = keyboard;
 
         setOnKeyboardListener((ViewGroup) keyboard);

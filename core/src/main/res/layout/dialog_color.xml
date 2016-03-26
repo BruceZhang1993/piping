@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dip"
+    android:padding="24dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/dialog_bcg"
+    android:orientation="vertical" >
+
+    <TextView 
+        android:layout_marginBottom="18dp"
+	    android:layout_width="wrap_content"
+	    android:layout_height="40dip"
+	    android:gravity="center"
+        android:text="@string/select_color"
+	   	android:textColor="#333333"
+	    android:textSize="21dip"
+        />
+
+    <indi.shinado.piping.color.ColorPickerView
+        android:id="@+id/picker"
+        android:layout_width="fill_parent"
+        android:layout_height="200dip" />
+
+	<LinearLayout 
+	    android:layout_marginTop="24dp"
+	    android:layout_width="fill_parent"
+	    android:layout_height="36dp"
+    	android:gravity="right" >
+	    
+	    <Button 
+	        android:id="@+id/dialog_cancel_btn"
+	        android:layout_width="88dp"
+	        android:layout_height="fill_parent"
+	        android:gravity="right|center"
+	        android:background="#00000000"
+	    	android:textColor="@drawable/button_cancel_style"
+	        android:onClick="cancel"
+	        android:textSize="18dp"
+	        android:text="@string/bt_cancel"/>
+	       
+	    <Button 
+	        android:id="@+id/dialog_done_btn"
+	        android:layout_width="88dp"
+	        android:layout_height="fill_parent"
+	        android:gravity="right|center"
+	        android:background="#00000000"
+	    	android:textColor="@drawable/button_done_style"
+	        android:textSize="18dp"
+	        android:onClick="done"
+	        android:text="@string/bt_done"/>
+	    
+	</LinearLayout>
+
+</LinearLayout>

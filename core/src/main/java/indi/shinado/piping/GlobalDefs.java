@@ -25,4 +25,5 @@ public class GlobalDefs {
 
 	public static final String ACTION_CHANGE_THEME = "com.shinado.yi.desk.theme.change";
 	public static final String ACTION_RESTART = "com.shinado.yi.desk.theme.restart";
+	public static final String EXTRA_COLOR = "extra.color";
 }
