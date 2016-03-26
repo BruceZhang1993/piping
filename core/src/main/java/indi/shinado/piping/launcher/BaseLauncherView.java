@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import indi.shinado.piping.GlobalDefs;
+import indi.shinado.piping.color.ColorActivity;
 import indi.shinado.piping.feed.BarService;
 import indi.shinado.piping.feed.FeedHelper;
 import indi.shinado.piping.feed.Feedable;
@@ -28,6 +30,7 @@ import indi.shinado.piping.statusbar.TimeStatusBar;
 
 public abstract class BaseLauncherView extends Activity{
 
+	private static final int REQUEST_COLOR = 1;
 	private ArrayList<StatusBar> mStatusBars = new ArrayList<>();
 	private Intent mBarService;
 	private FeedHelper feedHelper;
@@ -73,6 +76,25 @@ public abstract class BaseLauncherView extends Activity{
 	public void selectWallpaper(){
 		Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
 		startActivity(Intent.createChooser(intent, "Select Wallpaper"));
+	}
+
+	public void selectColor(){
+		startActivityForResult(
+				new Intent(this, ColorActivity.class),
+				REQUEST_COLOR);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent){
+		switch (requestCode) {
+			case REQUEST_COLOR:
+				if(resultCode == RESULT_OK){
+					int color = intent.getIntExtra(GlobalDefs.EXTRA_COLOR, 0);
+					getConsoleTextView().setTextColor(color);
+					mPref.setColor(color);
+				}
+				break;
+		}
 	}
 
 	private BroadcastReceiver mWallpaperSetReceiver = new BroadcastReceiver() {

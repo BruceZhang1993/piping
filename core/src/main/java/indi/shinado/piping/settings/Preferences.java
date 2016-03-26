@@ -56,11 +56,16 @@ public class Preferences {
         editor.putFloat(KEY_LEFT_Y, left.y);
         editor.putFloat(KEY_RIGHT_X, right.x);
         editor.putFloat(KEY_RIGHT_Y, right.y);
-        editor.commit();
+        editor.apply();
     }
 
     public int getColor(){
-        int color = settings.getInt(KEY_COLOR, 8092539);
-        return color;
+        return settings.getInt(KEY_COLOR, 8092539);
+    }
+
+    public void setColor(int color) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt(KEY_COLOR, color);
+        editor.apply();
     }
 }
