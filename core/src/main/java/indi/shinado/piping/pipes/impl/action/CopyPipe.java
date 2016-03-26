@@ -21,7 +21,7 @@ public class CopyPipe extends ActionPipe {
 
     @Override
     public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
-        copyToClipboard(baseLauncherView, input);
+        copyToClipboard(getLauncher(), input);
         callback.onOutput(input);
     }
 
@@ -41,7 +41,7 @@ public class CopyPipe extends ActionPipe {
     @Override
     public void getOutput(Pipe result, OutputCallback callback) {
         @SuppressWarnings("deprecation")
-        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) baseLauncherView.getSystemService(Context.CLIPBOARD_SERVICE);
+        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getLauncher().getSystemService(Context.CLIPBOARD_SERVICE);
         callback.onOutput(clipboard.getText().toString());
     }
 

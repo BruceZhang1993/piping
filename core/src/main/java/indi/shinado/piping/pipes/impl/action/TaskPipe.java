@@ -80,7 +80,7 @@ public class TaskPipe extends DefaultInputActionPipe{
             Pipe prev = previous.get();
             if (prev.getId() == PipesLoader.ID_APPLICATION) {
                 if (pm == null){
-                    pm = new ProcessManager(baseLauncherView);
+                    pm = new ProcessManager(getLauncher());
                 }
                 String value = prev.getExecutable();
                 String split[] = value.split(",");

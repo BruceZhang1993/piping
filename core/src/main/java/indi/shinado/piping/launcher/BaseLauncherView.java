@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -40,7 +41,6 @@ public abstract class BaseLauncherView extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mPref = new Preferences(this);
-		initWallpaper();
 		mBarService = new Intent(this, BarService.class);
 		startService(mBarService);
 		IntentFilter filter = new IntentFilter(Intent.ACTION_WALLPAPER_CHANGED);
@@ -55,7 +55,7 @@ public abstract class BaseLauncherView extends Activity{
 		destroy();
 	}
 
-	private void initWallpaper(){
+	protected void initWallpaper(){
 		if (mPref.isWallpaperSet()){
 			setWallpaper();
 		}
@@ -70,6 +70,18 @@ public abstract class BaseLauncherView extends Activity{
 			getBackgroundView().setBackground(drawable);
 		}else {
 			getBackgroundView().setBackgroundDrawable(drawable);
+		}
+	}
+
+	protected void setTextColor(ViewGroup viewGroup, int color){
+		for (int i=0;  i < viewGroup.getChildCount(); i++){
+			View view = viewGroup.getChildAt(i);
+			if (view instanceof TextView){
+				TextView textView = (TextView) view;
+				textView.setTextColor(color);
+			}else if (view instanceof ViewGroup){
+				setTextColor((ViewGroup) view, color);
+			}
 		}
 	}
 
@@ -91,8 +103,8 @@ public abstract class BaseLauncherView extends Activity{
 			case REQUEST_COLOR:
 				if(resultCode == RESULT_OK){
 					int color = intent.getIntExtra(GlobalDefs.EXTRA_COLOR, 0);
-					getConsoleTextView().setTextColor(color);
 					mPref.setColor(color);
+					setTextColor(getBackgroundView(), color);
 				}
 				break;
 		}
@@ -179,7 +191,6 @@ public abstract class BaseLauncherView extends Activity{
 		return super.onKeyDown(keyCode, event);
 	}
 
-	public abstract View getBackgroundView();
+	public abstract ViewGroup getBackgroundView();
 
-	public abstract TextView getConsoleTextView();
 }

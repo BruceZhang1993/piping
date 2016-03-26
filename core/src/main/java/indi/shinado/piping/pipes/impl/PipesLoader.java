@@ -23,6 +23,7 @@ import indi.shinado.piping.pipes.impl.action.HelpPipe;
 import indi.shinado.piping.pipes.impl.action.InstallPipe;
 import indi.shinado.piping.pipes.impl.action.NotePipe;
 import indi.shinado.piping.pipes.impl.action.SearchItemPipe;
+import indi.shinado.piping.pipes.impl.action.SettingPipe;
 import indi.shinado.piping.pipes.impl.action.TaskPipe;
 import indi.shinado.piping.pipes.impl.action.UninstallPipe;
 import indi.shinado.piping.pipes.impl.search.ApplicationPipe;
@@ -49,6 +50,7 @@ public class PipesLoader implements IPipesLoader {
 //        pipes.add(new DirectoryPipe(10));
         pipes.add(new HelpPipe(11));
         pipes.add(new ClearPipe(12));
+        pipes.add(new SettingPipe(13));
 
         return pipes;
     }

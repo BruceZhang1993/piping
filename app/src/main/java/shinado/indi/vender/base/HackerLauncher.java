@@ -1,38 +1,30 @@
 package shinado.indi.vender.base;
 
-import android.app.WallpaperManager;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
-import java.io.IOException;
 
 import indi.shinado.piping.feed.Feedable;
 import indi.shinado.piping.launcher.BaseLauncherView;
 import indi.shinado.piping.launcher.IOHelper;
 import indi.shinado.piping.launcher.IOHelperFactory;
-import indi.shinado.piping.launcher.InputCallback;
 import indi.shinado.piping.launcher.impl.ConsoleHelper;
 import indi.shinado.piping.launcher.impl.DeviceConsole;
 import indi.shinado.piping.launcher.impl.HackerView;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
-import indi.shinado.piping.settings.Preferences;
-import indi.shinado.piping.util.android.AppManager;
 import shinado.indi.vender.R;
 
 public class HackerLauncher extends BaseLauncherView implements DeviceConsole, Feedable{
 
     private ScrollView mScrollView;
     private HackerView mHackerView;
-    private View wallpaper;
+    private ViewGroup wallpaper;
     private TextView consoleTextView;
 
     /**
@@ -57,6 +49,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
         setupStatusBar();
         addFeedable(this);
+        setTextColor(wallpaper, mPref.getColor(0xff83f352));
 //        startService(new Intent(this, LockService.class));
     }
 
@@ -73,7 +66,8 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     }
 
     private void initViews() {
-        wallpaper = this.findViewById(R.id.background);
+        wallpaper = (ViewGroup) this.findViewById(R.id.background);
+        initWallpaper();
         mScrollView = (ScrollView) this.findViewById(R.id.scrollView);
         consoleTextView = (TextView) this.findViewById(R.id.displayText);
         consoleTextView.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +91,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         });
         mHackerView = new HackerView(consoleTextView, this);
         mHackerView.init();
+
     }
 
     private void replaceItem(boolean ignoreMatch, Pipe pipe) {
@@ -199,13 +194,8 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     }
 
     @Override
-    public View getBackgroundView() {
+    public ViewGroup getBackgroundView() {
         return wallpaper;
-    }
-
-    @Override
-    public TextView getConsoleTextView() {
-        return consoleTextView;
     }
 
     @Override

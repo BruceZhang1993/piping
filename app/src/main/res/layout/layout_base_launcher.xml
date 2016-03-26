@@ -2,6 +2,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp"
     android:background="@drawable/geek_bcg"
     android:id="@+id/background">
 
@@ -10,8 +12,9 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <RelativeLayout
-            android:padding="2dp"
+            android:paddingTop="2dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -41,14 +44,12 @@
                     android:text="36%"
                     style="@style/geek"/>
 
-
             </LinearLayout>
 
         </RelativeLayout>
 
         <ScrollView
             android:id="@+id/scrollView"
-            android:padding="2dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

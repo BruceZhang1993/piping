@@ -42,7 +42,7 @@ public class DataPipe extends DefaultInputActionPipe{
     }
 
     private void roll(OutputCallback callback){
-        ConnectivityManager mCM = (ConnectivityManager) baseLauncherView.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager mCM = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         Class<?> cmClass  = mCM.getClass();
         Boolean isEnable = true;
         try{
