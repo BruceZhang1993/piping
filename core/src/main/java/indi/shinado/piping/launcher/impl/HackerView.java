@@ -1,5 +1,6 @@
 package indi.shinado.piping.launcher.impl;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.TextView;
@@ -7,14 +8,12 @@ import android.widget.TextView;
 import java.lang.ref.WeakReference;
 
 import indi.shinado.piping.launcher.Console;
+import indi.shinado.piping.settings.Preferences;
 import indi.shinado.piping.util.CommonUtil;
 
 public class HackerView {
 
-    private final String[] INIT_TEXT = {"wsp_stp_auth_build.bui",
-            "Account:******",
-            "Password:***************",
-            "Access granted"};
+    private String[] initTexts;
 
     /**
      * tick_
@@ -48,6 +47,8 @@ public class HackerView {
      */
     private boolean mSystemReady = false;
 
+    private Context mContext;
+
     private TextView mConsole;
 
     private Console mDevice;
@@ -56,10 +57,18 @@ public class HackerView {
 
     private HandlerHelper mHandlerHelper = new HandlerHelper();
 
-    public HackerView(TextView console, Console device) {
+    public HackerView(Context context, TextView console, Console device) {
         this.mConsole = console;
         this.mDevice = device;
+        this.mContext = context;
+        initText();
         mHandler = new OutputHandler(this);
+    }
+
+    private void initText(){
+        Preferences preferences = new Preferences(mContext);
+        String text = preferences.getInitText();
+        initTexts = text.split("\n");
     }
 
     /**
@@ -194,13 +203,18 @@ public class HackerView {
 
     public void clear() {
         mPreviousLines = new StringBuffer();
-        for (String str : INIT_TEXT){
+        for (String str : initTexts){
             mPreviousLines.append(str);
             mPreviousLines.append("\n");
         }
         mPreviousLines.append("\n");
         mCurrentLine = "";
         mConsole.setText(mPreviousLines.toString() + mCurrentLine);
+    }
+
+    public void setInitText(String text){
+        initTexts = text.split("\n");
+        clear();
     }
 
     private class HandlerHelper {
@@ -291,7 +305,7 @@ public class HackerView {
         }
 
         private void typeInitTexts() {
-            for (String str : INIT_TEXT) {
+            for (String str : initTexts) {
                 typeText(str);
                 try {
                     sleep(150);

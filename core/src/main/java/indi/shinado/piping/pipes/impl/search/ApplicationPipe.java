@@ -96,9 +96,11 @@ public class ApplicationPipe extends FrequentPipe{
                             vo.setBasePipe(ApplicationPipe.this);
                             putItemInMap(vo);
                             addFrequency(vo);
+                            getConsole().input("Application " + vo.getDisplayName() + " has been installed.");
                         } else if (flag == AppManager.OnAppChangeListener.FLAG_REMOVE) {
                             removeItemInMap(vo);
                             removeFrequency(vo);
+                            getConsole().input("Application " + vo.getDisplayName() + " has been uninstalled.");
                         }
                     }
                 });

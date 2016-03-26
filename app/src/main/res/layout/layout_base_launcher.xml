@@ -2,12 +2,17 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="6dp"
-    android:paddingRight="6dp"
     android:background="@drawable/geek_bcg"
     android:id="@+id/background">
 
+    <indi.shinado.piping.view.BoundaryView
+        android:id="@+id/boundary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <LinearLayout
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
         android:layout_above="@+id/keyboard"
         android:orientation="vertical"
         android:layout_width="match_parent"

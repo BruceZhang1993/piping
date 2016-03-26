@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import indi.shinado.piping.statusbar.ConnectionStatusBar;
 import indi.shinado.piping.statusbar.StatusBar;
 import indi.shinado.piping.statusbar.Statusable;
 import indi.shinado.piping.statusbar.TimeStatusBar;
+import indi.shinado.piping.view.BoundaryView;
 
 
 public abstract class BaseLauncherView extends Activity{
@@ -73,10 +75,34 @@ public abstract class BaseLauncherView extends Activity{
 		}
 	}
 
-	protected void setTextColor(ViewGroup viewGroup, int color){
+	protected void setBoundaryColor(int color){
+		getBoundaryView().setBoundaryColor(color);
+	}
+
+	public void setBoundaryWidth(float width){
+		getBoundaryView().setBoundaryWidth(width);
+	}
+
+	public void setTextSize(float size){
+		setTextSize(getBackgroundView(), size);
+	}
+
+	protected void setTextSize(ViewGroup viewGroup, float size){
 		for (int i=0;  i < viewGroup.getChildCount(); i++){
 			View view = viewGroup.getChildAt(i);
 			if (view instanceof TextView){
+				TextView textView = (TextView) view;
+				textView.setTextSize(size);
+			}else if (view instanceof ViewGroup){
+				setTextSize((ViewGroup) view, size);
+			}
+		}
+	}
+
+	protected void setTextColor(ViewGroup viewGroup, int color){
+		for (int i=0;  i < viewGroup.getChildCount(); i++){
+			View view = viewGroup.getChildAt(i);
+			if (view instanceof TextView && ! (view instanceof EditText)){
 				TextView textView = (TextView) view;
 				textView.setTextColor(color);
 			}else if (view instanceof ViewGroup){
@@ -90,10 +116,8 @@ public abstract class BaseLauncherView extends Activity{
 		startActivity(Intent.createChooser(intent, "Select Wallpaper"));
 	}
 
-	//0xff83f352
-	public void selectColor(int defaultColor){
+	public void selectColor(){
 		Intent intent = new Intent(this, ColorActivity.class);
-		intent.putExtra(ColorActivity.EXTRA_COLOR, defaultColor);
 		startActivityForResult(intent, REQUEST_COLOR);
 	}
 
@@ -105,6 +129,7 @@ public abstract class BaseLauncherView extends Activity{
 					int color = intent.getIntExtra(GlobalDefs.EXTRA_COLOR, 0);
 					mPref.setColor(color);
 					setTextColor(getBackgroundView(), color);
+					setBoundaryColor(color);
 				}
 				break;
 		}
@@ -193,4 +218,7 @@ public abstract class BaseLauncherView extends Activity{
 
 	public abstract ViewGroup getBackgroundView();
 
+	public abstract BoundaryView getBoundaryView();
+
+	public abstract void setInitText(String text);
 }

@@ -8,6 +8,18 @@ import indi.shinado.piping.color.ColorPickerView;
 
 public class Preferences {
 
+    public static final int DEFAULT_TEXT_SIZE = 12;
+    public static final int DEFAULT_BOUNDARY_WIDTH = 6;
+    public static final int DEFAULT_COLOR = 0xff44d804;
+
+    public final String DEFAULT_INIT_TEXT = "wsp_stp_auth_build.bui\n"+
+            "Account:******\n"+
+            "Password:***************\n"+
+            "Access granted";
+
+    private static final String TEXT_SIZE = "text_size";
+    private static final String BOUNDARY_WIDTH = "boundary_width";
+    private static final String INIT_TEXT = "init_text";
     private static final String KEY_COLOR = "color";
     private static final String KEY_LEFT_X = "left_x";
     private static final String KEY_LEFT_Y = "left_y";
@@ -59,13 +71,43 @@ public class Preferences {
         editor.apply();
     }
 
-    public int getColor(int defaultColor){
-        return settings.getInt(KEY_COLOR, defaultColor);
+    public int getColor(){
+        return settings.getInt(KEY_COLOR, DEFAULT_COLOR);
     }
 
     public void setColor(int color) {
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt(KEY_COLOR, color);
+        editor.apply();
+    }
+
+    public String getInitText(){
+        return settings.getString(INIT_TEXT, DEFAULT_INIT_TEXT);
+    }
+
+    public void setInitText(String text) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(INIT_TEXT, text);
+        editor.apply();
+    }
+
+    public float getTextSize() {
+        return settings.getFloat(TEXT_SIZE, DEFAULT_TEXT_SIZE);
+    }
+
+    public void setTextSize(float size) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putFloat(TEXT_SIZE, size);
+        editor.apply();
+    }
+
+    public float getBoundaryWidth() {
+        return settings.getFloat(BOUNDARY_WIDTH, DEFAULT_BOUNDARY_WIDTH);
+    }
+
+    public void setBoundaryWidth(int width) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putFloat(BOUNDARY_WIDTH, width);
         editor.apply();
     }
 }

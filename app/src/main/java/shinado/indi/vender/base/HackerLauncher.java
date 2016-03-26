@@ -18,6 +18,7 @@ import indi.shinado.piping.launcher.impl.HackerView;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
+import indi.shinado.piping.view.BoundaryView;
 import shinado.indi.vender.R;
 
 public class HackerLauncher extends BaseLauncherView implements DeviceConsole, Feedable{
@@ -25,6 +26,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     private ScrollView mScrollView;
     private HackerView mHackerView;
     private ViewGroup wallpaper;
+    private BoundaryView boundaryView;
     private TextView consoleTextView;
 
     /**
@@ -36,6 +38,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
     private IOHelper mIOHelper;
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +52,9 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
         setupStatusBar();
         addFeedable(this);
-        setTextColor(wallpaper, mPref.getColor(0xff83f352));
-//        startService(new Intent(this, LockService.class));
+        setTextColor(wallpaper, mPref.getColor());
+        setTextSize(wallpaper, mPref.getTextSize());
+        setBoundaryColor(mPref.getColor());
     }
 
     @Override
@@ -58,7 +62,6 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         super.onDestroy();
         mHackerView.stop();
         mConsoleHelper.destroy();
-//        stopService(new Intent(this, LockService.class));
     }
 
     private void setupStatusBar(){
@@ -67,6 +70,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
     private void initViews() {
         wallpaper = (ViewGroup) this.findViewById(R.id.background);
+        boundaryView = (BoundaryView) this.findViewById(R.id.boundary);
         initWallpaper();
         mScrollView = (ScrollView) this.findViewById(R.id.scrollView);
         consoleTextView = (TextView) this.findViewById(R.id.displayText);
@@ -89,9 +93,12 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
                 return true;
             }
         });
-        mHackerView = new HackerView(consoleTextView, this);
+        mHackerView = new HackerView(this, consoleTextView, this);
         mHackerView.init();
+    }
 
+    public HackerView getHackerView(){
+        return mHackerView;
     }
 
     private void replaceItem(boolean ignoreMatch, Pipe pipe) {
@@ -196,6 +203,16 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     @Override
     public ViewGroup getBackgroundView() {
         return wallpaper;
+    }
+
+    @Override
+    public BoundaryView getBoundaryView() {
+        return boundaryView;
+    }
+
+    @Override
+    public void setInitText(String text) {
+        mHackerView.setInitText(text);
     }
 
     @Override

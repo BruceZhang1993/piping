@@ -13,7 +13,6 @@ import indi.shinado.piping.settings.Preferences;
 
 public class ColorActivity extends Activity{
 
-	public static final String EXTRA_COLOR = "extra.color";
 	private int mColor;
 	private PointF mLeftPoint, mRightPoint;
 	private Preferences pref;
@@ -23,12 +22,10 @@ public class ColorActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialog_color);
 
-		int color = getIntent().getIntExtra(EXTRA_COLOR, 0xff83f352);
-
 		pref = new Preferences(this);
 		mLeftPoint = pref.getLeftPoint();
 		mRightPoint = pref.getRightPoint();
-		mColor = pref.getColor(color);
+		mColor = pref.getColor();
 		
 		ColorPickerView picker = (ColorPickerView) findViewById(R.id.picker);
 		picker.setSelectedColor(mLeftPoint, mRightPoint);
