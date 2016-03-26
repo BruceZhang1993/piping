@@ -40,7 +40,7 @@ public class DirectoryPipe extends SearchablePipe {
 //        intent.setAction(android.content.Intent.ACTION_VIEW);
 //        intent.setData(uri);
 //        intent.setType("resource/folder");
-//        context.startActivity(intent);
+//        baseLauncherView.startActivity(intent);
     }
 
     @Override

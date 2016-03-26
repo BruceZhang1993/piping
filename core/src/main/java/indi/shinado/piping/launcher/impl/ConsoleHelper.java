@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import indi.shinado.piping.launcher.BaseLauncherView;
 import indi.shinado.piping.launcher.InputCallback;
 import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.IPipeManager;
@@ -29,7 +30,7 @@ public class ConsoleHelper implements IPipeManager{
     private PipeSearcher mSearcher;
 
     private IPipesLoader mLoader;
-    private Context mContext;
+    private BaseLauncherView mContext;
     private AbsTranslator mTranslator;
 
     private ArrayList<BasePipe> mPipes = new ArrayList<>();
@@ -47,7 +48,7 @@ public class ConsoleHelper implements IPipeManager{
     private OnHistoryListener mOnHistoryListener;
     private ArrayList<InputCallback> mInputCallbacks = new ArrayList<>();
 
-    public ConsoleHelper(Context context, final DeviceConsole console, final IPipesLoader loader, AbsTranslator translator) {
+    public ConsoleHelper(BaseLauncherView context, final DeviceConsole console, final IPipesLoader loader, AbsTranslator translator) {
         this.console = console;
         this.mLoader = loader;
         this.mContext = context;

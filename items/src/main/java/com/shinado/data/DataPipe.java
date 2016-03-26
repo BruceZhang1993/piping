@@ -42,14 +42,12 @@ public class DataPipe extends DefaultInputActionPipe{
     }
 
     private void roll(OutputCallback callback){
-        ConnectivityManager mCM = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        Class cmClass   = mCM.getClass();
-        Class[] argClasses  = null;
-        Object[] argObject  = null;
+        ConnectivityManager mCM = (ConnectivityManager) baseLauncherView.getSystemService(Context.CONNECTIVITY_SERVICE);
+        Class<?> cmClass  = mCM.getClass();
         Boolean isEnable = true;
         try{
-            Method method = cmClass.getMethod("getMobileDataEnabled", argClasses);
-            isEnable = (Boolean) method.invoke(mCM, argObject);
+            Method method = cmClass.getMethod("getMobileDataEnabled", null);
+            isEnable = (Boolean) method.invoke(mCM, null);
         }catch (Exception e){
             e.printStackTrace();
         }

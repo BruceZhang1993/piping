@@ -40,7 +40,7 @@ public class ApplicationPipe extends FrequentPipe{
     @Override
     public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
 
-        PackageManager pm = context.getPackageManager();
+        PackageManager pm = baseLauncherView.getPackageManager();
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, input);
@@ -52,13 +52,13 @@ public class ApplicationPipe extends FrequentPipe{
         for (ResolveInfo info : list){
             if (pkg.equals(info.activityInfo.packageName)){
                 sharingIntent.setComponent(new ComponentName(split[0], info.activityInfo.name));
-                context.startActivity(sharingIntent);
+                baseLauncherView.startActivity(sharingIntent);
                 return;
             }
         }
 
         sharingIntent.setComponent(new ComponentName(split[0], split[1]));
-        context.startActivity(sharingIntent);
+        baseLauncherView.startActivity(sharingIntent);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class ApplicationPipe extends FrequentPipe{
     }
 
     private void refreshAppMessage(final AbsTranslator translator, final OnItemsLoadedListener listener, final int total) {
-        appManager = AppManager.getInstance(context, translator);
+        appManager = AppManager.getInstance(baseLauncherView, translator);
         appManager.start();
         new Thread() {
             public void run() {

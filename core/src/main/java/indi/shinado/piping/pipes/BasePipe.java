@@ -1,11 +1,10 @@
 package indi.shinado.piping.pipes;
 
-import android.content.Context;
-
 import com.shinado.annotation.TargetVersion;
 
 import java.util.TreeSet;
 
+import indi.shinado.piping.launcher.BaseLauncherView;
 import indi.shinado.piping.launcher.Console;
 import indi.shinado.piping.launcher.InputCallback;
 import indi.shinado.piping.pipes.entity.Instruction;
@@ -16,7 +15,8 @@ public abstract class BasePipe {
 
     protected int id;
 
-    protected Context context;
+    //from version 3
+    protected BaseLauncherView baseLauncherView;
 
     protected Console console;
 
@@ -146,8 +146,8 @@ public abstract class BasePipe {
         this.console = console;
     }
 
-    public void setContext(Context context){
-        this.context = context;
+    public void setContext(BaseLauncherView context){
+        this.baseLauncherView = context;
     }
 
     public OutputCallback getConsoleCallback(){

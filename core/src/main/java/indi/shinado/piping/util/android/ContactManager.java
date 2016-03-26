@@ -52,13 +52,13 @@ public class ContactManager extends SearchableItemManager {
 
 	@Override
 	public void register() {
-//		context.getContentResolver().registerContentObserver(
+//		baseLauncherView.getContentResolver().registerContentObserver(
 //				ContactsContract.Contacts.CONTENT_URI, true, mObserver);
 	}
 
 	@Override
 	void unregister() {
-//		context.getContentResolver().unregisterContentObserver(mObserver);
+//		baseLauncherView.getContentResolver().unregisterContentObserver(mObserver);
 	}
 
 	private ContentObserver mObserver = new ContentObserver(mHandler) {
@@ -72,8 +72,7 @@ public class ContactManager extends SearchableItemManager {
 	};
 
 	private Contact getContact(String tel){
-		Contact c = map.get(tel);
-		return c;
+		return map.get(tel);
 	}
 	
 	public String getName(String tel){

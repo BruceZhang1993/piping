@@ -39,7 +39,7 @@ public class WiFiPipe extends DefaultInputActionPipe{
     }
 
     private void roll(OutputCallback callback){
-        WifiManager wm = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wm = (WifiManager) baseLauncherView.getSystemService(Context.WIFI_SERVICE);
         switch (wm.getWifiState()){
             case WifiManager.WIFI_STATE_DISABLING:
                 callback.onOutput("WiFi is being disabled");

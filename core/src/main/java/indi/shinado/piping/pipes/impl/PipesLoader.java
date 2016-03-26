@@ -11,6 +11,7 @@ import java.util.List;
 
 import dalvik.system.DexClassLoader;
 import indi.shinado.piping.GlobalDefs;
+import indi.shinado.piping.launcher.BaseLauncherView;
 import indi.shinado.piping.launcher.Console;
 import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.IPipesLoader;
@@ -52,7 +53,7 @@ public class PipesLoader implements IPipesLoader {
         return pipes;
     }
 
-    public void register(BasePipe basePipe, Context context, Console console, AbsTranslator translator,
+    public void register(BasePipe basePipe, BaseLauncherView context, Console console, AbsTranslator translator,
                          SearchablePipe.OnItemsLoadedListener listener, int total){
         if (basePipe == null){
             return;
@@ -73,7 +74,7 @@ public class PipesLoader implements IPipesLoader {
     }
 
     @Override
-    public ArrayList<BasePipe> load(Context context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener) {
+    public ArrayList<BasePipe> load(BaseLauncherView context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener) {
         ArrayList<BasePipe> pipes = new ArrayList<>();
         pipes.addAll(loadFromLocal(context));
         pipes.addAll(loadFromStorage(context));
@@ -85,7 +86,7 @@ public class PipesLoader implements IPipesLoader {
     }
 
     @Override
-    public BasePipe load(PipeEntity entity, Context context, Console console, AbsTranslator translator, BasePipe.OnItemsLoadedListener listener) {
+    public BasePipe load(PipeEntity entity, BaseLauncherView context, Console console, AbsTranslator translator, BasePipe.OnItemsLoadedListener listener) {
         BasePipe pipe = loadFromStorage(context, entity);
         register(pipe, context, console, translator, listener, -1);
         return pipe;

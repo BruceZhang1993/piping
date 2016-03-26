@@ -1,13 +1,10 @@
 package indi.shinado.piping.pipes.impl.action;
 
 import com.activeandroid.query.Select;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import csu.org.dependency.volley.DefaultApplication;
 import csu.org.dependency.volley.Listener;
 import csu.org.dependency.volley.VolleyProvider;
 import indi.shinado.piping.download.DownloadImpl;
@@ -51,7 +48,7 @@ public class InstallPipe extends DefaultInputActionPipe{
         HashMap<String, String> params = new HashMap<>();
 
         params.put("name", input);
-        params.put("version", ""+new SystemInfo(context).getVersionCode());
+        params.put("version", ""+new SystemInfo(baseLauncherView).getVersionCode());
         if (!value.isParamsEmpty()){
             if (value.params.length > 1) {
                 callback.onOutput("$install only takes one param, ignoring the rest");
@@ -95,7 +92,7 @@ public class InstallPipe extends DefaultInputActionPipe{
         }
         String option = value.params[0];
         params.put("option", option);
-        params.put("version", ""+new SystemInfo(context).getVersionCode());
+        params.put("version", ""+new SystemInfo(baseLauncherView).getVersionCode());
 
         if (option.equals(OPT_M)){
             callback.onOutput("The content cannot be null for -m option");

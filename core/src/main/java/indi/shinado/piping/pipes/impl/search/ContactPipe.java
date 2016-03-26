@@ -38,7 +38,7 @@ public class ContactPipe extends FrequentPipe {
                         e.printStackTrace();
                     }
                 }
-                contactManager = ContactManager.getInstance(context, translator);
+                contactManager = ContactManager.getInstance(baseLauncherView, translator);
                 contactManager.start();
                 contactManager.addOnContactChangeListener(new ContactManager.OnContactChangeListener() {
                     @Override
@@ -59,7 +59,7 @@ public class ContactPipe extends FrequentPipe {
         Uri uri = Uri.parse(strUri);
         Intent it = new Intent(Intent.ACTION_SENDTO, uri);
         it.putExtra("sms_body", input);
-        context.startActivity(it);
+        baseLauncherView.startActivity(it);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ContactPipe extends FrequentPipe {
     @Override
     public void execute(Pipe rs) {
         Intent myIntentDial = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + rs.getExecutable()));
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(baseLauncherView, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -81,7 +81,7 @@ public class ContactPipe extends FrequentPipe {
             return;
         }
         addFrequency(rs);
-        context.startActivity(myIntentDial);
+        baseLauncherView.startActivity(myIntentDial);
     }
 
     private void refreshContacts() {
