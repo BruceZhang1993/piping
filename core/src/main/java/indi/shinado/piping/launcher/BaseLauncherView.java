@@ -78,10 +78,11 @@ public abstract class BaseLauncherView extends Activity{
 		startActivity(Intent.createChooser(intent, "Select Wallpaper"));
 	}
 
-	public void selectColor(){
-		startActivityForResult(
-				new Intent(this, ColorActivity.class),
-				REQUEST_COLOR);
+	//0xff83f352
+	public void selectColor(int defaultColor){
+		Intent intent = new Intent(this, ColorActivity.class);
+		intent.putExtra(ColorActivity.EXTRA_COLOR, defaultColor);
+		startActivityForResult(intent, REQUEST_COLOR);
 	}
 
 	@Override

@@ -59,8 +59,8 @@ public class Preferences {
         editor.apply();
     }
 
-    public int getColor(){
-        return settings.getInt(KEY_COLOR, 8092539);
+    public int getColor(int defaultColor){
+        return settings.getInt(KEY_COLOR, defaultColor);
     }
 
     public void setColor(int color) {
