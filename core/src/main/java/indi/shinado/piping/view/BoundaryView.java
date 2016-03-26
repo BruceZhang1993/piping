@@ -28,6 +28,10 @@ public class BoundaryView extends View {
         super.onDraw(canvas);
 
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+
+        if (Math.abs(mPaint.getStrokeWidth()) < 0.01f){
+            return;
+        }
         //draw boundary
         canvas.drawLine(mLeft, mTop, mRight, mTop, mPaint);
         canvas.drawLine(mRight, mTop, mRight, mBottom, mPaint);

@@ -12,7 +12,7 @@ public class Preferences {
     public static final int DEFAULT_BOUNDARY_WIDTH = 6;
     public static final int DEFAULT_COLOR = 0xff44d804;
 
-    public final String DEFAULT_INIT_TEXT = "wsp_stp_auth_build.bui\n"+
+    public static final String DEFAULT_INIT_TEXT = "wsp_stp_auth_build.bui\n"+
             "Account:******\n"+
             "Password:***************\n"+
             "Access granted";
