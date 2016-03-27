@@ -25,7 +25,7 @@
 
 ## More pipes
 
-Click [here](https://github.com/shinado/piping/wiki/5.-How-Piping-save-your-life) to see more demonstration of pipes.
+Click [here](https://github.com/shinado/piping/wiki/6.-How-Piping-save-your-life) to see more demonstration of pipes.
 
 ## Contribute to pipe store
 
