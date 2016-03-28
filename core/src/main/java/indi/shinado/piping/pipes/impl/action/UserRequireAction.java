@@ -19,12 +19,12 @@ public abstract class UserRequireAction extends DefaultInputActionPipe{
         if (userName == null){
             final User user = new User();
 
-            getConsole().input("You haven't logged in. Your name please?");
+            getConsole().display("You haven't logged in. Your name please?");
             getConsole().waitForUserInput(new UserInputCallback() {
                 @Override
                 public void onUserInput(String userInput) {
                     user.name = userInput;
-                    getConsole().input("Your password please?");
+                    getConsole().display("Your password please?");
                     getConsole().waitForUserInput(new UserInputCallback() {
                         @Override
                         public void onUserInput(String userInput) {

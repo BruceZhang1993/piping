@@ -3,6 +3,7 @@ package indi.shinado.piping.launcher.impl;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.shinado.annotation.TargetVersion;
@@ -59,6 +60,8 @@ public class HackerView {
 
     private HandlerHelper mHandlerHelper = new HandlerHelper();
 
+    private TypeThread mTypeThread;
+
     public HackerView(Context context, TextView console, Console device) {
         this.mConsole = console;
         this.mDevice = device;
@@ -77,18 +80,26 @@ public class HackerView {
      * type text in thread
      */
     public void type(final String string) {
-        new Thread() {
-            public void run() {
-                typeText(string);
-            }
-        }.start();
+        mTypeThread = new TypeThread(string);
+        mTypeThread.start();
     }
 
+    /**
+     * started from version 4
+     * force {@link #typeText(String)}  to stop
+     */
+    @TargetVersion(4)
+    public void forceTextToShow(){
+        if (mTypeThread != null){
+            mTypeThread.interrupt();
+        }
+    }
 
     /**
      * type text in without thread
      */
     private void typeText(final String str) {
+
         //wait if blocked already
         while (isBlocked()) ;
         blockInput();
@@ -104,7 +115,13 @@ public class HackerView {
             try {
                 Thread.sleep(15);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //being interrupted by forceTextToShow
+                Log.d("InterruptedException", e.getMessage());
+                j += length;
+                appendCurrentLine(str.substring(j, str.length()));
+                appendNewLine();
+                releaseInput();
+                return;
             }
             j += length;
         }
@@ -182,14 +199,6 @@ public class HackerView {
 
     private void stopTicking() {
         mTicking = false;
-    }
-
-    /**
-     * input text into console
-     * adding string to the end
-     */
-    public void appendText(String sth) {
-        mHandler.obtainMessage(OutputHandler.WHAT_INPUT, sth).sendToTarget();
     }
 
     public void tik() {
@@ -295,10 +304,10 @@ public class HackerView {
         public void run() {
             while (mConsole == null) ;
 
+            blockInput();
             appendNewLine();
             typeInitTexts();
 
-            blockInput();
             loading();
 
             appendNewLine();
@@ -339,12 +348,28 @@ public class HackerView {
         }
     }
 
+    class TypeThread extends Thread{
+
+        private String text;
+
+        TypeThread(String text){
+            this.text = text;
+        }
+
+        public void run() {
+            if (text == null){
+                return;
+            }
+            mDevice.blockInput();
+            typeText(text);
+            mDevice.releaseInput();
+        }
+    }
 
     static class OutputHandler extends Handler {
 
         private static final int WHAT_TIK = 1;
         private static final int WHAT_TOK = 0;
-        private static final int WHAT_INPUT = 2;
         private static final int WHAT_APPEND_NEW_LINE = 5;
         private static final int WHAT_APPEND_CURRENT_LINE = 6;
         private static final int WHAT_REPLACE_CURRENT_LINE = 7;

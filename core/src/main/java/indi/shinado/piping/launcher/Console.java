@@ -4,6 +4,9 @@ import com.shinado.annotation.TargetVersion;
 
 public interface Console {
 
+    /**
+     * to TYPE in a string, blocking input
+     */
     void input(String string);
 
     void replaceCurrentLine(String line);
@@ -22,4 +25,10 @@ public interface Console {
 
     @TargetVersion(4)
     void waitForUserInput(UserInputCallback inputCallback);
+
+    /**
+     * to display a string immediately, without blocking input
+     */
+    @TargetVersion(4)
+    void display(String string);
 }

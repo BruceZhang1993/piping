@@ -2,6 +2,7 @@ package shinado.indi.vender.base;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     private ViewGroup wallpaper;
     private BoundaryView boundaryView;
     private TextView consoleTextView;
+    private boolean mInputBlock = false;
 
     /**
      * user input
@@ -141,7 +143,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     public void intercept() {
         releaseInput();
         mConsoleHelper.enableSearch();
-
+        mHackerView.forceTextToShow();
     }
 
     @Override
@@ -152,6 +154,12 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     @Override
     public void waitForUserInput(UserInputCallback inputCallback) {
         mConsoleHelper.waitForUserInput(inputCallback);
+    }
+
+    @Override
+    public void display(String string) {
+        mHackerView.appendCurrentLine(string);
+        mHackerView.appendNewLine();
     }
 
     @Override
@@ -185,11 +193,15 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     @Override
     public void blockInput() {
         mIOHelper.blockInput();
+        mInputBlock = true;
+        Log.d("Hacker",  "blockInput:" + mInputBlock);
     }
 
     @Override
     public void releaseInput() {
         mIOHelper.releaseInput();
+        mInputBlock = false;
+        Log.d("Hacker",  "releaseInput:" + mInputBlock);
     }
 
     @Override
@@ -207,7 +219,11 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
                 mConsoleHelper.onShift();
                 return true;
             case KeyEvent.KEYCODE_BACK:
-                mConsoleHelper.onUpArrow();
+                if (mInputBlock){
+                    mConsoleHelper.intercept();
+                }else{
+                    mConsoleHelper.onUpArrow();
+                }
                 return true;
         }
         return super.onKeyDown(keyCode, event);
