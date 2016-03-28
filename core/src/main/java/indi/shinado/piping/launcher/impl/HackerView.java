@@ -3,7 +3,6 @@ package indi.shinado.piping.launcher.impl;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.shinado.annotation.TargetVersion;
@@ -17,6 +16,7 @@ import indi.shinado.piping.util.CommonUtil;
 public class HackerView {
 
     private String[] initTexts;
+    private String[] initTextsCache;
 
     /**
      * tick_
@@ -190,12 +190,15 @@ public class HackerView {
         new InitTextingThread().start();
     }
 
-    private void startTicking() {
+    public void startTicking() {
+        if (!mTicking){
+            return;
+        }
         mTicking = true;
         new TickThread().start();
     }
 
-    private void stopTicking() {
+    public void stopTicking() {
         mTicking = false;
     }
 
@@ -224,6 +227,19 @@ public class HackerView {
 
     public void setInitText(String text){
         initTexts = text.split("\n");
+        clear();
+    }
+
+    public void hideInitText(){
+        initTextsCache = initTexts;
+        initTexts = new String[]{};
+        clear();
+    }
+
+    public void showInitText(){
+        if (initTextsCache != null){
+            initTexts = initTextsCache;
+        }
         clear();
     }
 

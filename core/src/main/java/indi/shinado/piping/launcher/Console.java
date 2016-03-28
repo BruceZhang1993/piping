@@ -2,6 +2,8 @@ package indi.shinado.piping.launcher;
 
 import com.shinado.annotation.TargetVersion;
 
+import indi.shinado.piping.pipes.ConsoleInfo;
+
 public interface Console {
 
     /**
@@ -17,7 +19,7 @@ public interface Console {
 
     void clear();
 
-    @TargetVersion(3)
+    @TargetVersion(4)
     void intercept();
 
     @TargetVersion(4)
@@ -31,4 +33,31 @@ public interface Console {
      */
     @TargetVersion(4)
     void display(String string);
+
+    @TargetVersion(4)
+    ConsoleInfo getConsoleInfo();
+
+    /**
+     * under this mode, you won't get any result from system
+     */
+    @TargetVersion(4)
+    void occupyMode();
+
+    @TargetVersion(4)
+    void quitOccupy();
+
+    @TargetVersion(4)
+    void hideInitText();
+
+    @TargetVersion(4)
+    void showInitText();
+
+    /**
+     * under this mode, any input will not be received
+     */
+    @TargetVersion(4)
+    void blindMode();
+
+    @TargetVersion(4)
+    void quitBlind();
 }

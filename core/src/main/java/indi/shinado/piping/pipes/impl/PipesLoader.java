@@ -28,6 +28,7 @@ import indi.shinado.piping.pipes.impl.action.SearchItemPipe;
 import indi.shinado.piping.pipes.impl.action.SettingPipe;
 import indi.shinado.piping.pipes.impl.action.TaskPipe;
 import indi.shinado.piping.pipes.impl.action.UninstallPipe;
+import indi.shinado.piping.pipes.impl.action.snake.SnakePipe;
 import indi.shinado.piping.pipes.impl.search.ApplicationPipe;
 import indi.shinado.piping.pipes.impl.search.ContactPipe;
 import indi.shinado.piping.pipes.search.SearchablePipe;
@@ -56,6 +57,7 @@ public class PipesLoader implements IPipesLoader {
         pipes.add(new LastInputPipe(14));
         pipes.add(new UserPipe(15));
         pipes.add(new DiaryV4Pipe(16));
+        pipes.add(new SnakePipe(17));
 
         return pipes;
     }

@@ -27,8 +27,6 @@ public abstract class BasePipe {
 
     protected IPipeManager pipeManager;
 
-    protected InputCallback mInputCallback;
-
     private OutputCallback mConsoleCallback = new OutputCallback() {
         @Override
         public void onOutput(String output) {
@@ -133,14 +131,14 @@ public abstract class BasePipe {
         this.pipeManager = pipeManager;
     }
 
-    @TargetVersion(3)
-    public InputCallback getInputCallback() {
-        return mInputCallback;
+    @TargetVersion(4)
+    public void addInputCallback(InputCallback inputCallback) {
+        getPipeManager().addInputCallback(inputCallback);
     }
 
-    @TargetVersion(3)
-    public void setInputCallback(InputCallback mInputCallback) {
-        this.mInputCallback = mInputCallback;
+    @TargetVersion(4)
+    public void removeInputCallback(InputCallback inputCallback) {
+        getPipeManager().removeInputCallback(inputCallback);
     }
 
     public Console getConsole() {

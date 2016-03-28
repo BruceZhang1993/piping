@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import indi.shinado.piping.launcher.UserInputCallback;
 import indi.shinado.piping.launcher.impl.ConsoleHelper;
 import indi.shinado.piping.launcher.impl.DeviceConsole;
 import indi.shinado.piping.launcher.impl.HackerView;
+import indi.shinado.piping.pipes.ConsoleInfo;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
@@ -30,6 +32,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     private ViewGroup wallpaper;
     private BoundaryView boundaryView;
     private TextView consoleTextView;
+    private int mConsoleWidth;
     private boolean mInputBlock = false;
 
     /**
@@ -77,6 +80,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         initWallpaper();
         mScrollView = (ScrollView) this.findViewById(R.id.scrollView);
         consoleTextView = (TextView) this.findViewById(R.id.displayText);
+
         consoleTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,6 +98,12 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
             public boolean onLongClick(View v) {
                 selectWallpaper();
                 return true;
+            }
+        });
+        consoleTextView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mConsoleWidth = getConsoleWidth();
             }
         });
         mHackerView = new HackerView(this, consoleTextView, this);
@@ -118,6 +128,17 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         return line;
     }
 
+    private int getConsoleWidth(){
+        String space = "█";
+        String text = "";
+        float textWidth = 0;
+        while (textWidth < consoleTextView.getMeasuredWidth()){
+            text += space;
+            textWidth = consoleTextView.getPaint().measureText(text);
+        }
+        return text.length();
+    }
+
     @Override
     public void onSystemReady() {
         mHackerView.start();
@@ -137,6 +158,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     @Override
     public void clear() {
         mHackerView.clear();
+        mIOHelper.clearInput();
     }
 
     @Override
@@ -178,6 +200,46 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     @Override
     public void onNothing() {
         replaceItem(true, null);
+    }
+
+    @Override
+    public ConsoleInfo getConsoleInfo() {
+        return new ConsoleInfo(mConsoleWidth, /**TODO**/ consoleTextView.getLineCount());
+    }
+
+    @Override
+    public void occupyMode() {
+        mHackerView.stopTicking();
+        mConsoleHelper.occupyMode();
+    }
+
+    @Override
+    public void quitOccupy() {
+        mHackerView.startTicking();
+        mConsoleHelper.quitOccupy();
+    }
+
+    @Override
+    public void hideInitText() {
+        mHackerView.hideInitText();
+    }
+
+    @Override
+    public void showInitText() {
+        mHackerView.showInitText();
+    }
+
+    @Override
+    public void blindMode() {
+        mHackerView.stopTicking();
+        mConsoleHelper.blindMode();
+    }
+
+    @Override
+    public void quitBlind() {
+        mHackerView.startTicking();
+        mConsoleHelper.quitBlind();
+        mIOHelper.clearInput();
     }
 
     @Override

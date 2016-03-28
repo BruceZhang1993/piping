@@ -6,6 +6,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -40,6 +41,11 @@ public class InputMethodIOHelper implements IOHelper{
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String cs = s.toString();
+                if (!cs.isEmpty()){
+                    //get last input
+                    helper.onInput(cs.charAt(cs.length()-1) + "");
+                }
                 helper.onUserInput(s.toString(), before, count);
             }
 
@@ -50,9 +56,6 @@ public class InputMethodIOHelper implements IOHelper{
         mInputTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (event != null){
-                    helper.onInput(event.getCharacters());
-                }
                 if (mBlockInput){
                     return true;
                 }

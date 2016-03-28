@@ -1,5 +1,7 @@
 package indi.shinado.piping.pipes;
 
+import com.shinado.annotation.TargetVersion;
+
 import java.util.ArrayList;
 
 import indi.shinado.piping.launcher.InputCallback;
@@ -14,5 +16,11 @@ public interface IPipeManager {
     ArrayList<BasePipe> getAllPipes();
 
     void destroy();
+
+    @TargetVersion(4)
+    void addInputCallback(InputCallback inputCallback);
+
+    @TargetVersion(4)
+    void removeInputCallback(InputCallback inputCallback);
 
 }

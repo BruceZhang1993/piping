@@ -5,6 +5,7 @@ import android.os.Handler;
 
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.shinado.annotation.TargetVersion;
 
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class ConsoleHelper implements IPipeManager{
 
     private PipeSearcher mSearcher;
     private boolean mSearchable = true;
+    private boolean mBlind = false;
     private UserInputCallback userInputCallback;
 
     private IPipesLoader mLoader;
@@ -75,10 +77,6 @@ public class ConsoleHelper implements IPipeManager{
         mSearcher.addPipes(mPipes);
         for (BasePipe pipe : mPipes){
             pipe.setPipeManager(this);
-            InputCallback callback = pipe.getInputCallback();
-            if (callback != null){
-                mInputCallbacks.add(callback);
-            }
         }
 
         mSearcher.setOnResultChangeListener(new PipeSearcher.OnResultChangeListener() {
@@ -149,18 +147,44 @@ public class ConsoleHelper implements IPipeManager{
         }
     }
 
+    @Override
+    public void addInputCallback(InputCallback inputCallback) {
+        mInputCallbacks.add(inputCallback);
+    }
+
+    @Override
+    public void removeInputCallback(InputCallback inputCallback) {
+        mInputCallbacks.remove(inputCallback);
+    }
+
     private boolean inDatabase(int id){
         PipeEntity search = new Select().from(PipeEntity.class).where("cId = ?", id).executeSingle();
         return (search != null);
     }
 
-    public void waitForUserInput(UserInputCallback callback){
-        userInputCallback = callback;
+    public void occupyMode(){
         mSearchable = false;
     }
 
-    public void enableSearch(){
+    public void quitOccupy(){
         mSearchable = true;
+    }
+
+    public void blindMode(){
+        mBlind = true;
+    }
+
+    public void quitBlind(){
+        mBlind = false;
+    }
+
+    public void waitForUserInput(UserInputCallback callback){
+        userInputCallback = callback;
+        occupyMode();
+    }
+
+    public void enableSearch(){
+        quitOccupy();
     }
 
     public void forceShow(String value, String msg){
@@ -191,6 +215,9 @@ public class ConsoleHelper implements IPipeManager{
      * @param input the current string in the console
      */
     public void onUserInput(String input, int before, int count) {
+        if (mBlind){
+            return;
+        }
         mCurrentInput = input;
         mResults.clear();
         mSearcher.search(input, before, count, mCurrentSelection);
