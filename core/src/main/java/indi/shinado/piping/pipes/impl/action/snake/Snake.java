@@ -50,25 +50,21 @@ public class Snake {
 
     /**
      *
-     * @return the last step
+     * @return the last step, null if hit itself
      */
     public Point crawl(Point dot){
         Point next = getNextStep();
+        for (Point pt : getBody()){
+            if (next.equals(pt)){
+                return null;
+            }
+        }
         if (!next.equals(dot)){
             body.poll();
         }
 
         body.add(next);
         return next;
-    }
-
-    public boolean hitSelf(Point next){
-        for (Point pt : getBody()){
-            if (next.equals(pt)){
-                return true;
-            }
-        }
-        return false;
     }
 
     public Point getNextStep(){

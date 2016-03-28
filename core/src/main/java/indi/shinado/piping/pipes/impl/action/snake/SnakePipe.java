@@ -31,10 +31,10 @@ public class SnakePipe extends DefaultInputActionPipe implements Console {
         StringBuilder sb = new StringBuilder();
         for (int y = 0; y < matrix.length; y++) {
             for (int x = 0; x < matrix[y].length; x++) {
-                if (matrix[x][y] == Game.EMPTY) {
-                    sb.append("　");
-                } else {
+                if (matrix[y][x] == Game.EMPTY) {
                     sb.append("█");
+                } else {
+                    sb.append("　");
                 }
             }
             sb.append("\n");
@@ -82,7 +82,7 @@ public class SnakePipe extends DefaultInputActionPipe implements Console {
             @Override
             public void onUserInput(String userInput) {
                 int width = getConsole().getConsoleInfo().width;
-                Maze maze = new Maze(width, width);
+                Maze maze = new Maze(width, (int) (width * 0.75f));
                 getConsole().blindMode();
                 getConsole().hideInitText();
                 game.create(maze, new Snake(), SnakePipe.this);

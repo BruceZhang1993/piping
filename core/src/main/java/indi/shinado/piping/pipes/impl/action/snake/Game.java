@@ -55,12 +55,17 @@ public class Game {
                 }
                 Snake previous = snake.clone();
                 Point next = snake.crawl(dot);
+                if (next == null){
+                    //hit itself
+                    console.die();
+                    return;
+                }
 
                 if (next.equals(dot)){
                     dot = getNewDot();
                     onNewDot(dot);
                 }
-                if (maze.hitWall(next) || snake.hitSelf(next)){
+                if (maze.hitWall(next)){
                     console.die();
                     return;
                 }
@@ -96,7 +101,7 @@ public class Game {
 
     //TODO add walls
     private void initMatrix(Maze maze){
-        matrix = new byte[maze.width][maze.height];
+        matrix = new byte[maze.height][maze.width];
         for (byte[] row : matrix){
             for (int i=0; i<row.length; i++){
                 row[i] += EMPTY;
@@ -114,11 +119,11 @@ public class Game {
     }
 
     private void remove(Point point){
-        matrix[point.x][point.y] = EMPTY;
+        matrix[point.y][point.x] = EMPTY;
     }
 
     private void add(Point point){
-        matrix[point.x][point.y] = SOLID;
+        matrix[point.y][point.x] = SOLID;
     }
 
     private void onNewDot(Point point) {
