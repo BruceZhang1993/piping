@@ -99,7 +99,6 @@ public class HackerView {
      * type text in without thread
      */
     private void typeText(final String str) {
-
         //wait if blocked already
         while (isBlocked()) ;
         blockInput();
@@ -116,7 +115,6 @@ public class HackerView {
                 Thread.sleep(15);
             } catch (InterruptedException e) {
                 //being interrupted by forceTextToShow
-                Log.d("InterruptedException", e.getMessage());
                 j += length;
                 appendCurrentLine(str.substring(j, str.length()));
                 appendNewLine();
@@ -304,10 +302,10 @@ public class HackerView {
         public void run() {
             while (mConsole == null) ;
 
-            blockInput();
             appendNewLine();
             typeInitTexts();
 
+            blockInput();
             loading();
 
             appendNewLine();
