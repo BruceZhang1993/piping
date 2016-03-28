@@ -150,8 +150,8 @@ public class ConsoleHelper implements IPipeManager{
         final Pipe item = getPipe(value);
         mResults.clear();
         mResults.add(item);
-        console.displayResult(item);
         console.input(msg);
+        console.displayResult(item);
 
         new Handler().postDelayed(new Runnable() {
             @Override

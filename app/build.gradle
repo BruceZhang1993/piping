@@ -15,8 +15,8 @@ android {
         targetSdkVersion project.ext.mTargetSdkVersion
 
         applicationId "shinado.indi.piping"
-        versionCode 3
-        versionName "1.0.01"
+        versionCode 4
+        versionName "1.0.03"
     }
     buildTypes {
         release {

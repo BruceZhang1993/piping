@@ -17,4 +17,7 @@ public interface Console {
     @TargetVersion(3)
     void intercept();
 
+    @TargetVersion(4)
+    String getLastInput();
+
 }

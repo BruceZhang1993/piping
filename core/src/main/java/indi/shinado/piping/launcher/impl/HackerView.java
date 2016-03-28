@@ -217,6 +217,11 @@ public class HackerView {
         clear();
     }
 
+    public String getLastInput(){
+        String[] splits = mPreviousLines.toString().split("\n");
+        return splits[splits.length-1];
+    }
+
     private class HandlerHelper {
 
         /**

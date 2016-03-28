@@ -21,7 +21,7 @@ import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
 import indi.shinado.piping.view.BoundaryView;
 import shinado.indi.vender.R;
 
-public class HackerLauncher extends BaseLauncherView implements DeviceConsole, Feedable{
+public class HackerLauncher extends BaseLauncherView implements DeviceConsole, Feedable {
 
     private ScrollView mScrollView;
     private HackerView mHackerView;
@@ -64,7 +64,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         mConsoleHelper.destroy();
     }
 
-    private void setupStatusBar(){
+    private void setupStatusBar() {
         new StatusBarHelper().setupStatusBar(this);
     }
 
@@ -97,7 +97,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         mHackerView.init();
     }
 
-    public HackerView getHackerView(){
+    public HackerView getHackerView() {
         return mHackerView;
     }
 
@@ -139,6 +139,11 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     @Override
     public void intercept() {
         releaseInput();
+    }
+
+    @Override
+    public String getLastInput() {
+        return mHackerView.getLastInput();
     }
 
     @Override
@@ -217,7 +222,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
     @Override
     public void resume(boolean flag) {
-        if (!flag){
+        if (!flag) {
             mConsoleHelper.intercept();
         }
     }
