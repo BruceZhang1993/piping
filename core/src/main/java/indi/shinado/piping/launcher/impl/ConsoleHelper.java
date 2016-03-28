@@ -160,7 +160,6 @@ public class ConsoleHelper implements IPipeManager{
     }
 
     public void enableSearch(){
-        userInputCallback = null;
         mSearchable = true;
     }
 

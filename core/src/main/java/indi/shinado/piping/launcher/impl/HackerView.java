@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.TextView;
 
+import com.shinado.annotation.TargetVersion;
+
 import java.lang.ref.WeakReference;
 
 import indi.shinado.piping.launcher.Console;
@@ -81,6 +83,7 @@ public class HackerView {
             }
         }.start();
     }
+
 
     /**
      * type text in without thread

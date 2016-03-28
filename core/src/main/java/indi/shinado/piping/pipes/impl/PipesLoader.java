@@ -19,6 +19,7 @@ import indi.shinado.piping.pipes.entity.PipeEntity;
 import indi.shinado.piping.pipes.impl.action.AppInfoPipe;
 import indi.shinado.piping.pipes.impl.action.ClearPipe;
 import indi.shinado.piping.pipes.impl.action.CopyPipe;
+import indi.shinado.piping.pipes.impl.action.DiaryV4Pipe;
 import indi.shinado.piping.pipes.impl.action.HelpPipe;
 import indi.shinado.piping.pipes.impl.action.InstallPipe;
 import indi.shinado.piping.pipes.impl.action.LastInputPipe;
@@ -54,6 +55,7 @@ public class PipesLoader implements IPipesLoader {
         pipes.add(new SettingPipe(13));
         pipes.add(new LastInputPipe(14));
         pipes.add(new UserPipe(15));
+        pipes.add(new DiaryV4Pipe(16));
 
         return pipes;
     }

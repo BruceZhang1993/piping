@@ -29,7 +29,7 @@ public class UserHelper {
         HashMap<String, String> params = new HashMap<>();
         params.put("name", user.name);
         params.put("pwd", user.pwd);
-        new VolleyProvider().handleData("", params, Result.class,
+        new VolleyProvider().handleData("http://1.yilaunch.sinaapp.com/user/sign_in_up.php", params, Result.class,
                 new Listener.Response<Result>() {
                     @Override
                     public void onResponse(Result obj) {

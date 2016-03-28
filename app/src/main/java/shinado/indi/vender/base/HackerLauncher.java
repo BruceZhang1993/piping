@@ -141,6 +141,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     public void intercept() {
         releaseInput();
         mConsoleHelper.enableSearch();
+
     }
 
     @Override
