@@ -32,9 +32,9 @@ public class SnakePipe extends DefaultInputActionPipe implements Console {
         for (int y = 0; y < matrix.length; y++) {
             for (int x = 0; x < matrix[y].length; x++) {
                 if (matrix[x][y] == Game.EMPTY) {
-                    sb.append("█");
-                } else {
                     sb.append("　");
+                } else {
+                    sb.append("█");
                 }
             }
             sb.append("\n");

@@ -60,7 +60,7 @@ public class Game {
                     dot = getNewDot();
                     onNewDot(dot);
                 }
-                if (maze.hitWall(next)){
+                if (maze.hitWall(next) || snake.hitSelf(next)){
                     console.die();
                     return;
                 }
@@ -94,7 +94,7 @@ public class Game {
         return snake;
     }
 
-
+    //TODO add walls
     private void initMatrix(Maze maze){
         matrix = new byte[maze.width][maze.height];
         for (byte[] row : matrix){

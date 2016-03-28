@@ -62,6 +62,15 @@ public class Snake {
         return next;
     }
 
+    public boolean hitSelf(Point next){
+        for (Point pt : getBody()){
+            if (next.equals(pt)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Point getNextStep(){
         Point last = body.getLast();
         Point next;
