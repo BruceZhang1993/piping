@@ -180,11 +180,11 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     }
 
     @Override
-    public void onFeed(int flag, String msg, String pkg) {
+    public void onFeed(int flag, String msg, String value) {
         //clear input
         mIOHelper.clearInput();
         mConsoleHelper.reset();
-        mConsoleHelper.forceShow(pkg, msg);
+        mConsoleHelper.forceShow(value, msg);
     }
 
     @Override

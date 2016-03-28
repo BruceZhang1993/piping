@@ -28,6 +28,11 @@ public class ContactPipe extends FrequentPipe {
     }
 
     @Override
+    public Pipe getByValue(String value) {
+        return contactManager.getResult(value);
+    }
+
+    @Override
     public void load(final AbsTranslator translator, final OnItemsLoadedListener listener, final int total) {
         new Thread() {
             public void run() {

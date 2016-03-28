@@ -35,9 +35,8 @@ public class FeedHelper {
 						context.sendBroadcast(new Intent(GlobalDefs.ACTION_PHONE_OFF));
 						if(dialNum != null){
 							int s = (int) ((System.currentTimeMillis() - ringingTime) / 1000);
-							Pipe item = ContactManager.getInstance(context, null).getResult(dialNum);
-							String msg = "Incoming call from " + item.getDisplayName() + ", lasting " + s;
-							feedable.onFeed(Feedable.FLAG_PHONE, msg, null);
+							String msg = "Incoming call lasting " + s + "s.";
+							feedable.onFeed(Feedable.FLAG_PHONE, msg, dialNum);
 							dialNum = null;
 						}
 						break;  

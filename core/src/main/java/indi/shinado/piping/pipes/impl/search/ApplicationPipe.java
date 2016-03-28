@@ -123,10 +123,12 @@ public class ApplicationPipe extends FrequentPipe{
         }
     }
 
-    public Pipe getByPackageName(String pkg){
-        Pipe item = appManager.getResult(pkg + ",", true);
+    @Override
+    public Pipe getByValue(/** package name **/ String value) {
+        Pipe item = appManager.getResult(value + ",", true);
         item.setBasePipe(this);
         item.setInstruction(new Instruction(""));
         return item;
     }
+
 }

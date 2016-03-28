@@ -21,6 +21,12 @@ public class DirectoryPipe extends SearchablePipe {
     }
 
     @Override
+    public Pipe getByValue(String value) {
+        //not used
+        return null;
+    }
+
+    @Override
     public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
         callback.onOutput("Directory does not take any input");
     }

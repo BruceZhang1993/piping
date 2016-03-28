@@ -1,6 +1,7 @@
 package indi.shinado.piping.launcher.impl;
 
 import android.content.Context;
+import android.os.Handler;
 
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
@@ -145,12 +146,20 @@ public class ConsoleHelper implements IPipeManager{
         return (search != null);
     }
 
-    public void forceShow(String pkg, String msg){
-        Pipe item = getPipe(pkg);
+    public void forceShow(String value, String msg){
+        final Pipe item = getPipe(value);
         mResults.clear();
         mResults.add(item);
-        console.input(msg);
         console.displayResult(item);
+        console.input(msg);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //display in the new line
+                console.displayResult(item);
+            }
+        }, 500);
     }
 
     public void reset(){
@@ -293,8 +302,11 @@ public class ConsoleHelper implements IPipeManager{
 
     private Pipe getPipe(String pkg){
         for (BasePipe pipe : mPipes){
-           if (pipe instanceof ApplicationPipe){
-               return ((ApplicationPipe)pipe).getByPackageName(pkg);
+           if (pipe instanceof SearchablePipe){
+               Pipe item = ((SearchablePipe)pipe).getByValue(pkg);
+               if (item != null){
+                   return item;
+               }
            }
         }
         return null;

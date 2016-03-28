@@ -99,22 +99,6 @@ public abstract class SearchablePipe extends BasePipe {
         }
     }
 
-    protected TreeSet<Pipe> getResultFromStack(String key) {
-        TreeSet<Pipe> some = new TreeSet<>();
-        if (!resultStack.empty()) {
-            TreeSet<Pipe> list = resultStack.peek();
-            Object[] array = list.toArray();
-            for (int i = 0; i < list.size(); i++) {
-                Pipe res = (Pipe) array[i];
-                if (res.getSearchableName().contains(key)) {
-                    some.add(res);
-                }
-            }
-        }
-        return some;
-    }
-
-    //TODO
     protected void removeItemInMap(Pipe vo) {
         for (TreeSet<Pipe> results : resultMap.values()){
             for (Pipe result : results){
@@ -136,7 +120,6 @@ public abstract class SearchablePipe extends BasePipe {
             if (list == null) {
                 list = new TreeSet<>();
                 resultMap.put(c, list);
-//                allItemMap.put(c, list);
             }
             list.add(vo);
         }
@@ -144,4 +127,5 @@ public abstract class SearchablePipe extends BasePipe {
 
     public abstract void destroy();
 
+    public abstract Pipe getByValue(String value);
 }
