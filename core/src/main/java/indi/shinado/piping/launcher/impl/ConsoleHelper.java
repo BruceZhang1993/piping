@@ -13,6 +13,7 @@ import java.util.TreeSet;
 
 import indi.shinado.piping.launcher.BaseLauncherView;
 import indi.shinado.piping.launcher.InputCallback;
+import indi.shinado.piping.launcher.UserInputCallback;
 import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.IPipeManager;
 import indi.shinado.piping.pipes.IPipesLoader;
@@ -29,6 +30,8 @@ public class ConsoleHelper implements IPipeManager{
     private DeviceConsole console;
 
     private PipeSearcher mSearcher;
+    private boolean mSearchable = true;
+    private UserInputCallback userInputCallback;
 
     private IPipesLoader mLoader;
     private BaseLauncherView mContext;
@@ -82,6 +85,11 @@ public class ConsoleHelper implements IPipeManager{
 
             @Override
             public void onResultChange(TreeSet<Pipe> results, String input, Pipe.PreviousPipes previous) {
+                if(!mSearchable){
+                    console.onNothing();
+                    return;
+                }
+
                 System.out.println("get results from input:" + input + ", size:" + results.size());
                 mResults.addAll(results);
 
@@ -144,6 +152,15 @@ public class ConsoleHelper implements IPipeManager{
     private boolean inDatabase(int id){
         PipeEntity search = new Select().from(PipeEntity.class).where("cId = ?", id).executeSingle();
         return (search != null);
+    }
+
+    public void waitForUserInput(UserInputCallback callback){
+        userInputCallback = callback;
+        mSearchable = false;
+    }
+
+    public void enableSearch(){
+        mSearchable = true;
     }
 
     public void forceShow(String value, String msg){
@@ -257,13 +274,19 @@ public class ConsoleHelper implements IPipeManager{
     }
 
     public void onEnter() {
-        addToHistory();
-        Pipe current = getCurrent();
-        if (current != null) {
-            console.onEnter(current);
-            current.getBasePipe().startExecution(current);
-            current.setPrevious(null);
-            mCurrent = current;
+        if (!mSearchable){
+            enableSearch();
+            userInputCallback.onUserInput(mCurrentInput);
+            console.onEnter(null);
+        }else {
+            addToHistory();
+            Pipe current = getCurrent();
+            if (current != null) {
+                console.onEnter(current);
+                current.getBasePipe().startExecution(current);
+                current.setPrevious(null);
+                mCurrent = current;
+            }
         }
         reset();
     }

@@ -93,7 +93,7 @@ public class SettingPipe extends DefaultInputActionPipe {
             String[] settings = input.split("\n");
             int i=0;
             for (String setting : settings){
-                String item = setting.split(": ")[1].trim();
+                String item = setting.split(": ", 2)[1].trim();
                 switch (i++){
                     case 0:
                         int width = Integer.parseInt(item);

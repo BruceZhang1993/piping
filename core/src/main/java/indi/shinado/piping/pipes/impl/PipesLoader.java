@@ -53,6 +53,7 @@ public class PipesLoader implements IPipesLoader {
         pipes.add(new ClearPipe(12));
         pipes.add(new SettingPipe(13));
         pipes.add(new LastInputPipe(14));
+        pipes.add(new UserPipe(15));
 
         return pipes;
     }

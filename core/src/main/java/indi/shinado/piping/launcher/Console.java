@@ -20,4 +20,6 @@ public interface Console {
     @TargetVersion(4)
     String getLastInput();
 
+    @TargetVersion(4)
+    void waitForUserInput(UserInputCallback inputCallback);
 }

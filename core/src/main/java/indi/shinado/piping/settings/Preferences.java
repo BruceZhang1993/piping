@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.PointF;
 
+import com.shinado.annotation.TargetVersion;
+
 import indi.shinado.piping.color.ColorPickerView;
 
 public class Preferences {
@@ -20,6 +22,7 @@ public class Preferences {
     private static final String TEXT_SIZE = "text_size";
     private static final String BOUNDARY_WIDTH = "boundary_width";
     private static final String INIT_TEXT = "init_text";
+    private static final String KEY_USER_NAME = "user.name";
     private static final String KEY_COLOR = "color";
     private static final String KEY_LEFT_X = "left_x";
     private static final String KEY_LEFT_Y = "left_y";
@@ -108,6 +111,18 @@ public class Preferences {
     public void setBoundaryWidth(int width) {
         SharedPreferences.Editor editor = settings.edit();
         editor.putFloat(BOUNDARY_WIDTH, width);
+        editor.apply();
+    }
+
+    @TargetVersion(4)
+    public String getUserName(){
+        return settings.getString(KEY_USER_NAME, null);
+    }
+
+    @TargetVersion(4)
+    public void setUserName(String name) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(KEY_USER_NAME, name);
         editor.apply();
     }
 }

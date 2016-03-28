@@ -12,6 +12,7 @@ import indi.shinado.piping.feed.Feedable;
 import indi.shinado.piping.launcher.BaseLauncherView;
 import indi.shinado.piping.launcher.IOHelper;
 import indi.shinado.piping.launcher.IOHelperFactory;
+import indi.shinado.piping.launcher.UserInputCallback;
 import indi.shinado.piping.launcher.impl.ConsoleHelper;
 import indi.shinado.piping.launcher.impl.DeviceConsole;
 import indi.shinado.piping.launcher.impl.HackerView;
@@ -144,6 +145,11 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     @Override
     public String getLastInput() {
         return mHackerView.getLastInput();
+    }
+
+    @Override
+    public void waitForUserInput(UserInputCallback inputCallback) {
+        mConsoleHelper.waitForUserInput(inputCallback);
     }
 
     @Override
