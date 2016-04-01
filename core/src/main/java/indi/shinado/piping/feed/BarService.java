@@ -31,7 +31,6 @@ public class BarService extends AccessibilityService {
 
             if (parcelable instanceof Notification) {
                 // Statusbar Notification
-
                 //Notification notification = (Notification) parcelable;
                 //Log.e(TAG, "Notification -> notification.tickerText :: " + notification.tickerText);
                 List<CharSequence> messages = event.getText();
@@ -110,6 +109,12 @@ public class BarService extends AccessibilityService {
         info.notificationTimeout = 100;
 
         this.setServiceInfo(info);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.d("BarService", "onCreate");
     }
 
     public static final class Constants {

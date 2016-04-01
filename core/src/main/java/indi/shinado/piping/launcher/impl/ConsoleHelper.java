@@ -1,12 +1,9 @@
 package indi.shinado.piping.launcher.impl;
 
-import android.content.Context;
 import android.os.Handler;
 
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
-import com.shinado.annotation.TargetVersion;
-
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,8 +18,6 @@ import indi.shinado.piping.pipes.IPipesLoader;
 import indi.shinado.piping.pipes.PipeSearcher;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.PipeEntity;
-import indi.shinado.piping.pipes.impl.PipesLoader;
-import indi.shinado.piping.pipes.impl.search.ApplicationPipe;
 import indi.shinado.piping.pipes.search.SearchablePipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
@@ -190,7 +185,7 @@ public class ConsoleHelper implements IPipeManager{
     public void forceShow(String value, String msg){
         final Pipe item = getPipe(value);
         mResults.clear();
-        mResults.add(item);
+            mResults.add(item);
         console.input(msg);
         console.displayResult(item);
 

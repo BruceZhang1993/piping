@@ -1,6 +1,8 @@
 package indi.shinado.piping.pipes.impl.action;
 
 
+import android.support.annotation.NonNull;
+
 import com.shinado.annotation.TargetVersion;
 
 import java.util.HashMap;
@@ -79,7 +81,6 @@ public class DiaryV4Pipe extends UserRequireAction {
                     public void onResponse(Result obj) {
                         getConsole().releaseInput();
                         StringBuilder sb = new StringBuilder();
-                        int i=0;
                         for (Result.Diary item : obj.list){
                             sb.append("------").append(item.date.substring(0, 10)).append("------").append("\n");
                             sb.append(item.memo);
@@ -106,7 +107,7 @@ public class DiaryV4Pipe extends UserRequireAction {
 
         getConsole().blockInput();
         String[] split = input.split("@");
-        int rating = 1024;
+        int rating = -1;
         String memo = split[0];
         if (split.length > 1){
             try {
@@ -126,8 +127,12 @@ public class DiaryV4Pipe extends UserRequireAction {
 
                     @Override
                     public void onResponse(AddResult obj) {
+                        if (obj.result > 0){
+                            getConsole().input("Diary added.");
+                        }else{
+                            getConsole().input("Diary failed.");
+                        }
                         getConsole().releaseInput();
-
                     }
                 },
                 new Listener.Error() {
@@ -154,7 +159,7 @@ public class DiaryV4Pipe extends UserRequireAction {
             public String date;
 
             @Override
-            public int compareTo(Diary another) {
+            public int compareTo(@NonNull Diary another) {
                 return another.date.compareTo(date);
             }
         }
