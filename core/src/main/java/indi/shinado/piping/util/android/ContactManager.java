@@ -107,6 +107,7 @@ public class ContactManager extends SearchableItemManager {
 		Log.d(TAG, "start loading contacts");
 		map = new HashMap<>();
 		ContentResolver resolver = context.getContentResolver();
+		//TODO add permission check
 		Cursor phoneCursor = resolver.query(Phone.CONTENT_URI, PHONES_PROJECTION, null, null, null);  
 		if (phoneCursor != null) {  
 		    while (phoneCursor.moveToNext()) {  
