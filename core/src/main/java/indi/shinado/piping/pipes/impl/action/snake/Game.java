@@ -1,5 +1,7 @@
 package indi.shinado.piping.pipes.impl.action.snake;
 
+import android.util.Log;
+
 import java.util.Random;
 
 public class Game {
@@ -11,7 +13,7 @@ public class Game {
     private Snake snake;
     private Point dot;
     private byte[][] matrix;
-    private int interval = 500;
+    private int interval = 350;
     private boolean running = false;
 
     public void create(Maze maze, Snake snake, Console console){
@@ -25,6 +27,7 @@ public class Game {
         }
 
         dot = getNewDot();
+        add(dot);
     }
 
     public void start(){
@@ -63,7 +66,7 @@ public class Game {
 
                 if (next.equals(dot)){
                     dot = getNewDot();
-                    onNewDot(dot);
+                    add(dot);
                 }
                 if (maze.hitWall(next)){
                     console.die();
@@ -79,13 +82,14 @@ public class Game {
         while (snake.isPointPartOfBody(point)){
             point = getRandomPoint();
         }
+        Log.d("snake", "dot:"+point.x + "," + point.y);
         return point;
     }
 
     private Point getRandomPoint(){
         Point point = new Point(
-                Math.abs(new Random(maze.width).nextInt()),
-                Math.abs(new Random(maze.height).nextInt())
+                Math.abs(new Random().nextInt() % maze.width),
+                Math.abs(new Random().nextInt() % maze.height)
         );
         return point;
     }
@@ -99,7 +103,6 @@ public class Game {
         return snake;
     }
 
-    //TODO add walls
     private void initMatrix(Maze maze){
         matrix = new byte[maze.height][maze.width];
         for (byte[] row : matrix){
@@ -114,7 +117,6 @@ public class Game {
         Point previousTail = snake.getTail();
         remove(previousTail);
         add(next);
-        this.snake = snake;
         console.draw(matrix);
     }
 
@@ -124,11 +126,6 @@ public class Game {
 
     private void add(Point point){
         matrix[point.y][point.x] = SOLID;
-    }
-
-    private void onNewDot(Point point) {
-        add(point);
-        console.draw(matrix);
     }
 
 }

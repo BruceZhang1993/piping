@@ -9,15 +9,16 @@ public class Snake {
 
     public Snake(){
         direction = Direction.RIGHT;
+        body.add(new Point(0, 0));
         body.add(new Point(1, 0));
         body.add(new Point(2, 0));
         body.add(new Point(3, 0));
-        body.add(new Point(4, 0));
     }
 
     private Snake(Snake another){
         this.direction = another.direction;
-        this.body = another.body;
+        body.clear();
+        body.addAll(another.body);
     }
 
     public void up(){
@@ -49,7 +50,6 @@ public class Snake {
     }
 
     /**
-     *
      * @return the last step, null if hit itself
      */
     public Point crawl(Point dot){
