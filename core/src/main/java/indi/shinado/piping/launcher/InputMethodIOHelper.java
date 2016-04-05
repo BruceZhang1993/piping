@@ -139,6 +139,11 @@ public class InputMethodIOHelper implements IOHelper{
         startInput();
     }
 
+    @Override
+    public void requestLayout() {
+        mInputTextView.requestLayout();
+    }
+
     static class InputTextHandler extends Handler{
 
         static final int WHAT_BLOCK = 1;

@@ -2,11 +2,15 @@ package shinado.indi.vender.base;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -22,7 +26,10 @@ import indi.shinado.piping.pipes.ConsoleInfo;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
+import indi.shinado.piping.settings.ConsoleAnimation;
+import indi.shinado.piping.view.AnimationTextView;
 import indi.shinado.piping.view.BoundaryView;
+import indi.shinado.piping.view.TextAnimation;
 import shinado.indi.vender.R;
 
 public class HackerLauncher extends BaseLauncherView implements DeviceConsole, Feedable {
@@ -31,14 +38,9 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     private HackerView mHackerView;
     private ViewGroup wallpaper;
     private BoundaryView boundaryView;
-    private TextView consoleTextView;
+    private AnimationTextView consoleTextView;
     private int mConsoleWidth;
     private boolean mInputBlock = false;
-
-    /**
-     * user input
-     */
-//    private String mInputText = "";
 
     private ConsoleHelper mConsoleHelper;
 
@@ -79,20 +81,8 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         boundaryView = (BoundaryView) this.findViewById(R.id.boundary);
         initWallpaper();
         mScrollView = (ScrollView) this.findViewById(R.id.scrollView);
-        consoleTextView = (TextView) this.findViewById(R.id.displayText);
+        consoleTextView = (AnimationTextView) this.findViewById(R.id.displayText);
 
-        consoleTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mIOHelper.restartInput();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
-                    }
-                }, 800);
-            }
-        });
         consoleTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -110,10 +100,6 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         mHackerView.init();
     }
 
-    public HackerView getHackerView() {
-        return mHackerView;
-    }
-
     private void replaceItem(boolean ignoreMatch, Pipe pipe) {
         String newLine = constructDisplay(mIOHelper.getCurrentUserInput(), pipe);
         mHackerView.replaceCurrentLine(newLine);
@@ -128,11 +114,11 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         return line;
     }
 
-    private int getConsoleWidth(){
+    private int getConsoleWidth() {
         String space = "█";
         String text = "";
         float textWidth = 0;
-        while (textWidth < consoleTextView.getMeasuredWidth()){
+        while (textWidth < consoleTextView.getMeasuredWidth()) {
             text += space;
             textWidth = consoleTextView.getPaint().measureText(text);
         }
@@ -143,6 +129,9 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     public void onSystemReady() {
         mHackerView.start();
         mIOHelper.startInput();
+
+        ConsoleAnimation animation = ConsoleAnimation.get();
+        setAnimation(animation);
     }
 
     @Override
@@ -204,7 +193,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
     @Override
     public ConsoleInfo getConsoleInfo() {
-        return new ConsoleInfo(mConsoleWidth, /**TODO**/ consoleTextView.getLineCount());
+        return new ConsoleInfo(mConsoleWidth, /**TODO**/consoleTextView.getLineCount());
     }
 
     @Override
@@ -256,14 +245,14 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     public void blockInput() {
         mIOHelper.blockInput();
         mInputBlock = true;
-        Log.d("Hacker",  "blockInput:" + mInputBlock);
+        Log.d("Hacker", "blockInput:" + mInputBlock);
     }
 
     @Override
     public void releaseInput() {
         mIOHelper.releaseInput();
         mInputBlock = false;
-        Log.d("Hacker",  "releaseInput:" + mInputBlock);
+        Log.d("Hacker", "releaseInput:" + mInputBlock);
     }
 
     @Override
@@ -281,9 +270,9 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
                 mConsoleHelper.onShift();
                 return true;
             case KeyEvent.KEYCODE_BACK:
-                if (mInputBlock){
+                if (mInputBlock) {
                     mConsoleHelper.intercept();
-                }else{
+                } else {
                     mConsoleHelper.onUpArrow();
                 }
                 return true;
@@ -307,9 +296,26 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     }
 
     @Override
+    public void setConsoleAnimation(ConsoleAnimation animation) {
+
+    }
+
+    @Override
+    public void setAnimation(ConsoleAnimation animation) {
+//        consoleTextView.setConsoleAnimation(animation);
+    }
+
+    @Override
     public void resume(boolean flag) {
         if (!flag) {
-            mConsoleHelper.intercept();
+            mIOHelper.restartInput();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mIOHelper.requestLayout();
+                    mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                }
+            }, 800);
         }
     }
 

@@ -16,7 +16,7 @@ android {
 
         applicationId "shinado.indi.piping"
         versionCode 4
-        versionName "1.0.03"
+        versionName "1.0.1"
     }
     buildTypes {
         release {

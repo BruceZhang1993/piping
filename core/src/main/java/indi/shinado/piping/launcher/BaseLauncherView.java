@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.shinado.annotation.TargetVersion;
+
 import java.util.ArrayList;
 
 import indi.shinado.piping.GlobalDefs;
@@ -22,6 +24,7 @@ import indi.shinado.piping.color.ColorActivity;
 import indi.shinado.piping.feed.BarService;
 import indi.shinado.piping.feed.FeedHelper;
 import indi.shinado.piping.feed.Feedable;
+import indi.shinado.piping.settings.ConsoleAnimation;
 import indi.shinado.piping.settings.Preferences;
 import indi.shinado.piping.statusbar.BatteryStatusBar;
 import indi.shinado.piping.statusbar.ConnectionStatusBar;
@@ -121,6 +124,11 @@ public abstract class BaseLauncherView extends Activity{
 		startActivityForResult(intent, REQUEST_COLOR);
 	}
 
+	public void setColor(int color){
+		setTextColor(getBackgroundView(), color);
+		setBoundaryColor(color);
+	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent){
 		switch (requestCode) {
@@ -128,8 +136,7 @@ public abstract class BaseLauncherView extends Activity{
 				if(resultCode == RESULT_OK){
 					int color = intent.getIntExtra(GlobalDefs.EXTRA_COLOR, 0);
 					mPref.setColor(color);
-					setTextColor(getBackgroundView(), color);
-					setBoundaryColor(color);
+					setColor(color);
 				}
 				break;
 		}
@@ -216,9 +223,19 @@ public abstract class BaseLauncherView extends Activity{
 		return super.onKeyDown(keyCode, event);
 	}
 
+	@TargetVersion(4)
 	public abstract ViewGroup getBackgroundView();
 
+	@TargetVersion(4)
 	public abstract BoundaryView getBoundaryView();
 
+	@TargetVersion(4)
 	public abstract void setInitText(String text);
+
+	@TargetVersion(4)
+	public abstract void setConsoleAnimation(ConsoleAnimation animation);
+
+	@TargetVersion(4)
+	public abstract void setAnimation(ConsoleAnimation animation);
+
 }

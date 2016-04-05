@@ -1,9 +1,6 @@
 package indi.shinado.piping.launcher.impl;
 
-import com.shinado.annotation.TargetVersion;
-
 import indi.shinado.piping.launcher.Console;
-import indi.shinado.piping.pipes.ConsoleInfo;
 import indi.shinado.piping.pipes.entity.Pipe;
 
 public interface DeviceConsole extends Console {

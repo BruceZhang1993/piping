@@ -248,6 +248,7 @@ public class HackerView {
         return splits[splits.length-1];
     }
 
+
     private class HandlerHelper {
 
         /**

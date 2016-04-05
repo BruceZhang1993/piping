@@ -150,6 +150,11 @@ public class KeyboardIOHelper implements IOHelper{
         //none of my business
     }
 
+    @Override
+    public void requestLayout() {
+        //none of my business
+    }
+
     private void showKeyboard() {
         int TIME_SHOW = 150;
         mKeyboard.setVisibility(View.VISIBLE);

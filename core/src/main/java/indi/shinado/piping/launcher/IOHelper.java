@@ -23,4 +23,6 @@ public interface IOHelper {
     void startInput();
 
     void restartInput();
+
+    void requestLayout();
 }
