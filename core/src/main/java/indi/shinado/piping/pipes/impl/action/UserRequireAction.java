@@ -24,7 +24,7 @@ public abstract class UserRequireAction extends DefaultInputActionPipe{
                 @Override
                 public void onUserInput(String userInput) {
                     user.name = userInput;
-                    getConsole().display("Your password please?");
+                    getConsole().display("\nYour password please?");
                     getConsole().waitForUserInput(new UserInputCallback() {
                         @Override
                         public void onUserInput(String userInput) {

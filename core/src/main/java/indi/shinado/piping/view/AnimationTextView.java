@@ -11,7 +11,6 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
@@ -130,24 +129,12 @@ public class AnimationTextView extends TextView{
         float textX = layout.getLineWidth(layout.getLineCount()-1);
         float textY = getBottom();
 
-        AnimationSet animationSet = new AnimationSet(false);
         if (animation instanceof TextAnimation){
             ((TextAnimation)animation).applyValue(textX, textY, getWidth(), contentContainer.getHeight());
-        }else{
-            //get to the right position
-            TextAnimation textAnimation = new TextAnimation(Animation.RELATIVE_TO_PARENT, 0,
-                    Animation.RELATIVE_TO_PARENT, 0,
-                    Animation.RELATIVE_TO_PARENT, 0,
-                    Animation.RELATIVE_TO_PARENT, 0);
-            textAnimation.setDuration(animation.getDuration());
-            textAnimation.applyValue(textX, textY, getWidth(), contentContainer.getHeight());
-            animationSet.addAnimation(textAnimation);
         }
-        animationSet.addAnimation(animation);
-        animationSet.setDuration(animation.getDuration());
 
-        textView.startAnimation(animationSet);
-//        animationSet.setAnimationListener(listener);
+        textView.startAnimation(animation);
+        animation.setAnimationListener(listener);
     }
 
 }
