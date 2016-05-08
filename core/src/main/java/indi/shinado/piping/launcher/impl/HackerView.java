@@ -191,7 +191,7 @@ public class HackerView {
     }
 
     public void startTicking() {
-        if (!mTicking){
+        if (mTicking){
             return;
         }
         mTicking = true;

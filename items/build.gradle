@@ -6,7 +6,7 @@ android {
     buildToolsVersion project.ext.mBuildToolsVersion
 
     defaultConfig {
-        minSdkVersion 18
+        minSdkVersion project.ext.mMinSdkVersion
         targetSdkVersion project.ext.mTargetSdkVersion
 
         applicationId "shinado.indi.vender"
@@ -31,7 +31,7 @@ dependencies {
     compile project(':core')
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:1.+"
-    compile 'com.android.support:appcompat-v7:22.0.0' //← MAKE SURE IT’S 22.0.0
+//    compile 'com.android.support:appcompat-v7:22.0.0' //← MAKE SURE IT’S 22.0.0
     apt project(':compiler')
 
     androidTestCompile 'com.android.support:support-annotations:23.1.1'

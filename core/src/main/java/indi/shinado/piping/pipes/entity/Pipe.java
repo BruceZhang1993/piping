@@ -1,7 +1,5 @@
 package indi.shinado.piping.pipes.entity;
 
-import android.support.annotation.NonNull;
-
 import java.util.TreeSet;
 
 import indi.shinado.piping.pipes.BasePipe;
@@ -65,7 +63,6 @@ public class Pipe implements Comparable<Pipe> {
         this.searchableName = searchableName;
         this.executable = executable;
     }
-
     public SearchableName getSearchableName() {
         return searchableName;
     }
@@ -174,7 +171,7 @@ public class Pipe implements Comparable<Pipe> {
     }
 
     @Override
-    public int compareTo(@NonNull Pipe another) {
+    public int compareTo(Pipe another) {
         //search results always ahead of action
 //        int compare = another.typeIndex - typeIndex;
         //same type
@@ -197,7 +194,7 @@ public class Pipe implements Comparable<Pipe> {
     @Override
     public boolean equals(Object o) {
         if (o instanceof Pipe){
-            return displayName.equals(((Pipe)o).displayName);
+            return executable.equals(((Pipe)o).executable);
         }
         return super.equals(o);
     }

@@ -1,7 +1,6 @@
 package indi.shinado.piping.pipes.impl.action;
 
 
-import android.support.annotation.NonNull;
 
 import com.shinado.annotation.TargetVersion;
 
@@ -159,7 +158,7 @@ public class DiaryV4Pipe extends UserRequireAction {
             public String date;
 
             @Override
-            public int compareTo(@NonNull Diary another) {
+            public int compareTo(Diary another) {
                 return another.date.compareTo(date);
             }
         }

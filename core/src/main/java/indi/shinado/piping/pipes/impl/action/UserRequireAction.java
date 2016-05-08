@@ -1,7 +1,5 @@
 package indi.shinado.piping.pipes.impl.action;
 
-import android.support.annotation.NonNull;
-
 import indi.shinado.piping.account.User;
 import indi.shinado.piping.account.UserHelper;
 import indi.shinado.piping.launcher.UserInputCallback;
@@ -13,7 +11,7 @@ public abstract class UserRequireAction extends DefaultInputActionPipe{
         super(id);
     }
     
-    protected void verifyUser(@NonNull final OnUserCallback callback){
+    protected void verifyUser(final OnUserCallback callback){
         final UserHelper userHelper = new UserHelper(context);
         String userName = userHelper.getUserName();
         if (userName == null){

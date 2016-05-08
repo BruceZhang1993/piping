@@ -1,8 +1,14 @@
 package indi.shinado.piping.pipes.impl.action;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.view.KeyEvent;
 import android.view.animation.Animation;
 
+import java.util.HashMap;
+
 import indi.shinado.piping.launcher.Console;
+import indi.shinado.piping.launcher.KeyDownCallback;
 import indi.shinado.piping.launcher.UserInputCallback;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Instruction;
@@ -55,7 +61,8 @@ public class SettingPipe extends DefaultInputActionPipe {
                 "1.set text color\n" +
                 "2.set text size\n" +
                 "3.set head text\n" +
-                "4.set boundary width";
+                "4.set boundary width\n" +
+                "5.set shift key";
 //                "5.set text animation";
         callback.onOutput(help);
         getConsole().waitForUserInput(new UserInputCallback() {
@@ -251,7 +258,7 @@ public class SettingPipe extends DefaultInputActionPipe {
     @Override
     public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
         if (input.startsWith(LIST_PREFIX)) {
-            Preferences preferences = new Preferences(context);
+            final Preferences preferences = new Preferences(context);
             String[] settings = input.split("\n");
             int i = 0;
             for (String setting : settings) {
@@ -281,6 +288,19 @@ public class SettingPipe extends DefaultInputActionPipe {
                         animation.clearTable();
                         animation.save();
                         getLauncher().setAnimation(animation);
+                        break;
+                    case 5:
+                        getConsole().waitForKeyDown(new KeyDownCallback() {
+                            @Override
+                            public void onKeyDown(int keyCode) {
+                                if (keyCode == KeyEvent.KEYCODE_BACK ||
+                                        keyCode == KeyEvent.KEYCODE_HOME){
+                                    getConsole().input("Error, can not set this key");
+                                    return;
+                                }
+                                preferences.setShiftKey(keyCode);
+                            }
+                        });
                         break;
                 }
             }
@@ -324,4 +344,24 @@ public class SettingPipe extends DefaultInputActionPipe {
         }
     }
 
+    private void setValues(Context context, HashMap<String, String> values){
+        SharedPreferences preferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        for (String key : values.keySet()){
+            String value = values.get(key);
+            editor.putString(key, value);
+        }
+        editor.apply();
+    }
+
+    public class SettingStorage{
+
+        private SharedPreferences mStorage;
+
+        public SettingStorage(Context context){
+            mStorage = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+        }
+
+
+    }
 }

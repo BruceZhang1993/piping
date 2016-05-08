@@ -1,5 +1,7 @@
 package indi.shinado.piping.pipes.search;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
@@ -102,8 +104,10 @@ public abstract class SearchablePipe extends BasePipe {
     protected void removeItemInMap(Pipe vo) {
         for (TreeSet<Pipe> results : resultMap.values()){
             for (Pipe result : results){
-                if (result == vo){
+                if (result.equals(vo)){
+                    Log.d("Searchable", "remove item:" + vo.getExecutable());
                     results.remove(result);
+                    break;
                 }
             }
         }

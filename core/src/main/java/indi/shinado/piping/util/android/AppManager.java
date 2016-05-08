@@ -209,12 +209,13 @@ public class AppManager extends SearchableItemManager{
 
     private void onUninstall(String packageName) {
         ResolveInfo info = getResolveByPackage(packageName);
+        Pipe result = getResult(packageName, false);
 
         mPackageMap.remove(info.activityInfo.packageName);
         mActivityMap.remove(info.activityInfo.name);
         if (onAppChangeListener != null) {
             for (OnAppChangeListener l : onAppChangeListener) {
-                l.onAppChange(OnAppChangeListener.FLAG_REMOVE, getResult(packageName, false));
+                l.onAppChange(OnAppChangeListener.FLAG_REMOVE, result);
             }
         }
     }

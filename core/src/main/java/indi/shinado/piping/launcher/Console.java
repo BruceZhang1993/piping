@@ -28,6 +28,9 @@ public interface Console {
     @TargetVersion(4)
     void waitForUserInput(UserInputCallback inputCallback);
 
+    @TargetVersion(4)
+    void waitForKeyDown(KeyDownCallback inputCallback);
+
     /**
      * to display a string immediately, without blocking input
      */
@@ -60,4 +63,7 @@ public interface Console {
 
     @TargetVersion(4)
     void quitBlind();
+
+    @TargetVersion(4)
+    void notifyUI();
 }

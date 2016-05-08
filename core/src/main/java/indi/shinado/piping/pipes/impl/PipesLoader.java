@@ -58,6 +58,7 @@ public class PipesLoader implements IPipesLoader {
         pipes.add(new UserPipe(15));
         pipes.add(new DiaryV4Pipe(16));
         pipes.add(new SnakePipe(17));
+        pipes.add(new ShellPipe(18));
 
         return pipes;
     }

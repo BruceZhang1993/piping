@@ -3,4 +3,6 @@
     <string name="select_color">Select color</string>
     <string name="bt_cancel">Cancel</string>
     <string name="bt_done">Done</string>
+    <string name="process_memory">[Memory: %s]</string>
+    <string name="process_tasks">Tasks %s</string>
 </resources>

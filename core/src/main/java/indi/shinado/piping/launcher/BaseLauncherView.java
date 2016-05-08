@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.shinado.annotation.TargetVersion;
+import com.shinado.core.R;
 
 import java.util.ArrayList;
 
@@ -103,6 +104,10 @@ public abstract class BaseLauncherView extends Activity{
 	}
 
 	protected void setTextColor(ViewGroup viewGroup, int color){
+		if (viewGroup.getTag() != null && viewGroup.getTag().equals("no-format")){
+			return;
+		}
+
 		for (int i=0;  i < viewGroup.getChildCount(); i++){
 			View view = viewGroup.getChildAt(i);
 			if (view instanceof TextView && ! (view instanceof EditText)){

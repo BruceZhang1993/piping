@@ -3,6 +3,7 @@ package indi.shinado.piping.settings;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.PointF;
+import android.view.KeyEvent;
 
 import com.shinado.annotation.TargetVersion;
 
@@ -24,6 +25,9 @@ public class Preferences {
     private static final String INIT_TEXT = "init_text";
     private static final String KEY_USER_NAME = "user.name";
     private static final String KEY_COLOR = "color";
+//    private static final String KEY_HISTORY = "history";
+    private static final String KEY_KEYBOARD = "keyboard";
+    private static final String KEY_SHIFT = "shift";
     private static final String KEY_LEFT_X = "left_x";
     private static final String KEY_LEFT_Y = "left_y";
     private static final String KEY_RIGHT_X = "right_x";
@@ -124,5 +128,31 @@ public class Preferences {
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(KEY_USER_NAME, name);
         editor.apply();
+    }
+
+    @TargetVersion(4)
+    public int getKeyboardKey(){
+        return settings.getInt(KEY_KEYBOARD, KeyEvent.KEYCODE_HOME);
+    }
+
+    @TargetVersion(4)
+    public void getKeyboardKey(int keyCode){
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt(KEY_KEYBOARD, keyCode);
+        editor.apply();
+
+    }
+
+    @TargetVersion(4)
+    public int getShiftKey(){
+        return settings.getInt(KEY_SHIFT, KeyEvent.KEYCODE_MENU);
+    }
+
+    @TargetVersion(4)
+    public void setShiftKey(int keyCode){
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt(KEY_SHIFT, keyCode);
+        editor.apply();
+
     }
 }

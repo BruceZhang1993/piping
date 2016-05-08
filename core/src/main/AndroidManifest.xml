@@ -29,7 +29,7 @@
             </intent-filter>
         </service>
         <activity android:name="indi.shinado.piping.color.ColorActivity"
-            android:theme="@style/Base.Theme.AppCompat.Dialog"/>
+            />
     </application>
 
 </manifest>

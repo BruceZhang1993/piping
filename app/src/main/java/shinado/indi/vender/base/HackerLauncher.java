@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import indi.shinado.piping.feed.Feedable;
 import indi.shinado.piping.launcher.BaseLauncherView;
 import indi.shinado.piping.launcher.IOHelper;
 import indi.shinado.piping.launcher.IOHelperFactory;
+import indi.shinado.piping.launcher.KeyDownCallback;
 import indi.shinado.piping.launcher.UserInputCallback;
 import indi.shinado.piping.launcher.impl.ConsoleHelper;
 import indi.shinado.piping.launcher.impl.DeviceConsole;
@@ -26,7 +28,9 @@ import indi.shinado.piping.pipes.ConsoleInfo;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
+import indi.shinado.piping.process.ProcessView;
 import indi.shinado.piping.settings.ConsoleAnimation;
+import indi.shinado.piping.settings.Preferences;
 import indi.shinado.piping.view.AnimationTextView;
 import indi.shinado.piping.view.BoundaryView;
 import indi.shinado.piping.view.TextAnimation;
@@ -44,13 +48,24 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
     private ConsoleHelper mConsoleHelper;
 
+    private KeyDownCallback mKeyDownCallback;
+    private boolean waitingForKeyDown;
+
+    private Preferences preferences;
+    private int KEY_SHIFT;
+
     private IOHelper mIOHelper;
+
+    private ProcessView mProcessView;
 
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_base_launcher);
+
+        preferences = new Preferences(this);
+        reloadKey();
 
         mIOHelper = new IOHelperFactory().getInstance();
         initViews();
@@ -63,6 +78,11 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         setTextColor(wallpaper, mPref.getColor());
         setTextSize(wallpaper, mPref.getTextSize());
         setBoundaryColor(mPref.getColor());
+
+    }
+
+    private void reloadKey(){
+        KEY_SHIFT = preferences.getShiftKey();
     }
 
     @Override
@@ -70,10 +90,30 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         super.onDestroy();
         mHackerView.stop();
         mConsoleHelper.destroy();
+        mProcessView.onDestroy();
     }
 
     private void setupStatusBar() {
         new StatusBarHelper().setupStatusBar(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mProcessView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mProcessView.onPause();
+    }
+
+    private void initHeadView(){
+        mProcessView = new ProcessView(this, 5);
+        FrameLayout headLayout = (FrameLayout) findViewById(R.id.head_fl);
+        headLayout.addView(mProcessView.getView());
+        mProcessView.onCreate();
     }
 
     private void initViews() {
@@ -98,6 +138,8 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         });
         mHackerView = new HackerView(this, consoleTextView, this);
         mHackerView.init();
+
+        initHeadView();
     }
 
     private void replaceItem(boolean ignoreMatch, Pipe pipe) {
@@ -168,6 +210,12 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     }
 
     @Override
+    public void waitForKeyDown(KeyDownCallback inputCallback) {
+        mKeyDownCallback = inputCallback;
+        waitingForKeyDown = true;
+    }
+
+    @Override
     public void display(String string) {
         mHackerView.appendCurrentLine(string);
         mHackerView.appendNewLine();
@@ -232,6 +280,11 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     }
 
     @Override
+    public void notifyUI() {
+        mProcessView.notifyUI();
+    }
+
+    @Override
     public void input(String string) {
         mHackerView.type(string);
     }
@@ -265,10 +318,20 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (waitingForKeyDown){
+            if (mKeyDownCallback != null){
+                mKeyDownCallback.onKeyDown(keyCode);
+            }
+            reloadKey();
+            waitingForKeyDown = false;
+            return true;
+        }
+
+        if (keyCode == KEY_SHIFT){
+            mConsoleHelper.onShift();
+            return true;
+        }
         switch (keyCode) {
-            case KeyEvent.KEYCODE_MENU:
-                mConsoleHelper.onShift();
-                return true;
             case KeyEvent.KEYCODE_BACK:
                 if (mInputBlock) {
                     mConsoleHelper.intercept();

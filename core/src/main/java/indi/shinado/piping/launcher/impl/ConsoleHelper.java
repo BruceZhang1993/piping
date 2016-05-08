@@ -161,12 +161,20 @@ public class ConsoleHelper implements IPipeManager{
         mSearchable = false;
     }
 
+    public boolean inOccupyMode(){
+        return mSearchable;
+    }
+
     public void quitOccupy(){
         mSearchable = true;
     }
 
     public void blindMode(){
         mBlind = true;
+    }
+
+    public boolean inBlindMode(){
+        return mBlind;
     }
 
     public void quitBlind(){
@@ -296,7 +304,7 @@ public class ConsoleHelper implements IPipeManager{
     }
 
     public void onEnter() {
-        if (!mSearchable){
+        if (!inOccupyMode()){
             enableSearch();
             userInputCallback.onUserInput(mCurrentInput);
             console.onEnter(null);
