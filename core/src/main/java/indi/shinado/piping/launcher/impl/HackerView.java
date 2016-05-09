@@ -282,7 +282,7 @@ public class HackerView {
         }
 
         private void tik() {
-            mConsole.setText(mPreviousLines.toString() + mCurrentLine + "_");
+            mConsole.setText(mPreviousLines.toString() + mCurrentLine + "▊");
         }
 
         private void tok() {

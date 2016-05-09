@@ -55,7 +55,7 @@ public class SettingPipe extends DefaultInputActionPipe {
     }
 
     @Override
-    public void onParamsEmpty(Pipe rs, OutputCallback callback) {
+    public void onParamsEmpty(Pipe rs, final OutputCallback callback) {
         String help = "Please select an item. Enter any other keys to quit. \n" +
                 "0.set wallpaper\n" +
                 "1.set text color\n" +
@@ -89,6 +89,10 @@ public class SettingPipe extends DefaultInputActionPipe {
                             getConsole().input("Please enter boundary width(e.g. 4)");
                             setBoundaryWidth();
                             break;
+                        case 5:
+                            getConsole().input("Please press a key to set shift key");
+                            setKey();
+                            break;
 //                        case 5:
 //                            getConsole().input("please enter animation parameters.\n" +
 //                                    "(" + ConsoleAnimation.TYPE_TRANS +", float startX, float endX, float startY, float endY, int duration) to set translate animation\n" +
@@ -106,7 +110,22 @@ public class SettingPipe extends DefaultInputActionPipe {
         });
     }
 
-    private void setAnimation(){
+    private void setKey() {
+        getConsole().waitForKeyDown(new KeyDownCallback() {
+            @Override
+            public void onKeyDown(int keyCode) {
+                if (keyCode == KeyEvent.KEYCODE_BACK ||
+                        keyCode == KeyEvent.KEYCODE_HOME) {
+                    getConsole().input("Error, can not set this key");
+                    return;
+                }
+                Preferences preferences = new Preferences(getLauncher());
+                preferences.setShiftKey(keyCode);
+            }
+        });
+    }
+
+    private void setAnimation() {
         getConsole().waitForUserInput(new UserInputCallback() {
             @Override
             public void onUserInput(String userInput) {
@@ -115,11 +134,11 @@ public class SettingPipe extends DefaultInputActionPipe {
         });
     }
 
-    private void parserAnimation(String userInput){
+    private void parserAnimation(String userInput) {
         userInput = userInput.replace("(", "");
         userInput = userInput.replace(")", "");
         String[] split = userInput.split(",");
-        if (split.length > 0){
+        if (split.length > 0) {
             int type = 0;
             try {
                 type = Integer.parseInt(split[0]);
@@ -127,9 +146,9 @@ public class SettingPipe extends DefaultInputActionPipe {
                 getConsole().input("Parameters wrong. ");
                 return;
             }
-            switch (type){
+            switch (type) {
                 case ConsoleAnimation.TYPE_TRANS:
-                    if (split.length == 6){
+                    if (split.length == 6) {
                         try {
                             float startX = Float.parseFloat(split[1]);
                             float endX = Float.parseFloat(split[2]);
@@ -144,16 +163,16 @@ public class SettingPipe extends DefaultInputActionPipe {
                         } catch (NumberFormatException e) {
                             getConsole().input("Parameters wrong.");
                         }
-                    }else{
+                    } else {
                         getConsole().input("Parameters length wrong.");
                     }
                     break;
                 default:
-                    if (!ConsoleAnimation.isTypeCorrect(type)){
+                    if (!ConsoleAnimation.isTypeCorrect(type)) {
                         getConsole().input("Type wrong.");
                         return;
                     }
-                    if (split.length == 4){
+                    if (split.length == 4) {
                         float startX = Float.parseFloat(split[1]);
                         float endX = Float.parseFloat(split[2]);
                         int duration = Integer.parseInt(split[3]);
@@ -162,7 +181,7 @@ public class SettingPipe extends DefaultInputActionPipe {
                         animation.clearTable();
                         animation.save();
                         getLauncher().setAnimation(animation);
-                    }else{
+                    } else {
                         getConsole().input("Parameters length wrong.");
                     }
 
@@ -207,7 +226,7 @@ public class SettingPipe extends DefaultInputActionPipe {
             @Override
             public void onUserInput(String userInput) {
                 Preferences preferences = new Preferences(context);
-                if (userInput.equals(OPT_R)){
+                if (userInput.equals(OPT_R)) {
                     userInput = Preferences.DEFAULT_INIT_TEXT;
                 }
                 preferences.setInitText(userInput);
@@ -294,7 +313,7 @@ public class SettingPipe extends DefaultInputActionPipe {
                             @Override
                             public void onKeyDown(int keyCode) {
                                 if (keyCode == KeyEvent.KEYCODE_BACK ||
-                                        keyCode == KeyEvent.KEYCODE_HOME){
+                                        keyCode == KeyEvent.KEYCODE_HOME) {
                                     getConsole().input("Error, can not set this key");
                                     return;
                                 }
@@ -344,21 +363,21 @@ public class SettingPipe extends DefaultInputActionPipe {
         }
     }
 
-    private void setValues(Context context, HashMap<String, String> values){
+    private void setValues(Context context, HashMap<String, String> values) {
         SharedPreferences preferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        for (String key : values.keySet()){
+        for (String key : values.keySet()) {
             String value = values.get(key);
             editor.putString(key, value);
         }
         editor.apply();
     }
 
-    public class SettingStorage{
+    public class SettingStorage {
 
         private SharedPreferences mStorage;
 
-        public SettingStorage(Context context){
+        public SettingStorage(Context context) {
             mStorage = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
         }
 
