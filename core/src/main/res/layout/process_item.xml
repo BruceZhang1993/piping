@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/process_item_pid"
+        style="@style/ProcessInfoText"
+        android:text="10229" />
+
+    <TextView
+        android:id="@+id/process_item_name"
+        style="@style/ProcessInfoText"
+        android:text="com.tencent.mm" />
+
+    <TextView
+        android:id="@+id/process_item_vmrss"
+        style="@style/ProcessInfoText"
+        android:text="20336kB" />
+
+    <TextView
+        android:id="@+id/process_item_threads"
+        style="@style/ProcessInfoText"
+        android:text="3" />
+
+    <TextView
+        android:id="@+id/process_item_state"
+        style="@style/ProcessInfoText"
+        android:text="sleeping" />
+
+</TableRow>

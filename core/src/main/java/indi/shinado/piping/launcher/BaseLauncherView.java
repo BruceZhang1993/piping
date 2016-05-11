@@ -155,7 +155,6 @@ public abstract class BaseLauncherView extends Activity{
 		}
 	};
 
-
 	public ArrayList<StatusBar> addStatusable(Statusable statusable){
 		loadLocalStatusBar(statusable);
 		loadServerStatusBar(statusable);

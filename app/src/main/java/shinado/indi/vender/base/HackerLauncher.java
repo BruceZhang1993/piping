@@ -2,18 +2,16 @@ package shinado.indi.vender.base;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
+
+import com.shinado.piping.geek.HeadLoadder;
+import com.shinado.piping.geek.header.IHeadView;
 
 import indi.shinado.piping.feed.Feedable;
 import indi.shinado.piping.launcher.BaseLauncherView;
@@ -28,12 +26,10 @@ import indi.shinado.piping.pipes.ConsoleInfo;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
-import indi.shinado.piping.process.ProcessView;
 import indi.shinado.piping.settings.ConsoleAnimation;
 import indi.shinado.piping.settings.Preferences;
 import indi.shinado.piping.view.AnimationTextView;
 import indi.shinado.piping.view.BoundaryView;
-import indi.shinado.piping.view.TextAnimation;
 import shinado.indi.vender.R;
 
 public class HackerLauncher extends BaseLauncherView implements DeviceConsole, Feedable {
@@ -56,7 +52,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
     private IOHelper mIOHelper;
 
-    private ProcessView mProcessView;
+    private IHeadView mHeadView;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -90,7 +86,9 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         super.onDestroy();
         mHackerView.stop();
         mConsoleHelper.destroy();
-        mProcessView.onDestroy();
+        if (mHeadView != null){
+            mHeadView.onDestroy();
+        }
     }
 
     private void setupStatusBar() {
@@ -100,20 +98,26 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     @Override
     public void onResume() {
         super.onResume();
-        mProcessView.onResume();
+        if(mHeadView != null){
+            mHeadView.onResume();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mProcessView.onPause();
+        if (mHeadView != null){
+            mHeadView.onPause();
+        }
     }
 
     private void initHeadView(){
-        mProcessView = new ProcessView(this, 5);
-        FrameLayout headLayout = (FrameLayout) findViewById(R.id.head_fl);
-        headLayout.addView(mProcessView.getView());
-        mProcessView.onCreate();
+        mHeadView = HeadLoadder.load(this);
+        if (mHeadView != null){
+            FrameLayout headLayout = (FrameLayout) findViewById(R.id.head_fl);
+            headLayout.addView(mHeadView.getView(this, headLayout));
+            mHeadView.onCreate();
+        }
     }
 
     private void initViews() {
@@ -281,7 +285,9 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
     @Override
     public void notifyUI() {
-        mProcessView.notifyUI();
+        if (mHeadView != null){
+            mHeadView.notifyUI();
+        }
     }
 
     @Override

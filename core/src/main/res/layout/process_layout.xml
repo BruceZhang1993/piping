@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/process_layout_tasks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tasks 12, 118 Threads"
+        android:textColor="#00aaff" />
+
+    <TextView
+        android:id="@+id/process_layout_memory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Memory [1230MB/2870MB]"
+        android:textColor="#ff0000" />
+
+    <TableLayout
+        android:id="@+id/process_layout_procs_tl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:id="@+id/process_layout_procs_head"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00ff00">
+
+            <TextView
+                style="@style/ProcessInfoText.head"
+                android:text="Pid" />
+
+            <TextView
+                style="@style/ProcessInfoText.head"
+                android:text="Name" />
+
+
+            <TextView
+                style="@style/ProcessInfoText.head"
+                android:text="VmRSS" />
+
+            <TextView
+                style="@style/ProcessInfoText.head"
+                android:text="Threads" />
+
+            <TextView
+                style="@style/ProcessInfoText.head"
+                android:text="State" />
+        </TableRow>
+
+
+    </TableLayout>
+
+</LinearLayout>

@@ -35,6 +35,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     testCompile "org.mockito:mockito-core:1.+"
-    compile project(':core')
-    apt project(':compiler')
+    compile project(':geek')
 }

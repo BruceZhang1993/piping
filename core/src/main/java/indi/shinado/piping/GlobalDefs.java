@@ -13,7 +13,7 @@ public class GlobalDefs {
 	public static final String PATH_HOME = 
 			Environment.getExternalStorageDirectory().toString() + 
 			File.separator + 
-			"Flow"+
+			"Piping"+
 			File.separator;
 
 	public static final String ACTION_START = "com.shinado.desk.start";
