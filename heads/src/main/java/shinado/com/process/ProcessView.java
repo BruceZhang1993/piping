@@ -21,9 +21,9 @@ import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.util.List;
 
-import indi.shinado.piping.process.ProcessManager;
-import indi.shinado.piping.process.models.AndroidAppProcess;
-import indi.shinado.piping.process.models.Status;
+import shinado.com.process.models.AndroidAppProcess;
+import shinado.com.process.models.Status;
+
 
 public class ProcessView implements IHeadView {
 

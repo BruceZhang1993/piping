@@ -58,14 +58,14 @@ public class ControlGroup implements Parcelable {
     return String.format("%d:%s:%s", id, subsystems, group);
   }
 
-  public static final Creator<indi.shinado.piping.process.models.ControlGroup> CREATOR = new Creator<indi.shinado.piping.process.models.ControlGroup>() {
+  public static final Creator<ControlGroup> CREATOR = new Creator<ControlGroup>() {
 
-    @Override public indi.shinado.piping.process.models.ControlGroup createFromParcel(Parcel source) {
-      return new indi.shinado.piping.process.models.ControlGroup(source);
+    @Override public ControlGroup createFromParcel(Parcel source) {
+      return new ControlGroup(source);
     }
 
-    @Override public indi.shinado.piping.process.models.ControlGroup[] newArray(int size) {
-      return new indi.shinado.piping.process.models.ControlGroup[size];
+    @Override public ControlGroup[] newArray(int size) {
+      return new ControlGroup[size];
     }
   };
 

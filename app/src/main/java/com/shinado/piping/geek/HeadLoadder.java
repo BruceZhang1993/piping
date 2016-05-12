@@ -22,8 +22,9 @@ public class HeadLoadder {
 
     public static IHeadView load(Context context) {
 
-        HeadEntity entity = new Select().from(HeadEntity.class).where("selected = false").executeSingle();
+        HeadEntity entity = new Select().from(HeadEntity.class).where("selected = 1").executeSingle();
         if (entity == null){
+            return new ShoppingHeadView();
         }
 
         File dexOutputDir = context.getDir("outdex", 0);

@@ -22,9 +22,6 @@ import android.os.Parcelable;
 
 import java.io.IOException;
 
-import indi.shinado.piping.process.models.*;
-import indi.shinado.piping.process.models.ProcFile;
-
 /**
  * <p>Provides information about memory usage, measured in pages.</p>
  *
@@ -47,12 +44,12 @@ public final class Statm extends ProcFile {
    *
    * @param pid
    *     the process id.
-   * @return the {@link indi.shinado.piping.process.models.Statm}
+   * @return the {@link Statm}
    * @throws IOException
    *     if the file does not exist or we don't have read permissions.
    */
-  public static indi.shinado.piping.process.models.Statm get(int pid) throws IOException {
-    return new indi.shinado.piping.process.models.Statm(String.format("/proc/%d/statm", pid));
+  public static Statm get(int pid) throws IOException {
+    return new Statm(String.format("/proc/%d/statm", pid));
   }
 
   public final String[] fields;
@@ -86,14 +83,14 @@ public final class Statm extends ProcFile {
     dest.writeStringArray(this.fields);
   }
 
-  public static final Creator<indi.shinado.piping.process.models.Statm> CREATOR = new Creator<indi.shinado.piping.process.models.Statm>() {
+  public static final Creator<Statm> CREATOR = new Creator<Statm>() {
 
-    @Override public indi.shinado.piping.process.models.Statm createFromParcel(Parcel source) {
-      return new indi.shinado.piping.process.models.Statm(source);
+    @Override public Statm createFromParcel(Parcel source) {
+      return new Statm(source);
     }
 
-    @Override public indi.shinado.piping.process.models.Statm[] newArray(int size) {
-      return new indi.shinado.piping.process.models.Statm[size];
+    @Override public Statm[] newArray(int size) {
+      return new Statm[size];
     }
   };
 

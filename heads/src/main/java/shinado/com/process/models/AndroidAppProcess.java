@@ -26,9 +26,8 @@ import android.os.Parcel;
 import java.io.File;
 import java.io.IOException;
 
-import indi.shinado.piping.process.ProcessManager;
-import indi.shinado.piping.process.models.*;
-import indi.shinado.piping.process.models.Cgroup;
+import shinado.com.process.ProcessManager;
+
 
 public class AndroidAppProcess extends AndroidProcess {
 
@@ -138,16 +137,16 @@ public class AndroidAppProcess extends AndroidProcess {
         uid = in.readInt();
     }
 
-    public static final Creator<indi.shinado.piping.process.models.AndroidAppProcess> CREATOR = new Creator<indi.shinado.piping.process.models.AndroidAppProcess>() {
+    public static final Creator<AndroidAppProcess> CREATOR = new Creator<AndroidAppProcess>() {
 
         @Override
-        public indi.shinado.piping.process.models.AndroidAppProcess createFromParcel(Parcel source) {
-            return new indi.shinado.piping.process.models.AndroidAppProcess(source);
+        public AndroidAppProcess createFromParcel(Parcel source) {
+            return new AndroidAppProcess(source);
         }
 
         @Override
-        public indi.shinado.piping.process.models.AndroidAppProcess[] newArray(int size) {
-            return new indi.shinado.piping.process.models.AndroidAppProcess[size];
+        public AndroidAppProcess[] newArray(int size) {
+            return new AndroidAppProcess[size];
         }
     };
 

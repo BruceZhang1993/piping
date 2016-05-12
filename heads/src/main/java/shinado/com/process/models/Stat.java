@@ -22,9 +22,6 @@ import android.os.Parcelable;
 
 import java.io.IOException;
 
-import indi.shinado.piping.process.models.*;
-import indi.shinado.piping.process.models.ProcFile;
-
 /**
  * <p>/proc/[pid]/stat</p>
  *
@@ -169,12 +166,12 @@ public final class Stat extends ProcFile {
    *
    * @param pid
    *     the process id.
-   * @return the {@link indi.shinado.piping.process.models.Stat}
+   * @return the {@link Stat}
    * @throws IOException
    *     if the file does not exist or we don't have read permissions.
    */
-  public static indi.shinado.piping.process.models.Stat get(int pid) throws IOException {
-    return new indi.shinado.piping.process.models.Stat(String.format("/proc/%d/stat", pid));
+  public static Stat get(int pid) throws IOException {
+    return new Stat(String.format("/proc/%d/stat", pid));
   }
 
   private final String[] fields;
@@ -633,14 +630,14 @@ public final class Stat extends ProcFile {
     dest.writeStringArray(fields);
   }
 
-  public static final Creator<indi.shinado.piping.process.models.Stat> CREATOR = new Creator<indi.shinado.piping.process.models.Stat>() {
+  public static final Creator<Stat> CREATOR = new Creator<Stat>() {
 
-    @Override public indi.shinado.piping.process.models.Stat createFromParcel(Parcel source) {
-      return new indi.shinado.piping.process.models.Stat(source);
+    @Override public Stat createFromParcel(Parcel source) {
+      return new Stat(source);
     }
 
-    @Override public indi.shinado.piping.process.models.Stat[] newArray(int size) {
-      return new indi.shinado.piping.process.models.Stat[size];
+    @Override public Stat[] newArray(int size) {
+      return new Stat[size];
     }
   };
 

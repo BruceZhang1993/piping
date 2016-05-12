@@ -23,12 +23,6 @@ import android.text.TextUtils;
 
 import java.io.IOException;
 
-import indi.shinado.piping.process.models.*;
-import indi.shinado.piping.process.models.Cgroup;
-import indi.shinado.piping.process.models.ProcFile;
-import indi.shinado.piping.process.models.Stat;
-import indi.shinado.piping.process.models.Statm;
-import indi.shinado.piping.process.models.Status;
 
 public class AndroidProcess implements Parcelable {
 
@@ -629,14 +623,14 @@ public class AndroidProcess implements Parcelable {
     this.pid = in.readInt();
   }
 
-  public static final Creator<indi.shinado.piping.process.models.AndroidProcess> CREATOR = new Creator<indi.shinado.piping.process.models.AndroidProcess>() {
+  public static final Creator<AndroidProcess> CREATOR = new Creator<AndroidProcess>() {
 
-    @Override public indi.shinado.piping.process.models.AndroidProcess createFromParcel(Parcel source) {
-      return new indi.shinado.piping.process.models.AndroidProcess(source);
+    @Override public AndroidProcess createFromParcel(Parcel source) {
+      return new AndroidProcess(source);
     }
 
-    @Override public indi.shinado.piping.process.models.AndroidProcess[] newArray(int size) {
-      return new indi.shinado.piping.process.models.AndroidProcess[size];
+    @Override public AndroidProcess[] newArray(int size) {
+      return new AndroidProcess[size];
     }
   };
 

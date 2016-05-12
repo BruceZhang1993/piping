@@ -33,8 +33,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import indi.shinado.piping.process.models.AndroidAppProcess;
-import indi.shinado.piping.process.models.AndroidProcess;
+import shinado.com.process.models.AndroidAppProcess;
+import shinado.com.process.models.AndroidProcess;
 
 /**
  * Helper class to get a list of processes on Android.
@@ -219,7 +219,7 @@ public class ProcessManager {
      */
     public static List<RunningAppProcessInfo> getRunningAppProcessInfo(Context ctx) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            List<AndroidAppProcess> runningAppProcesses = indi.shinado.piping.process.ProcessManager.getRunningAppProcesses(ctx);
+            List<AndroidAppProcess> runningAppProcesses = ProcessManager.getRunningAppProcesses(ctx);
             List<RunningAppProcessInfo> appProcessInfos = new ArrayList<>();
             for (AndroidAppProcess process : runningAppProcesses) {
                 RunningAppProcessInfo info = new RunningAppProcessInfo(process.name, process.pid, null);

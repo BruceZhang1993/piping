@@ -6,14 +6,11 @@ import com.activeandroid.annotation.Table;
 
 import indi.shinado.piping.download.Downloadable;
 
-@Table(name = "TPipeEntity")
+@Table(name = "THeadEntity")
 public class HeadEntity extends Model implements Downloadable{
 
-    @Column(name = "cId")
-    public int sid;
-
     public HeadEntity() {
-        selected = false;
+        selected = 0;
     }
 
     public HeadEntity(int sid, String url, String name, String author, String pkg, String className) {
@@ -25,6 +22,9 @@ public class HeadEntity extends Model implements Downloadable{
         this.pkg = pkg;
         this.className = className;
     }
+
+    @Column(name = "cId")
+    public int sid;
 
     //e.g :
     // /storage/0/nix/execute/weather.dex
@@ -56,7 +56,16 @@ public class HeadEntity extends Model implements Downloadable{
     public String imgUrl;
 
     @Column(name = "selected")
-    public boolean selected;
+    public int selected;
+
+    @Column(name = "price")
+    public float price;
+
+    public boolean isLocal = false;
+
+    public int downloadProgress = 0;
+
+    public boolean isDownloading = false;
 
     @Override
     public String getUrl() {

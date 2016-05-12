@@ -49,7 +49,7 @@ public class PipesLoader implements IPipesLoader {
         pipes.add(new AppInfoPipe(5));
         pipes.add(new UninstallPipe(6));
         pipes.add(new NotePipe(7));
-        pipes.add(new TaskPipe(8));
+//        pipes.add(new TaskPipe(8));
         pipes.add(new SearchItemPipe(9));
         pipes.add(new DirectoryPipe(10));
         pipes.add(new HelpPipe(11));

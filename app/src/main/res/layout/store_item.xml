@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="6dp">
+
+        <ImageView
+            android:id="@+id/store_item_img"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/temp" />
+
+        <TextView
+            android:id="@+id/store_item_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Memory Monitor\nPrice: free"
+            android:textColor="#ff0000"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/store_item_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Selected"
+            android:textColor="#0088ff"
+            android:textSize="12dp" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/store_item_progress"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:max="100" />
+
+</RelativeLayout>

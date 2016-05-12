@@ -8,8 +8,6 @@ import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.impl.PipesLoader;
-import indi.shinado.piping.process.ProcessManager;
-import indi.shinado.piping.process.models.AndroidAppProcess;
 
 public class TaskPipe extends DefaultInputActionPipe {
 
@@ -55,31 +53,31 @@ public class TaskPipe extends DefaultInputActionPipe {
                 StringBuilder sb = new StringBuilder();
                 sb.append("List of running process:");
                 sb.append("\n");
-                List<AndroidAppProcess> list = ProcessManager.getRunningAppProcesses(getLauncher());
-                for (AndroidAppProcess running : list) {
-                    try {
-                        sb.append(running.pid + " " + running.getPackageName() + " " + running.status().content);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    sb.append("\n");
-                }
+//                List<AndroidAppProcess> list = ProcessManager.getRunningAppProcesses(getLauncher());
+//                for (AndroidAppProcess running : list) {
+//                    try {
+//                        sb.append(running.pid + " " + running.getPackageName() + " " + running.status().content);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                    sb.append("\n");
+//                }
                 callback.onOutput(sb.toString());
                 break;
             case OPT_IDLE:
-                callback.onOutput("idle:" + ProcessManager.getMemoSize(getLauncher()));
+//                callback.onOutput("idle:" + ProcessManager.getMemoSize(getLauncher()));
                 break;
             case OPT_ALL:
-                List<AndroidAppProcess> runningAppProcesses = ProcessManager.getRunningAppProcesses(getLauncher());
-                getConsole().input("Number of running processes: " + runningAppProcesses.size());
-
-                for (AndroidAppProcess running : runningAppProcesses) {
-                    if (running.pid != android.os.Process.myPid()) {
-                        ProcessManager.killProcess(running.pid);
-                    }
-                }
-
-                callback.onOutput("idle:" + ProcessManager.getMemoSize(getLauncher()));
+//                List<AndroidAppProcess> runningAppProcesses = ProcessManager.getRunningAppProcesses(getLauncher());
+//                getConsole().input("Number of running processes: " + runningAppProcesses.size());
+//
+//                for (AndroidAppProcess running : runningAppProcesses) {
+//                    if (running.pid != android.os.Process.myPid()) {
+//                        ProcessManager.killProcess(running.pid);
+//                    }
+//                }
+//
+//                callback.onOutput("idle:" + ProcessManager.getMemoSize(getLauncher()));
                 break;
             default:
                 callback.onOutput(HELP);
@@ -104,7 +102,7 @@ public class TaskPipe extends DefaultInputActionPipe {
             if (prev.getId() == PipesLoader.ID_APPLICATION) {
                 String value = prev.getExecutable();
                 String split[] = value.split(",");
-                ProcessManager.killProcess(getLauncher(), split[0]);
+//                ProcessManager.killProcess(getLauncher(), split[0]);
             } else {
                 callback.onOutput(prev.getDisplayName() + " is not an application");
             }

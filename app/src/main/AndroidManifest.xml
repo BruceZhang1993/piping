@@ -13,6 +13,7 @@
         <meta-data android:name="AA_DB_NAME" android:value="vender.db" />
         <meta-data android:name="AA_DB_VERSION" android:value="3" />
 
+        <activity android:name="com.shinado.piping.geek.store.ShoppingActivity"/>
         <activity
             android:launchMode="singleInstance"
             android:theme="@style/LauncherTheme"

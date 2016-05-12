@@ -78,14 +78,14 @@ public class ProcFile extends File implements Parcelable {
     dest.writeString(this.content);
   }
 
-  public static final Creator<indi.shinado.piping.process.models.ProcFile> CREATOR = new Creator<indi.shinado.piping.process.models.ProcFile>() {
+  public static final Creator<ProcFile> CREATOR = new Creator<ProcFile>() {
 
-    @Override public indi.shinado.piping.process.models.ProcFile createFromParcel(Parcel in) {
-      return new indi.shinado.piping.process.models.ProcFile(in);
+    @Override public ProcFile createFromParcel(Parcel in) {
+      return new ProcFile(in);
     }
 
-    @Override public indi.shinado.piping.process.models.ProcFile[] newArray(int size) {
-      return new indi.shinado.piping.process.models.ProcFile[size];
+    @Override public ProcFile[] newArray(int size) {
+      return new ProcFile[size];
     }
   };
 

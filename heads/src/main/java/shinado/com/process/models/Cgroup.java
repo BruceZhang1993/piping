@@ -23,8 +23,6 @@ import android.os.Parcelable;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import indi.shinado.piping.process.models.*;
-import indi.shinado.piping.process.models.ProcFile;
 
 /**
  * <p>/proc/[pid]/cgroup (since Linux 2.6.24)</p>
@@ -53,12 +51,12 @@ public final class Cgroup extends ProcFile {
    *
    * @param pid
    *     the processes id.
-   * @return the {@link indi.shinado.piping.process.models.Cgroup}
+   * @return the {@link Cgroup}
    * @throws IOException
    *     if the file does not exist or we don't have read permissions.
    */
-  public static indi.shinado.piping.process.models.Cgroup get(int pid) throws IOException {
-    return new indi.shinado.piping.process.models.Cgroup(String.format("/proc/%d/cgroup", pid));
+  public static Cgroup get(int pid) throws IOException {
+    return new Cgroup(String.format("/proc/%d/cgroup", pid));
   }
 
   /** the process' control groups */
@@ -98,14 +96,14 @@ public final class Cgroup extends ProcFile {
     dest.writeTypedList(groups);
   }
 
-  public static final Creator<indi.shinado.piping.process.models.Cgroup> CREATOR = new Creator<indi.shinado.piping.process.models.Cgroup>() {
+  public static final Creator<Cgroup> CREATOR = new Creator<Cgroup>() {
 
-    @Override public indi.shinado.piping.process.models.Cgroup createFromParcel(Parcel source) {
-      return new indi.shinado.piping.process.models.Cgroup(source);
+    @Override public Cgroup createFromParcel(Parcel source) {
+      return new Cgroup(source);
     }
 
-    @Override public indi.shinado.piping.process.models.Cgroup[] newArray(int size) {
-      return new indi.shinado.piping.process.models.Cgroup[size];
+    @Override public Cgroup[] newArray(int size) {
+      return new Cgroup[size];
     }
   };
 

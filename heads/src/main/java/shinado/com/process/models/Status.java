@@ -22,9 +22,6 @@ import android.os.Parcelable;
 
 import java.io.IOException;
 
-import indi.shinado.piping.process.models.*;
-import indi.shinado.piping.process.models.ProcFile;
-
 /**
  * <p>/proc/[pid]/status</p>
  *
@@ -140,12 +137,12 @@ public final class Status extends ProcFile {
    *
    * @param pid
    *     the process id.
-   * @return the {@link indi.shinado.piping.process.models.Status}
+   * @return the {@link Status}
    * @throws IOException
    *     if the file does not exist or we don't have read permissions.
    */
-  public static indi.shinado.piping.process.models.Status get(int pid) throws IOException {
-    return new indi.shinado.piping.process.models.Status(String.format("/proc/%d/status", pid));
+  public static Status get(int pid) throws IOException {
+    return new Status(String.format("/proc/%d/status", pid));
   }
 
   private Status(String path) throws IOException {
@@ -195,14 +192,14 @@ public final class Status extends ProcFile {
     }
   }
 
-  public static final Creator<indi.shinado.piping.process.models.Status> CREATOR = new Creator<indi.shinado.piping.process.models.Status>() {
+  public static final Creator<Status> CREATOR = new Creator<Status>() {
 
-    @Override public indi.shinado.piping.process.models.Status createFromParcel(Parcel source) {
-      return new indi.shinado.piping.process.models.Status(source);
+    @Override public Status createFromParcel(Parcel source) {
+      return new Status(source);
     }
 
-    @Override public indi.shinado.piping.process.models.Status[] newArray(int size) {
-      return new indi.shinado.piping.process.models.Status[size];
+    @Override public Status[] newArray(int size) {
+      return new Status[size];
     }
   };
 
