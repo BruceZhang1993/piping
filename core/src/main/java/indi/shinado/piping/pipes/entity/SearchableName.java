@@ -32,9 +32,9 @@ public class SearchableName {
      * contains(["google", "map"], "gg") -> false
      */
     public boolean contains(String key) {
-        key = removeSpace(key);
+        key = removeSpace(key).toLowerCase();
         for (int i = 0; i < name.length; i++) {
-            String str = name[i];
+            String str = name[i].toLowerCase();
             char c = str.charAt(0);
             //key start with the first character of name
             //e.g. ["face", "book"], "boo" => true
@@ -55,7 +55,7 @@ public class SearchableName {
         if (i >= name.length) {
             return false;
         }
-        String str = name[i];
+        String str = name[i].toLowerCase();
         char c = str.charAt(0);
         if (key.startsWith(c + "")) {
             for (int j = 1; j < key.length() && j < str.length(); j++) {
@@ -78,7 +78,7 @@ public class SearchableName {
                     //for item "facebook", since it's split as ["fa", "ce", "boo", "k"]
                     //by commenting firstTime&&, contains("fb") returns false, contains("fc") returns true
                     //otherwise, they both return true
-                    firstTime &&
+//                    firstTime &&
                             contains(name, key, i + 1, true);
 
         }

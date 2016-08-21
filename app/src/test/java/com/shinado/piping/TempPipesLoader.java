@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 
+import indi.shinado.piping.launcher.BaseLauncherView;
 import indi.shinado.piping.launcher.Console;
 import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.IPipesLoader;
@@ -13,8 +14,16 @@ import indi.shinado.piping.pipes.search.SearchablePipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
 public class TempPipesLoader implements IPipesLoader {
+
+    private void register(BasePipe basePipe, BaseLauncherView context, Console console, AbsTranslator translator,
+                         SearchablePipe.OnItemsLoadedListener listener, int size){
+        basePipe.setConsole(console);
+        basePipe.setContext(context);
+        basePipe.load(translator, listener, size);
+    }
+
     @Override
-    public ArrayList<BasePipe> load(Context context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener) {
+    public ArrayList<BasePipe> load(BaseLauncherView context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener) {
         ArrayList<BasePipe> pipes = new ArrayList<>();
 
         TestActionPipe actionPipe = new TestActionPipe();
@@ -53,15 +62,8 @@ public class TempPipesLoader implements IPipesLoader {
     }
 
     @Override
-    public BasePipe load(PipeEntity entity, Context context, Console console, AbsTranslator translator, BasePipe.OnItemsLoadedListener listener) {
+    public BasePipe load(PipeEntity entity, BaseLauncherView context, Console console, AbsTranslator translator, BasePipe.OnItemsLoadedListener listener) {
         return null;
-    }
 
-    private void register(BasePipe basePipe, Context context, Console console, AbsTranslator translator,
-                         SearchablePipe.OnItemsLoadedListener listener, int size){
-        basePipe.setConsole(console);
-        basePipe.setContext(context);
-        basePipe.load(translator, listener, size);
     }
-
 }

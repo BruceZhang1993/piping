@@ -13,6 +13,7 @@ import indi.shinado.piping.pipes.entity.Pipe;
 
 public abstract class SearchablePipe extends BasePipe {
 
+    private static final String TAG = "SearchablePipe";
     protected Stack<TreeSet<Pipe>> resultStack =
             new Stack<>();
     protected HashMap<String, TreeSet<Pipe>> resultMap = new HashMap<>();

@@ -1,28 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#888888"
+    android:background="@drawable/store_bg"
     android:orientation="vertical">
 
     <RelativeLayout
+        android:background="@color/store_theme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ListView
-            android:id="@+id/store_list"
+
+        <TextView
+            android:layout_centerVertical="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:padding="4dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="14dp"
+            android:text="Widget Store" />
 
         <TextView
             android:onClick="quit"
+            android:layout_centerVertical="true"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:padding="6dp"
+            android:text="x"
+            android:layout_marginRight="6dp"
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="×"
-            android:textColor="#ff0000"
-            android:textSize="24dp" />
+            android:layout_height="wrap_content" />
 
     </RelativeLayout>
+
+    <ListView
+        android:id="@+id/store_list"
+        android:padding="6dp"
+        android:listSelector="@color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

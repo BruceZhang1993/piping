@@ -1,22 +1,19 @@
 package com.shinado.piping;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import indi.shinado.piping.pipes.action.ActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 
-public class TestActionPipe extends ActionPipe{
+public class InstallPipe extends ActionPipe{
 
     Pipe mResult;
 
-    public TestActionPipe(){
+    public InstallPipe(){
         super(11);
         mResult = new Pipe();
         mResult.setId(id);
-        mResult.setDisplayName("$copy");
-        mResult.setSearchableName(new SearchableName(new String[]{"co", "py"}));
+        mResult.setDisplayName("$install");
+        mResult.setSearchableName(new SearchableName(new String[]{"ins", "tall"}));
         mResult.setBasePipe(this);
     }
 
@@ -40,24 +37,4 @@ public class TestActionPipe extends ActionPipe{
 
     }
 
-    @Test
-    public void testSearch(){
-        Pipe pipe = search("");
-        Assert.assertEquals(true, pipe == null);
-
-        pipe = search("c");
-        Assert.assertEquals(false, pipe == null);
-
-        pipe = search("cp");
-        Assert.assertEquals(false, pipe == null);
-
-        pipe = search("cp.");
-        Assert.assertEquals(true, pipe == null);
-
-        pipe = search("cp.k");
-        Assert.assertEquals(true, pipe == null);
-
-        pipe = search("cp.c");
-        Assert.assertEquals(false, pipe == null);
-    }
 }

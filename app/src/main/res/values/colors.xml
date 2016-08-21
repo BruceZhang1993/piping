@@ -13,5 +13,7 @@
     <color name="bcg_keyboard">#212021</color>
     <color name="bcg_key">#4a494a</color>
     <color name="bcg_pressed">#313031</color>
+    <color name="store_theme">#21ff00</color>
+    <color name="black">#000000</color>
 
 </resources>

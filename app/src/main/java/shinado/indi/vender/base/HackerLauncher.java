@@ -1,5 +1,6 @@
 package shinado.indi.vender.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -11,17 +12,22 @@ import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 import com.shinado.piping.geek.HeadLoadder;
+import com.shinado.piping.geek.ShoppingHeadView;
+import com.shinado.piping.geek.Tutorial;
 import com.shinado.piping.geek.header.IHeadView;
 
 import indi.shinado.piping.feed.Feedable;
 import indi.shinado.piping.launcher.BaseLauncherView;
+import indi.shinado.piping.launcher.CharacterInputCallback;
 import indi.shinado.piping.launcher.IOHelper;
 import indi.shinado.piping.launcher.IOHelperFactory;
+import indi.shinado.piping.launcher.InputCallback;
 import indi.shinado.piping.launcher.KeyDownCallback;
 import indi.shinado.piping.launcher.UserInputCallback;
 import indi.shinado.piping.launcher.impl.ConsoleHelper;
 import indi.shinado.piping.launcher.impl.DeviceConsole;
 import indi.shinado.piping.launcher.impl.HackerView;
+import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.ConsoleInfo;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.impl.PipesLoader;
@@ -53,13 +59,16 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     private IOHelper mIOHelper;
 
     private IHeadView mHeadView;
+    private Tutorial mTutorial;
 
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_base_launcher);
+        log("onCreate");
 
+        mTutorial = new Tutorial(this, this);
         preferences = new Preferences(this);
         reloadKey();
 
@@ -98,8 +107,22 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     @Override
     public void onResume() {
         super.onResume();
+        log("onResume");
         if(mHeadView != null){
             mHeadView.onResume();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        log("onActivityResult");
+        switch (requestCode){
+            case ShoppingHeadView.REQUEST_SHOPPING:
+                if (resultCode == RESULT_OK){
+                    reloadHeadView();
+                }
+                break;
         }
     }
 
@@ -115,9 +138,20 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         mHeadView = HeadLoadder.load(this);
         if (mHeadView != null){
             FrameLayout headLayout = (FrameLayout) findViewById(R.id.head_fl);
-            headLayout.addView(mHeadView.getView(this, headLayout));
+            View view = mHeadView.getView(this, headLayout);
+            headLayout.addView(view);
             mHeadView.onCreate();
+            if (view instanceof ViewGroup){
+                setTextSize((ViewGroup) view, mPref.getTextSize());
+            }
         }
+    }
+
+    private void reloadHeadView(){
+        if (mHeadView != null){
+            mHeadView.onDestroy();
+        }
+        initHeadView();
     }
 
     private void initViews() {
@@ -178,6 +212,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
         ConsoleAnimation animation = ConsoleAnimation.get();
         setAnimation(animation);
+        mTutorial.start();
     }
 
     @Override
@@ -214,6 +249,19 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     }
 
     @Override
+    public void waitForCharacterInput(final CharacterInputCallback inputCallback) {
+        blindMode();
+        mConsoleHelper.addInputCallback(new InputCallback() {
+            @Override
+            public void onInput(String character) {
+                inputCallback.onCharacterInput(character);
+                mConsoleHelper.removeInputCallback(this);
+                quitBlind();
+            }
+        });
+    }
+
+    @Override
     public void waitForKeyDown(KeyDownCallback inputCallback) {
         mKeyDownCallback = inputCallback;
         waitingForKeyDown = true;
@@ -231,6 +279,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         mHackerView.appendNewLine();
         mIOHelper.clearInput();
         mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+        mTutorial.resume();
     }
 
     @Override
@@ -291,6 +340,21 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     }
 
     @Override
+    public BasePipe getPipeById(int id) {
+        for (BasePipe item : mConsoleHelper.getAllPipes()){
+            if (item.getId() == id){
+                return item;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void startTutorial() {
+        mTutorial.start();
+    }
+
+    @Override
     public void input(String string) {
         mHackerView.type(string);
     }
@@ -330,6 +394,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
             }
             reloadKey();
             waitingForKeyDown = false;
+            input("Special key set.");
             return true;
         }
 
@@ -391,6 +456,10 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     @Override
     public void onBackPressed() {
         return;
+    }
+
+    private void log(String msg){
+        Log.d("HackerLauncher", msg);
     }
 
 }

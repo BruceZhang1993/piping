@@ -87,15 +87,18 @@ public class ShoppingActivity extends Activity {
     }
 
     private void loadItems() {
+        String localWidgets = "";
         mLocalItems = new Select().all().from(HeadEntity.class).execute();
         if (mLocalItems != null) {
             for (HeadEntity entity : mLocalItems) {
                 entity.isLocal = true;
+                localWidgets += entity.sid + "-";
             }
             mAdapter.addAll(mLocalItems);
         }
 
         HashMap<String, String> params = new HashMap<>();
+        params.put("local", localWidgets);
         params.put("version", "" + new SystemInfo(this).getVersionCode());
         new VolleyProvider().handleData(URL_STORE, params, Result.class,
                 new Listener.Response<Result>() {
@@ -119,9 +122,11 @@ public class ShoppingActivity extends Activity {
                     if (entity.selected == 0) {
                         entity.selected = 1;
                         entity.save();
+                        setResult(RESULT_OK);
+                        finish();
                     }
                 } else {
-                    mAdapter.download(i);
+                    mAdapter.download(entity);
                 }
             }
         });
@@ -163,12 +168,11 @@ public class ShoppingActivity extends Activity {
                 view = LayoutInflater.from(context).inflate(R.layout.store_item, viewGroup, false);
             }
             ImageView imgView = (ImageView) view.findViewById(R.id.store_item_img);
-            TextView infoTv = (TextView) view.findViewById(R.id.store_item_info);
+            TextView nameTv = (TextView) view.findViewById(R.id.store_item_name);
             TextView statusTv = (TextView) view.findViewById(R.id.store_item_status);
-            ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.store_item_progress);
 
             ImageLoader.getInstance().displayImage(item.imgUrl, imgView);
-            infoTv.setText(item.name + "\n" + "Author:" + item.author);
+            nameTv.setText(item.name);
 
             if (item.isLocal) {
                 statusTv.setVisibility(View.VISIBLE);
@@ -178,21 +182,19 @@ public class ShoppingActivity extends Activity {
                     statusTv.setText("Downloaded");
                 }
             } else {
-                statusTv.setText(Math.abs(item.price) < 0.01f ? "Free" : "$" + item.price);
+
+                if (item.isDownloading) {
+                    statusTv.setText("Loading:..." + item.downloadProgress + "%");
+                }else {
+                    statusTv.setText(Math.abs(item.price) < 0.01f ? "Free" : "$" + item.price);
+                }
             }
 
-            if (item.isDownloading) {
-                progressBar.setVisibility(View.VISIBLE);
-                progressBar.setProgress(item.downloadProgress);
-            } else {
-                progressBar.setVisibility(View.GONE);
-            }
 
             return view;
         }
 
-        public void download(int index) {
-            HeadEntity entity = mItems.get(index);
+        public void download(HeadEntity entity) {
             entity.isDownloading = true;
             mDownloadImpl.addToQueue(entity);
             mDownloadImpl.start();

@@ -30,7 +30,6 @@ public class ProcessView implements IHeadView {
     private int mMaxProceesses = 5;
     private int mInterval = 30 * 1000;
 
-    private float mTextSize = -1;
     private View view;
     private TextView memoryTv;
     private TextView taskTv;
@@ -44,10 +43,6 @@ public class ProcessView implements IHeadView {
 
     private float density;
     private DisplayMetrics dm;
-
-    public void setTextSize(float textSize) {
-        this.mTextSize = textSize;
-    }
 
     public View getView(Context context, ViewGroup parent) {
         this.mContext = context;
@@ -105,7 +100,7 @@ public class ProcessView implements IHeadView {
         return root;
     }
 
-    private TextView inflateTextViewContent(){
+    private TextView inflateTextViewContent() {
         TextView textView = inflateTextViewHead();
         textView.setTextColor(0xffffffff);
         return textView;
@@ -123,7 +118,6 @@ public class ProcessView implements IHeadView {
 
         return textView;
     }
-
 
 
     public void onPause() {
@@ -161,30 +155,27 @@ public class ProcessView implements IHeadView {
     }
 
     private void updateUI(List<AndroidAppProcess> list) {
-        memoryTv.setText(String.format("[Memory: $s]", getMemoryInfo(mContext)));
+        memoryTv.setText(String.format("[Memory: %s]", getMemoryInfo(mContext)));
 
+        int count = processTl.getChildCount() - 1;
+        if (count == 0) {
+            for (int i = 0; i < mMaxProceesses; i++) {
+                TableRow row = inflateContentView();
 
-        processTl.removeViews(1, processTl.getChildCount() - 1);
-        int count = 0;
+                processTl.addView(row);
+            }
+        }
 
+        int index = 1;
         for (AndroidAppProcess item : list) {
-            TableRow row = inflateContentView();
-//                    (TableRow) LayoutInflater.from(mContext).inflate(R.layout.process_item, processTl, false);
+            TableRow row = (TableRow) processTl.getChildAt(index);
             TextView pidTv = (TextView) row.findViewWithTag("pid");//findViewById(R.id.process_item_pid);
             TextView nameTv = (TextView) row.findViewWithTag("name");//findViewById(R.id.process_item_name);
             TextView stateTv = (TextView) row.findViewWithTag("state");//findViewById(R.id.process_item_state);
             TextView threadsTv = (TextView) row.findViewWithTag("threads");//findViewById(R.id.process_item_threads);
             TextView vmrssTv = (TextView) row.findViewWithTag("vm");//findViewById(R.id.process_item_vmrss);
 
-            if (mTextSize > 0) {
-                pidTv.setTextSize(mTextSize);
-                nameTv.setTextSize(mTextSize);
-                stateTv.setTextSize(mTextSize);
-                threadsTv.setTextSize(mTextSize);
-                vmrssTv.setTextSize(mTextSize);
-            }
-
-            Status status = null;
+            Status status;
             try {
                 status = item.status();
             } catch (IOException e) {
@@ -197,16 +188,15 @@ public class ProcessView implements IHeadView {
             threadsTv.setText(status.getValue("Threads"));
             vmrssTv.setText(status.getValue("VmRSS"));
 
-            processTl.addView(row);
-
-            if (++count >= mMaxProceesses) {
+            if (++index >= processTl.getChildCount()) {
                 break;
             }
         }
 
     }
 
-    private TableRow inflateContentView(){
+
+    private TableRow inflateContentView() {
         TableRow tableRow = new TableRow(mContext, null);
 
         TextView pidTv = inflateTextViewContent();
@@ -214,20 +204,20 @@ public class ProcessView implements IHeadView {
         tableRow.addView(pidTv);
 
         TextView nameTv = inflateTextViewContent();
-        nameTv.setTag("namt");
+        nameTv.setTag("name");
         tableRow.addView(nameTv);
 
-        TextView stateTv = inflateTextViewContent();
-        stateTv.setTag("state");
-        tableRow.addView(stateTv);
+        TextView vmTv = inflateTextViewContent();
+        vmTv.setTag("vm");
+        tableRow.addView(vmTv);
 
         TextView threadsTv = inflateTextViewContent();
         threadsTv.setTag("threads");
         tableRow.addView(threadsTv);
 
-        TextView vmTv = inflateTextViewContent();
-        vmTv.setTag("vm");
-        tableRow.addView(vmTv);
+        TextView stateTv = inflateTextViewContent();
+        stateTv.setTag("state");
+        tableRow.addView(stateTv);
 
         return tableRow;
     }

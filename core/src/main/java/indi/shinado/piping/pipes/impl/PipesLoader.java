@@ -23,13 +23,15 @@ import indi.shinado.piping.pipes.impl.action.DiaryV4Pipe;
 import indi.shinado.piping.pipes.impl.action.HelpPipe;
 import indi.shinado.piping.pipes.impl.action.InstallPipe;
 import indi.shinado.piping.pipes.impl.action.LastInputPipe;
+import indi.shinado.piping.pipes.impl.action.LastInstallPipe;
 import indi.shinado.piping.pipes.impl.action.NotePipe;
 import indi.shinado.piping.pipes.impl.action.SearchItemPipe;
 import indi.shinado.piping.pipes.impl.action.SettingPipe;
-import indi.shinado.piping.pipes.impl.action.TaskPipe;
+import indi.shinado.piping.pipes.impl.action.TutorialPipe;
 import indi.shinado.piping.pipes.impl.action.UninstallPipe;
+import indi.shinado.piping.pipes.impl.action.WidgetPipe;
 import indi.shinado.piping.pipes.impl.action.snake.SnakePipe;
-import indi.shinado.piping.pipes.impl.search.ApplicationPipe;
+import indi.shinado.piping.pipes.impl.search.applications.ApplicationPipe;
 import indi.shinado.piping.pipes.impl.search.ContactPipe;
 import indi.shinado.piping.pipes.impl.search.DirectoryPipe;
 import indi.shinado.piping.pipes.search.SearchablePipe;
@@ -60,6 +62,9 @@ public class PipesLoader implements IPipesLoader {
         pipes.add(new DiaryV4Pipe(16));
         pipes.add(new SnakePipe(17));
         pipes.add(new ShellPipe(18));
+        pipes.add(new WidgetPipe(19));
+        pipes.add(new TutorialPipe(20));
+        pipes.add(new LastInstallPipe(21));
 
         return pipes;
     }

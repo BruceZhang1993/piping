@@ -41,8 +41,9 @@ public class HelpPipe extends DefaultInputActionPipe{
 
     private void help(OutputCallback callback){
         StringBuilder sb = new StringBuilder("Simply search your application or contact.\n")
-                .append("To switch results, hig MENU button.\n")
-                .append("To display history or intercept an action, hit BACK button.\n")
+                .append("To switch results, tap MENU button.\n")
+                .append("If you do not have MENU button in your phone, please try enter '$setting' to set shift key.\n")
+                .append("To display history or intercept an action, tap BACK button.\n")
                 .append("To display notifications on the terminal, please enable Piping in Accessibility\n")
                 .append("You can also type these instructions below to find more information:\n");
         ArrayList<BasePipe> pipes = getPipeManager().getAllPipes();

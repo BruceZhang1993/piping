@@ -11,13 +11,28 @@
         android:icon="@mipmap/ic_launcher" >
 
         <meta-data android:name="AA_DB_NAME" android:value="vender.db" />
+        <meta-data android:name="AA_MODELS"
+            android:value="indi.shinado.piping.pipes.entity.PipeEntity,
+            com.shinado.piping.geek.header.HeadEntity,
+            indi.shinado.piping.pipes.search.FrequentItem,
+            indi.shinado.piping.settings.ConsoleAnimation"
+            />
         <meta-data android:name="AA_DB_VERSION" android:value="3" />
 
-        <activity android:name="com.shinado.piping.geek.store.ShoppingActivity"/>
+        <activity android:name="com.shinado.piping.geek.store.ShoppingActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            >
+            <intent-filter>
+                <action android:name="com.shinado.piping.shopping"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:launchMode="singleInstance"
             android:theme="@style/LauncherTheme"
             android:name=".base.HackerLauncher"
+            android:taskAffinity=".HackerLauncher"
             android:excludeFromRecents="true"
             android:label="@string/app_name" >
             <intent-filter>

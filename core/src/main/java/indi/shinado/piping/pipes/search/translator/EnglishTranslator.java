@@ -59,14 +59,20 @@ public class EnglishTranslator extends AbsTranslator {
         return names.toArray(new String[names.size()]);
     }
 
+    /**
+     * make KakaoTalk  -> {ka, kao, ta, l, k}
+     * otherwise, KakaoTalk -> {kakao, talk}
+     */
     private boolean isConsonant(char c){
-        String str = (""+c).toLowerCase();
-        for (String a : AEIOU){
-            if (str.equals(a)){
-                return false;
-            }
-        }
-        return true;
+        return false;
+
+//        String str = (""+c).toLowerCase();
+//        for (String a : AEIOU){
+//            if (str.equals(a)){
+//                return false;
+//            }
+//        }
+//        return true;
     }
 
 }

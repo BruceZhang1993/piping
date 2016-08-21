@@ -1,18 +1,10 @@
-package indi.shinado.piping.pipes.impl;
-
-import android.util.Log;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+package com.shinado.shell;
 
 import indi.shinado.piping.launcher.UserInputCallback;
-import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
+import indi.shinado.piping.pipes.impl.ShellUtil;
 
 /**
  * Created by shinado on 16/5/7.

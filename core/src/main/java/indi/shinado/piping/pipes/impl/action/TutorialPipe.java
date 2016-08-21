@@ -5,11 +5,14 @@ import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 
-public class LastInputPipe extends DefaultInputActionPipe{
+/**
+ * Created by shinado on 16/5/14.
+ */
+public class TutorialPipe extends DefaultInputActionPipe{
 
-    private final String NAME = "$latest";
+    private static final String NAME = "$tutorial";
 
-    public LastInputPipe(int id) {
+    public TutorialPipe(int id) {
         super(id);
     }
 
@@ -20,30 +23,23 @@ public class LastInputPipe extends DefaultInputActionPipe{
 
     @Override
     public SearchableName getSearchable() {
-        return new SearchableName(new String[]{"latest"});
+        return new SearchableName(new String[]{"tutorial"});
     }
 
     @Override
     public void onParamsEmpty(Pipe rs, OutputCallback callback) {
-        lastInput(callback);
+        getConsole().startTutorial();
     }
 
     @Override
     public void onParamsNotEmpty(Pipe rs, OutputCallback callback) {
-        lastInput(callback);
+        getConsole().startTutorial();
+
     }
 
     @Override
     public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
-        callback.onOutput(NAME + "does not accept input.");
-    }
+        getConsole().startTutorial();
 
-    private void lastInput(OutputCallback callback){
-        String lastInput = getConsole().getLastInput();
-        if (lastInput != null){
-            callback.onOutput(lastInput);
-        }else {
-            callback.onOutput("Last input is null. ");
-        }
     }
 }

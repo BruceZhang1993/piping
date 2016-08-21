@@ -13,24 +13,26 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.util.Log;
 
-import java.lang.ref.WeakReference;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeSet;
 
 import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.impl.PipesLoader;
+import indi.shinado.piping.pipes.impl.search.applications.SimpleAppInfo;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
-import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
 
-public class AppManager extends SearchableItemManager{
+public class AppManager extends SearchableItemManager {
 
     private static final String TAG = "App@Manager";
 
     private HashMap<String, ResolveInfo> mActivityMap = new HashMap<>();
     private HashMap<String, ResolveInfo> mPackageMap = new HashMap<>();
+    private TreeSet<SimpleAppInfo> mAppList = new TreeSet();
     private PackageManager pm;
     private static AppManager appManager;
 
@@ -39,30 +41,43 @@ public class AppManager extends SearchableItemManager{
         pm = context.getPackageManager();
     }
 
-    public static AppManager getInstance(Context context, AbsTranslator translator){
-        if (appManager == null){
+    public static AppManager getInstance(Context context, AbsTranslator translator) {
+        if (appManager == null) {
             appManager = new AppManager(context, translator);
         }
         return appManager;
     }
 
+    public static AppManager getInstance() {
+        return appManager;
+    }
 
     public void loadApps() {
         Log.d(TAG, "start loading apps");
-        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> list = pm.queryIntentActivities(mainIntent, 0);
-        for (int i = 0; i < list.size(); i++) {
-            ResolveInfo app = list.get(i);
-
-            if (app.activityInfo.packageName.equals(context.getPackageName())) {
-                continue;
-            }
-
-            mActivityMap.put(app.activityInfo.name, app);
-            mPackageMap.put(app.activityInfo.packageName, app);
-
-        }
+        onInstall(null);
+//        PackageManager pm = context.getPackageManager();
+//        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+//        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+//        List<ResolveInfo> list = pm.queryIntentActivities(mainIntent, 0);
+//        for (int i = 0; i < list.size(); i++) {
+//            ResolveInfo app = list.get(i);
+//
+////            if (app.activityInfo.packageName.equals(context.getPackageName())) {
+////                continue;
+////            }
+//
+//            mActivityMap.put(app.activityInfo.name, app);
+//            mPackageMap.put(app.activityInfo.packageName, app);
+//
+//            try {
+//                ApplicationInfo appInfo = pm.getApplicationInfo(app.activityInfo.packageName, 0);
+//                String appFile = appInfo.sourceDir;
+//                long installTime = new File(appFile).lastModified(); //Epoch Time
+//                mAppList.add(new SimpleAppInfo(installTime, app.activityInfo.name, app.activityInfo.packageName));
+//            } catch (PackageManager.NameNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//        }
         Log.d(TAG, "end loading apps");
     }
 
@@ -72,6 +87,10 @@ public class AppManager extends SearchableItemManager{
 
     private ResolveInfo getInfo(int index) {
         return (ResolveInfo) mActivityMap.values().toArray()[index];
+    }
+
+    public TreeSet<SimpleAppInfo> getAppList(){
+        return mAppList;
     }
 
     public String getAppName(int index) {
@@ -138,16 +157,30 @@ public class AppManager extends SearchableItemManager{
     private void onInstall(ApplicationInfo app) {
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        mainIntent.setPackage(app.packageName);
+        if (app != null){
+            mainIntent.setPackage(app.packageName);
+        }
         List<ResolveInfo> list = pm.queryIntentActivities(mainIntent, 0);
+
         for (ResolveInfo info : list) {
             mActivityMap.put(info.activityInfo.name, info);
             mPackageMap.put(info.activityInfo.packageName, info);
+
+            try {
+                ApplicationInfo appInfo = pm.getApplicationInfo(info.activityInfo.packageName, 0);
+                String appFile = appInfo.sourceDir;
+                long installTime = new File(appFile).lastModified(); //Epoch Time
+                mAppList.add(new SimpleAppInfo(installTime, info.activityInfo.name, info.activityInfo.packageName));
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
-        if (onAppChangeListener != null) {
-            for (OnAppChangeListener l : onAppChangeListener) {
-                l.onAppChange(OnAppChangeListener.FLAG_ADD, getResult(app.packageName + ",", true));
+        if (app != null){
+            if (onAppChangeListener != null) {
+                for (OnAppChangeListener l : onAppChangeListener) {
+                    l.onAppChange(OnAppChangeListener.FLAG_ADD, getResult(app.packageName + ",", true));
+                }
             }
         }
     }
@@ -213,6 +246,13 @@ public class AppManager extends SearchableItemManager{
 
         mPackageMap.remove(info.activityInfo.packageName);
         mActivityMap.remove(info.activityInfo.name);
+        for (SimpleAppInfo simpleAppInfo : mAppList){
+            if (simpleAppInfo.packageName.equals(packageName)){
+                mAppList.remove(simpleAppInfo);
+                break;
+            }
+        }
+
         if (onAppChangeListener != null) {
             for (OnAppChangeListener l : onAppChangeListener) {
                 l.onAppChange(OnAppChangeListener.FLAG_REMOVE, result);

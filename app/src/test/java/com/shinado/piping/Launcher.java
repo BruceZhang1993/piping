@@ -8,8 +8,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import indi.shinado.piping.launcher.BaseLauncherView;
+import indi.shinado.piping.launcher.CharacterInputCallback;
+import indi.shinado.piping.launcher.KeyDownCallback;
+import indi.shinado.piping.launcher.UserInputCallback;
 import indi.shinado.piping.launcher.impl.ConsoleHelper;
 import indi.shinado.piping.launcher.impl.DeviceConsole;
+import indi.shinado.piping.pipes.BasePipe;
+import indi.shinado.piping.pipes.ConsoleInfo;
 import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.translator.EnglishTranslator;
@@ -23,7 +29,7 @@ public class Launcher {
     public static final String KEY_SHIFT = "shift";
 
     @Mock
-    private Context context;
+    private BaseLauncherView context;
 
     private DeviceConsole console = new StaticConsole();
 
@@ -34,6 +40,12 @@ public class Launcher {
     @Before
     public void setup() {
         helper = new ConsoleHelper(context, console, new TempPipesLoader(), new EnglishTranslator(context));
+    }
+
+    @Test
+    public void testSearch1(){
+        inputString("ins");
+        input("-");
     }
 
     @Test
@@ -181,6 +193,86 @@ public class Launcher {
         @Override
         public void clear() {
             System.out.println("clear");
+
+        }
+
+        @Override
+        public void intercept() {
+
+        }
+
+        @Override
+        public String getLastInput() {
+            return null;
+        }
+
+        @Override
+        public void waitForUserInput(UserInputCallback inputCallback) {
+
+        }
+
+        @Override
+        public void waitForCharacterInput(CharacterInputCallback inputCallback) {
+
+        }
+
+        @Override
+        public void waitForKeyDown(KeyDownCallback inputCallback) {
+
+        }
+
+        @Override
+        public void display(String string) {
+
+        }
+
+        @Override
+        public ConsoleInfo getConsoleInfo() {
+            return null;
+        }
+
+        @Override
+        public void occupyMode() {
+
+        }
+
+        @Override
+        public void quitOccupy() {
+
+        }
+
+        @Override
+        public void hideInitText() {
+
+        }
+
+        @Override
+        public void showInitText() {
+
+        }
+
+        @Override
+        public void blindMode() {
+
+        }
+
+        @Override
+        public void quitBlind() {
+
+        }
+
+        @Override
+        public void notifyUI() {
+
+        }
+
+        @Override
+        public BasePipe getPipeById(int id) {
+            return null;
+        }
+
+        @Override
+        public void startTutorial() {
 
         }
 

@@ -18,7 +18,7 @@ import indi.shinado.piping.launcher.Console;
 import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.IPipesLoader;
 import indi.shinado.piping.pipes.entity.PipeEntity;
-import indi.shinado.piping.pipes.impl.search.ApplicationPipe;
+import indi.shinado.piping.pipes.impl.search.applications.ApplicationPipe;
 import indi.shinado.piping.pipes.impl.search.ContactPipe;
 import indi.shinado.piping.pipes.search.SearchablePipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;

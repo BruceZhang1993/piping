@@ -8,7 +8,7 @@ import indi.shinado.piping.pipes.entity.SearchableName;
 public class TestSearchableName {
 
     @Test
-    public void testContains(){
+    public void testContains1(){
         SearchableName searchableName = new SearchableName(new String[]{"i", "fa", "ce", "boo", "k", "4", "w", "h", "at", "?"});
 
         Assert.assertEquals(false, searchableName.contains(""));
@@ -20,5 +20,13 @@ public class TestSearchableName {
         Assert.assertEquals(true, searchableName.contains("facebook"));
         Assert.assertEquals(false, searchableName.contains("facebookw"));
         Assert.assertEquals(false, searchableName.contains("facebook w"));
+    }
+
+    @Test
+    public void testContains2(){
+        SearchableName searchableName = new SearchableName(new String[]{"Malaysia", "News"});
+
+        Assert.assertEquals(true, searchableName.contains("man"));
+        Assert.assertEquals(true, searchableName.contains("mn"));
     }
 }

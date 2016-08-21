@@ -23,7 +23,7 @@ public class SnakePipe extends DefaultInputActionPipe implements Console {
         super(id);
         game = new Game();
         game.create(new Maze(1, 1)/**TODO**/, new Snake(), this);
-        setInputCallback(mInputCallback);
+        addInputCallback(mInputCallback);
     }
 
     @Override

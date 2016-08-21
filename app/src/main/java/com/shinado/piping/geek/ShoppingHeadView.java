@@ -1,5 +1,6 @@
 package com.shinado.piping.geek;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import shinado.indi.vender.R;
  * Created by shinado on 16/5/11.
  */
 public class ShoppingHeadView implements IHeadView {
+
+    public static final int REQUEST_SHOPPING = 10;
 
     @Override
     public void onCreate() {
@@ -42,8 +45,8 @@ public class ShoppingHeadView implements IHeadView {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                context.startActivity(new Intent(context, ShoppingActivity.class));
+                ((Activity) context).startActivityForResult(
+                        new Intent(context, ShoppingActivity.class), REQUEST_SHOPPING);
             }
         });
         return view;

@@ -85,4 +85,9 @@ public class TestContactPipe extends SearchablePipe {
     public void destroy() {
 
     }
+
+    @Override
+    public Pipe getByValue(String value) {
+        return null;
+    }
 }

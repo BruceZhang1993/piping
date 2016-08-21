@@ -42,11 +42,11 @@ public class InputMethodIOHelper implements IOHelper{
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String cs = s.toString();
+                helper.onUserInput(s.toString(), before, count);
                 if (!cs.isEmpty()){
                     //get last input
                     helper.onInput(cs.charAt(cs.length()-1) + "");
                 }
-                helper.onUserInput(s.toString(), before, count);
             }
 
             @Override

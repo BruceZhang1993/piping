@@ -7,11 +7,11 @@ import indi.shinado.piping.pipes.action.ActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 
-public class TestActionPipe extends ActionPipe{
+public class CopyPipe extends ActionPipe{
 
     Pipe mResult;
 
-    public TestActionPipe(){
+    public CopyPipe(){
         super(11);
         mResult = new Pipe();
         mResult.setId(id);
@@ -40,24 +40,4 @@ public class TestActionPipe extends ActionPipe{
 
     }
 
-    @Test
-    public void testSearch(){
-        Pipe pipe = search("");
-        Assert.assertEquals(true, pipe == null);
-
-        pipe = search("c");
-        Assert.assertEquals(false, pipe == null);
-
-        pipe = search("cp");
-        Assert.assertEquals(false, pipe == null);
-
-        pipe = search("cp.");
-        Assert.assertEquals(true, pipe == null);
-
-        pipe = search("cp.k");
-        Assert.assertEquals(true, pipe == null);
-
-        pipe = search("cp.c");
-        Assert.assertEquals(false, pipe == null);
-    }
 }

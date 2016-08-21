@@ -1,6 +1,7 @@
 package indi.shinado.piping.launcher.impl;
 
 import android.os.Handler;
+import android.util.Log;
 
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
@@ -16,6 +17,7 @@ import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.IPipeManager;
 import indi.shinado.piping.pipes.IPipesLoader;
 import indi.shinado.piping.pipes.PipeSearcher;
+import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.PipeEntity;
 import indi.shinado.piping.pipes.search.SearchablePipe;
@@ -78,7 +80,7 @@ public class ConsoleHelper implements IPipeManager{
 
             @Override
             public void onResultChange(TreeSet<Pipe> results, String input, Pipe.PreviousPipes previous) {
-                if(!mSearchable){
+                if(inOccupyMode()){
                     console.onNothing();
                     return;
                 }
@@ -90,7 +92,7 @@ public class ConsoleHelper implements IPipeManager{
                     console.displayResult(mResults.first());
                 } else {
                     if (!previous.isEmpty()) {
-                        if (input.endsWith(".")){
+                        if (input.endsWith(Keys.PIPE)){
                             console.displayPrevious(previous.get());
                         } else {
                             console.onNothing();
@@ -162,7 +164,7 @@ public class ConsoleHelper implements IPipeManager{
     }
 
     public boolean inOccupyMode(){
-        return mSearchable;
+        return !mSearchable;
     }
 
     public void quitOccupy(){
@@ -218,13 +220,19 @@ public class ConsoleHelper implements IPipeManager{
      * @param input the current string in the console
      */
     public void onUserInput(String input, int before, int count) {
-        if (mBlind){
+        if (inBlindMode()){
             return;
         }
+        log("onUserInput");
         mCurrentInput = input;
         mResults.clear();
         mSearcher.search(input, before, count, mCurrentSelection);
         mCurrentSelection = 0;
+    }
+
+    private void log(String msg){
+//        Log.d("ConsoleHelper", msg);
+        System.out.println("ConsoleHelper: " + msg);
     }
 
     /**
@@ -232,6 +240,7 @@ public class ConsoleHelper implements IPipeManager{
      * @param character the current input
      */
     public void onInput(String character){
+        log("onInput");
         for (InputCallback callback : mInputCallbacks){
             callback.onInput(character);
         }
@@ -304,7 +313,7 @@ public class ConsoleHelper implements IPipeManager{
     }
 
     public void onEnter() {
-        if (!inOccupyMode()){
+        if (inOccupyMode()){
             enableSearch();
             userInputCallback.onUserInput(mCurrentInput);
             console.onEnter(null);

@@ -31,6 +31,10 @@ public abstract class ActionPipe extends BasePipe{
         if (input.isEmpty()){
             return null;
         }
+        if (input.startsWith("$")){
+            input = input.substring(1);
+        }
+
         //create a new pipe
         Pipe result = new Pipe(getResult());
         fulfill(result, input);

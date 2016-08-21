@@ -8,8 +8,8 @@ targetCompatibility = rootProject.ext.targetCompatibilityVersion
 
 dependencies {
     compile project (':annotation')
-    compile 'com.google.auto.service:auto-service:1.0-rc2'
-    compile 'com.squareup:javapoet:1.0.0'
+//    compile 'com.google.auto.service:auto-service:1.0-rc2'
+    compile 'com.squareup:javapoet:1.7.0'
 
     testCompile deps.festandroid
     testCompile deps.festassert

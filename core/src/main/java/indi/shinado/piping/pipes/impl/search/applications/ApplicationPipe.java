@@ -1,4 +1,4 @@
-package indi.shinado.piping.pipes.impl.search;
+package indi.shinado.piping.pipes.impl.search.applications;
 
 import android.content.ComponentName;
 import android.content.Intent;

@@ -10,6 +10,7 @@ import indi.shinado.piping.launcher.BaseLauncherView;
 import indi.shinado.piping.launcher.Console;
 import indi.shinado.piping.launcher.InputCallback;
 import indi.shinado.piping.pipes.entity.Instruction;
+import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
@@ -88,10 +89,12 @@ public abstract class BasePipe {
         }
     }
 
+    //fulfill with KeyIndex and Instruction
     protected void fulfill(Pipe item, String input){
-        int keyIndex = getKeyIndex(item, input);
+        Instruction instruction = new Instruction(input);
+        int keyIndex = getKeyIndex(item, instruction.body);
         item.setKeyIndex(keyIndex);
-        item.setInstruction(new Instruction(input));
+        item.setInstruction(instruction);
         //only set previous for the first item
         //pass it on to next when shifting
 //            item.setPrevious(prev);
@@ -105,20 +108,19 @@ public abstract class BasePipe {
      * ["we", "chat"] -> 2
      * so that "kakao talk" will come first
      */
-    public int getKeyIndex(Pipe item, String key) {
+    public int getKeyIndex(Pipe item, String body) {
         int i = 0;
         //set key index
         for (String str : item.getSearchableName().getNames()) {
-            if (str.startsWith(key)) {
+            if (str.startsWith(body)) {
                 break;
             }
-            if (key.startsWith(str)){
-                i = getKeyIndex(item, key.replace(str, ""));
+            if (body.startsWith(str)){
+                i = getKeyIndex(item, body.replace(str, ""));
                 break;
             }
             i++;
         }
-
 
         return i;
     }

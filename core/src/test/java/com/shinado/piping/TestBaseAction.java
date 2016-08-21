@@ -12,6 +12,7 @@ import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 public class TestBaseAction {
 
     private BasePipe basePipe = new BasePipe(1) {
+
         @Override
         public void search(String input, int length, SearchResultCallback callback) {
 

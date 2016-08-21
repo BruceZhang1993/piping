@@ -2,7 +2,9 @@ package indi.shinado.piping.launcher;
 
 import com.shinado.annotation.TargetVersion;
 
+import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.ConsoleInfo;
+import indi.shinado.piping.pipes.entity.Pipe;
 
 public interface Console {
 
@@ -25,9 +27,21 @@ public interface Console {
     @TargetVersion(4)
     String getLastInput();
 
+    /**
+     * after user press ENTER key
+     */
     @TargetVersion(4)
     void waitForUserInput(UserInputCallback inputCallback);
 
+    /**
+     * for single character input
+     */
+    @TargetVersion(4)
+    void waitForCharacterInput(CharacterInputCallback inputCallback);
+
+    /**
+     * for system key such as BACK, MENU, etc.
+     */
     @TargetVersion(4)
     void waitForKeyDown(KeyDownCallback inputCallback);
 
@@ -42,6 +56,7 @@ public interface Console {
 
     /**
      * under this mode, you won't get any result from system
+     * However, you will still find your input in the console
      */
     @TargetVersion(4)
     void occupyMode();
@@ -57,6 +72,7 @@ public interface Console {
 
     /**
      * under this mode, any input will not be received
+     * whatever you type will not be displayed
      */
     @TargetVersion(4)
     void blindMode();
@@ -66,4 +82,10 @@ public interface Console {
 
     @TargetVersion(4)
     void notifyUI();
+
+    @TargetVersion(4)
+    BasePipe getPipeById(int id);
+
+    @TargetVersion(4)
+    void startTutorial();
 }
