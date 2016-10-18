@@ -12,9 +12,6 @@ import com.shinado.piping.geek.store.ShoppingActivity;
 
 import shinado.indi.vender.R;
 
-/**
- * Created by shinado on 16/5/11.
- */
 public class ShoppingHeadView implements IHeadView {
 
     public static final int REQUEST_SHOPPING = 10;

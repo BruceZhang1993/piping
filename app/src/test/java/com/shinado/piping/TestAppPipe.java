@@ -48,7 +48,7 @@ public class TestAppPipe extends SearchablePipe {
         add("langyisiting", new String[]{"lang", "yi", "si", "ting"}, 11);
         add("message", new String[]{"me", "s", "sa", "ge"}, 12);
         add("themes", new String[]{"t", "h", "e", "me", "s"}, 13);
-        add("Malaysia News", new String[]{"ma", "la", "y", "sia", "ne", "w", "s"}, 14);
+        add("Malaysia News", new String[]{"malaysia", "news"}, 14);
         add("last-install", new String[]{"last", "install"}, 15);
 
         new Thread() {
@@ -148,6 +148,15 @@ public class TestAppPipe extends SearchablePipe {
         assertEquals(new int[]{12, 14, 13}, results);
 
         results = search("mn");
+        assertEquals(new int[]{14}, results);
+
+        results = search("ma");
+        assertEquals(new int[]{14}, results);
+
+        results = search("mal");
+        assertEquals(new int[]{14}, results);
+
+        results = search("maln");
         assertEquals(new int[]{14}, results);
     }
 
