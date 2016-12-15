@@ -338,6 +338,21 @@ public class Launcher implements DeviceConsole {
     }
 
     @Override
+    public void setIndicator(String indicator) {
+        System.out.print("set indicator: " + indicator);
+    }
+
+    @Override
+    public void searchOnly(int pipeId) {
+        System.out.print("search only: " + pipeId);
+    }
+
+    @Override
+    public void searchAll() {
+        System.out.print("search all: " );
+    }
+
+    @Override
     public void onEnter(Pipe pipe) {
         System.out.println("enter:" + (pipe == null ? "" : pipe.getDisplayName()));
     }

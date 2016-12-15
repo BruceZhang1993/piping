@@ -1,5 +1,7 @@
 package indi.shinado.piping.pipes.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
 import indi.shinado.piping.pipes.BasePipe;
@@ -16,6 +18,8 @@ public class Pipe implements Comparable<Pipe> {
     private int id;
 
     private SearchableName searchableName;
+
+    private List<Pipe> acceptableParams = new ArrayList<>();
 
     private PreviousPipes previous;
 
@@ -206,6 +210,14 @@ public class Pipe implements Comparable<Pipe> {
 
     public void addFrequency() {
         this.frequency++;
+    }
+
+    public List<Pipe> getAcceptableParams() {
+        return acceptableParams;
+    }
+
+    public void setAcceptableParams(List<Pipe> acceptableParams) {
+        this.acceptableParams = acceptableParams;
     }
 
     public static class PreviousPipes{

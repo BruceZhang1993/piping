@@ -4,6 +4,7 @@ import android.os.Handler;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeSet;
 
 import indi.shinado.piping.launcher.InputCallback;
@@ -54,19 +55,30 @@ public class ConsoleHelper {
                 log("get results from input:" + input + ", size:" + results.size());
                 mResults.addAll(results);
 
-                if (!mResults.isEmpty()) {
-                    console.displayResult(mResults);
+                if (input.endsWith(Keys.PARAMS)) {
+                    if (!mResults.isEmpty()) {
+                        Pipe current = getCurrent();
+                        List<Pipe> acceptableParams = current.getAcceptableParams();
+                        if (acceptableParams != null && acceptableParams.size() > 0) {
+                            console.displayResult(acceptableParams);
+                        }
+                    }
                 } else {
-                    if (!previous.isEmpty()) {
-                        if (input.endsWith(Keys.PIPE)) {
-                            console.displayPrevious(previous.get());
+                    if (!mResults.isEmpty()) {
+                        console.displayResult(mResults);
+                    } else {
+                        if (!previous.isEmpty()) {
+                            if (input.endsWith(Keys.PIPE)) {
+                                console.displayPrevious(previous.get());
+                            } else {
+                                console.onNothing();
+                            }
                         } else {
                             console.onNothing();
                         }
-                    } else {
-                        console.onNothing();
                     }
                 }
+
             }
         });
     }
@@ -159,8 +171,8 @@ public class ConsoleHelper {
         }
     }
 
-    public void select(int index){
-        if (index >=0 && index<mResults.size()){
+    public void select(int index) {
+        if (index >= 0 && index < mResults.size()) {
             select((Pipe) mResults.toArray()[index]);
         }
     }
@@ -192,7 +204,6 @@ public class ConsoleHelper {
             onHistory();
         }
     }
-
 
     public void onEnter() {
         if (inOccupyMode()) {
@@ -256,8 +267,8 @@ public class ConsoleHelper {
     }
 
     /**
-     *
      * TODO
+     *
      * @return the next item
      */
     private Pipe passPreviousTo(Pipe pipe) {

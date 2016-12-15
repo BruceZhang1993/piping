@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
+import indi.shinado.piping.pipes.entity.SearchableName;
+import indi.shinado.piping.pipes.impl.ShareIntent;
 import indi.shinado.piping.pipes.search.SearchablePipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 import indi.shinado.piping.pipes.search.translator.EnglishTranslator;
@@ -18,11 +20,12 @@ public class DirectoryPipe extends SearchablePipe {
     private static final String OPT_ADD = "add";
     private static final String OPT_REMOVE = "rm";
     private AbsTranslator mTranslator;
+    private Pipe cdPipe;
     private HashMap<String, Pipe> mPipeMap = new HashMap<>();
-    private String dir = null;
 
     public DirectoryPipe(int id) {
         super(id);
+        cdPipe = new Pipe(getId(), "$cd", new SearchableName("cd .."), "");
     }
 
     @Override
@@ -43,7 +46,15 @@ public class DirectoryPipe extends SearchablePipe {
 
     @Override
     public void getOutput(Pipe result, OutputCallback callback) {
-        callback.onOutput(result.getExecutable());
+        File file = new File(result.getExecutable());
+        if (file.isDirectory()) {
+            ls(result.getExecutable(), callback);
+        } else {
+            String type = IntentUtil.getMIMEType(result.getExecutable());
+            ShareIntent shareIntent = new ShareIntent(type);
+            shareIntent.extras.put(Intent.EXTRA_STREAM, result.getExecutable());
+            callback.onOutput(shareIntent.toString());
+        }
     }
 
     @Override
@@ -68,14 +79,14 @@ public class DirectoryPipe extends SearchablePipe {
             }
             switch (params[0]) {
                 case OPT_ADD:
-                    add(rs);
+                    add(rs, false);
                     break;
                 case OPT_REMOVE:
                     remove(rs);
                     break;
             }
         } else {
-            open(rs);
+            open(rs, getConsoleCallback());
         }
     }
 
@@ -86,19 +97,35 @@ public class DirectoryPipe extends SearchablePipe {
         }
     }
 
-    private void cd(String dir) {
-        this.dir = dir;
-
+    private void cd(Pipe rs, OutputCallback callback) {
         //clear all
         clear();
-        //TODO how to cd ..?
-        addFile(dir);
+        add(rs, false);
+        getConsole().setIndicator(rs.getDisplayName());
+        ls(rs.getExecutable(), callback);
     }
 
-    private void add(Pipe rs) {
+    private void ls(String dir, OutputCallback callback) {
+        File file = new File(dir);
+        File[] files = file.listFiles();
+        StringBuilder sb = new StringBuilder();
+        for (File f : files) {
+            sb.append(f.getName()).append("\n");
+        }
+        callback.onOutput(sb.toString());
+    }
+
+    private void add(Pipe rs, boolean isRoot) {
         File file = new File(rs.getExecutable());
         if (file.isDirectory()) {
             addFiles(file);
+        }
+
+        if (!isRoot){
+            cdPipe.setExecutable(file.getParent());
+            putItemInMap(cdPipe);
+        }else {
+            removeItemInMap(cdPipe);
         }
     }
 
@@ -109,7 +136,7 @@ public class DirectoryPipe extends SearchablePipe {
         if (mTranslator == null) {
             mTranslator = new EnglishTranslator(getLauncher());
         }
-        Pipe pipe = new Pipe(DirectoryPipe.this.getId(), "/" + displayName, mTranslator.getName(displayName), path);
+        Pipe pipe = new Pipe(getId(), "/" + displayName, mTranslator.getName(displayName), path);
         pipe.setBasePipe(DirectoryPipe.this);
         putItemInMap(pipe);
     }
@@ -142,16 +169,10 @@ public class DirectoryPipe extends SearchablePipe {
         removeItemInMap(pipe);
     }
 
-    private void open(Pipe rs) {
+    private void open(Pipe rs, OutputCallback callback) {
         File file = new File(rs.getExecutable());
         if (file.isDirectory()) {
-            File[] files = file.listFiles();
-            StringBuilder sb = new StringBuilder();
-            for (File f : files) {
-                sb.append(f.getName()).append("\n");
-            }
-            cd(rs.getExecutable());
-            getConsole().input(sb.toString());
+            cd(rs, callback);
         } else {
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -173,16 +194,15 @@ public class DirectoryPipe extends SearchablePipe {
         }.start();
     }
 
-    private void clear(){
+    private void clear() {
         resultMap.clear();
         mPipeMap.clear();
     }
 
     private void reset() {
-        ArrayList<String> all = getAllDirectoriesFromSDCard();
-        for (String item : all) {
-            addFile(item);
-        }
+        File root = Environment.getExternalStorageDirectory();
+
+        add(new Pipe(getId(), "/", new SearchableName(""), root.getAbsolutePath()), true);
     }
 
     public ArrayList<String> getAllDirectoriesFromSDCard() {

@@ -13,7 +13,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.HashMap;
@@ -27,12 +26,10 @@ import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
 /**
  * format
- * {}
- * name(key1:value, key2:?...)=[url]: [filter...]
  */
 public class APIPipe extends SearchablePipe {
 
-    private int ID = 0;
+    private static String NAME_ADD = "$addAPI";
     private static String TAG = "APIPipe";
     private DatabaseReference mDatabase;
 
@@ -52,7 +49,7 @@ public class APIPipe extends SearchablePipe {
 
     @Override
     public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, final OutputCallback callback) {
-        if (result.getId() == 0){
+        if (NAME_ADD.equals(result.getDisplayName())){
             addAPI(input);
         }else {
             callAPI(input, result.getExecutable(), callback);
@@ -61,7 +58,7 @@ public class APIPipe extends SearchablePipe {
 
     @Override
     public void getOutput(Pipe result, OutputCallback callback) {
-        if (result.getId() == 0){
+        if (NAME_ADD.equals(result.getDisplayName())){
             callback.onOutput("Should take input");
         }else {
             callAPI("", result.getExecutable(), callback);
@@ -79,7 +76,6 @@ public class APIPipe extends SearchablePipe {
             api = new Gson().fromJson(exe, API.class);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
-
             callback.onOutput("Format wrong. ");
             return;
         }
@@ -151,7 +147,7 @@ public class APIPipe extends SearchablePipe {
         WifiInfo info = manager.getConnectionInfo();
         String address = info.getMacAddress();
 
-        Pipe pipe = new Pipe(ID++, "$addAPI", new SearchableName("add", "api"), "");
+        Pipe pipe = new Pipe(getId(), "$addAPI", new SearchableName("add", "api"), "");
         putItemInMap(pipe);
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("local").child(address).child("Apis");
@@ -160,7 +156,7 @@ public class APIPipe extends SearchablePipe {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot != null) {
                     API item = dataSnapshot.getValue(API.class);
-                    Pipe pipe = new Pipe(ID++, "#" + item.name, new SearchableName(item.name), new Gson().toJson(item));
+                    Pipe pipe = new Pipe(getId(), "#" + item.name, new SearchableName(item.name), new Gson().toJson(item));
                     putItemInMap(pipe);
                 }
             }
