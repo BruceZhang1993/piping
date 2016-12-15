@@ -2,7 +2,7 @@ package indi.shinado.piping.pipes.impl.action;
 
 import indi.shinado.piping.account.User;
 import indi.shinado.piping.account.UserHelper;
-import indi.shinado.piping.launcher.UserInputCallback;
+import indi.shinado.piping.launcher.SingleLineInputCallback;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 
 public abstract class UserRequireAction extends DefaultInputActionPipe{
@@ -18,12 +18,12 @@ public abstract class UserRequireAction extends DefaultInputActionPipe{
             final User user = new User();
 
             getConsole().display("You haven't logged in. Your name please?");
-            getConsole().waitForUserInput(new UserInputCallback() {
+            getConsole().waitForSingleLineInput(new SingleLineInputCallback() {
                 @Override
                 public void onUserInput(String userInput) {
                     user.name = userInput;
                     getConsole().display("\nYour password please?");
-                    getConsole().waitForUserInput(new UserInputCallback() {
+                    getConsole().waitForSingleLineInput(new SingleLineInputCallback() {
                         @Override
                         public void onUserInput(String userInput) {
                             user.pwd = userInput;

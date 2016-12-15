@@ -15,7 +15,7 @@ import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
 public class TempPipesLoader implements IPipesLoader {
 
-    private void register(BasePipe basePipe, BaseLauncherView context, Console console, AbsTranslator translator,
+    private void register(BasePipe basePipe, Context context, Console console, AbsTranslator translator,
                          SearchablePipe.OnItemsLoadedListener listener, int size){
         basePipe.setConsole(console);
         basePipe.setContext(context);
@@ -23,7 +23,7 @@ public class TempPipesLoader implements IPipesLoader {
     }
 
     @Override
-    public ArrayList<BasePipe> load(BaseLauncherView context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener) {
+    public ArrayList<BasePipe> load(Context context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener) {
         ArrayList<BasePipe> pipes = new ArrayList<>();
 
         TestActionPipe actionPipe = new TestActionPipe();
@@ -48,21 +48,25 @@ public class TempPipesLoader implements IPipesLoader {
 
         };
         pipes.add(defaultPipe);
-        register(defaultPipe, context, console, translator, listener, 2);
+        register(defaultPipe, context, console, translator, listener, 4);
 
         TestAppPipe appPipe = new TestAppPipe();
         pipes.add(appPipe);
-        register(appPipe, context, console, translator, listener, 2);
+        register(appPipe, context, console, translator, listener, 4);
 
         TestContactPipe contactPipe  = new TestContactPipe();
         pipes.add(contactPipe);
-        register(contactPipe, context, console, translator, listener, 2);
+        register(contactPipe, context, console, translator, listener, 4);
+
+        TestPythonActionPipe pythonPipe = new TestPythonActionPipe();
+        pipes.add(pythonPipe);
+        register(pythonPipe, context, console, translator, listener, 4);
 
         return pipes;
     }
 
     @Override
-    public BasePipe load(PipeEntity entity, BaseLauncherView context, Console console, AbsTranslator translator, BasePipe.OnItemsLoadedListener listener) {
+    public BasePipe load(PipeEntity entity, Context context, Console console, AbsTranslator translator, BasePipe.OnItemsLoadedListener listener) {
         return null;
 
     }

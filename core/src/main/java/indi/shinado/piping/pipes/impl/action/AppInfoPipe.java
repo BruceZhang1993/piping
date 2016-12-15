@@ -47,7 +47,7 @@ public class AppInfoPipe extends DefaultInputActionPipe{
         }else{
             Pipe prev = previous.get();
             if (prev.getId() == PipesLoader.ID_APPLICATION) {
-                AppManager.info(getLauncher(), input);
+                AppManager.info(getLauncher(), prev.getExecutable());
             } else {
                 callback.onOutput(prev.getDisplayName() + " is not an application");
             }

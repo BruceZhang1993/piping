@@ -37,7 +37,6 @@ import indi.shinado.piping.view.BoundaryView;
 
 public abstract class BaseLauncherView extends Activity{
 
-	private static final int REQUEST_COLOR = 1;
 	private ArrayList<StatusBar> mStatusBars = new ArrayList<>();
 	private Intent mBarService;
 	private FeedHelper feedHelper;
@@ -49,111 +48,15 @@ public abstract class BaseLauncherView extends Activity{
 		mPref = new Preferences(this);
 		mBarService = new Intent(this, BarService.class);
 		startService(mBarService);
-		IntentFilter filter = new IntentFilter(Intent.ACTION_WALLPAPER_CHANGED);
-		registerReceiver(mWallpaperSetReceiver, filter);
 	}
 
 	@Override
 	public void onDestroy(){
         super.onDestroy();
 		stopService(mBarService);
-		unregisterReceiver(mWallpaperSetReceiver);
 		destroy();
 	}
 
-	protected void initWallpaper(){
-		if (mPref.isWallpaperSet()){
-			setWallpaper();
-		}
-	}
-
-	@SuppressWarnings("deprecation")
-	private void setWallpaper(){
-		WallpaperManager wallpaperManager
-				= WallpaperManager.getInstance(getApplicationContext());
-		Drawable drawable = wallpaperManager.getDrawable();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-			getBackgroundView().setBackground(drawable);
-		}else {
-			getBackgroundView().setBackgroundDrawable(drawable);
-		}
-	}
-
-	protected void setBoundaryColor(int color){
-		getBoundaryView().setBoundaryColor(color);
-	}
-
-	public void setBoundaryWidth(float width){
-		getBoundaryView().setBoundaryWidth(width);
-	}
-
-	public void setTextSize(float size){
-		setTextSize(getBackgroundView(), size);
-	}
-
-	protected void setTextSize(ViewGroup viewGroup, float size){
-		for (int i=0;  i < viewGroup.getChildCount(); i++){
-			View view = viewGroup.getChildAt(i);
-			if (view instanceof TextView){
-				TextView textView = (TextView) view;
-				textView.setTextSize(size);
-			}else if (view instanceof ViewGroup){
-				setTextSize((ViewGroup) view, size);
-			}
-		}
-	}
-
-	protected void setTextColor(ViewGroup viewGroup, int color){
-		if (viewGroup.getTag() != null && viewGroup.getTag().equals("no-format")){
-			return;
-		}
-
-		for (int i=0;  i < viewGroup.getChildCount(); i++){
-			View view = viewGroup.getChildAt(i);
-			if (view instanceof TextView && ! (view instanceof EditText)){
-				TextView textView = (TextView) view;
-				textView.setTextColor(color);
-			}else if (view instanceof ViewGroup){
-				setTextColor((ViewGroup) view, color);
-			}
-		}
-	}
-
-	public void selectWallpaper(){
-		Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
-		startActivity(Intent.createChooser(intent, "Select Wallpaper"));
-	}
-
-	public void selectColor(){
-		Intent intent = new Intent(this, ColorActivity.class);
-		startActivityForResult(intent, REQUEST_COLOR);
-	}
-
-	public void setColor(int color){
-		setTextColor(getBackgroundView(), color);
-		setBoundaryColor(color);
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent intent){
-		switch (requestCode) {
-			case REQUEST_COLOR:
-				if(resultCode == RESULT_OK){
-					int color = intent.getIntExtra(GlobalDefs.EXTRA_COLOR, 0);
-					mPref.setColor(color);
-					setColor(color);
-				}
-				break;
-		}
-	}
-
-	private BroadcastReceiver mWallpaperSetReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			mPref.setWallpaper(true);
-			setWallpaper();
-		}
-	};
 
 	public ArrayList<StatusBar> addStatusable(Statusable statusable){
 		loadLocalStatusBar(statusable);
@@ -226,20 +129,5 @@ public abstract class BaseLauncherView extends Activity{
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-
-	@TargetVersion(4)
-	public abstract ViewGroup getBackgroundView();
-
-	@TargetVersion(4)
-	public abstract BoundaryView getBoundaryView();
-
-	@TargetVersion(4)
-	public abstract void setInitText(String text);
-
-	@TargetVersion(4)
-	public abstract void setConsoleAnimation(ConsoleAnimation animation);
-
-	@TargetVersion(4)
-	public abstract void setAnimation(ConsoleAnimation animation);
 
 }

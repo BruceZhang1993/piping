@@ -12,9 +12,6 @@ import org.json.JSONObject;
 import java.util.Map;
 
 
-/**
- * Created by shinado on 15/8/27.
- */
 public class VolleyProvider {
 
     private final String TAG = "VolleyProvider";

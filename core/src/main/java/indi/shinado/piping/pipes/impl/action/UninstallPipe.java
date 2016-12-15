@@ -48,7 +48,7 @@ public class UninstallPipe extends DefaultInputActionPipe{
         }else{
             Pipe prev = previous.get();
             if (prev.getId() == PipesLoader.ID_APPLICATION) {
-                AppManager.uninstall(getLauncher(), input);
+                AppManager.uninstall(getLauncher(), prev.getExecutable());
             } else {
                 if (prev.getTypeIndex() == Pipe.TYPE_ACTION){
                     boolean b = getPipeManager().removePipe(prev.getId());

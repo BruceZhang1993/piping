@@ -16,9 +16,7 @@ public class ChineseTranslator extends EnglishTranslator{
         new Thread(){
             @Override
             public void run() {
-                Log.d("ChineseTranslator", "get translator end");
                 helper = new PinyinHelper(context);
-                Log.d("ChineseTranslator", "get translator end");
             }
         }.start();
     }

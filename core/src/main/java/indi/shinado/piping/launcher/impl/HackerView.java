@@ -3,13 +3,20 @@ package indi.shinado.piping.launcher.impl;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.shinado.annotation.TargetVersion;
+import com.shinado.core.R;
 
 import java.lang.ref.WeakReference;
+import java.util.Collection;
 
 import indi.shinado.piping.launcher.Console;
+import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.settings.Preferences;
 import indi.shinado.piping.util.CommonUtil;
 
@@ -247,6 +254,7 @@ public class HackerView {
         String[] splits = mPreviousLines.toString().split("\n");
         return splits[splits.length-1];
     }
+
 
 
     private class HandlerHelper {

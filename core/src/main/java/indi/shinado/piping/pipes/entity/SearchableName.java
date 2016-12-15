@@ -10,7 +10,7 @@ public class SearchableName {
      * accepting no languages other than English
      * however, accepting pronunciation of other languages such as Chinese
      */
-    public SearchableName(String[] name){
+    public SearchableName(String... name){
         this.name = name;
     }
 

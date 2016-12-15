@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeSet;
@@ -170,7 +172,8 @@ public class AppManager extends SearchableItemManager {
                 ApplicationInfo appInfo = pm.getApplicationInfo(info.activityInfo.packageName, 0);
                 String appFile = appInfo.sourceDir;
                 long installTime = new File(appFile).lastModified(); //Epoch Time
-                mAppList.add(new SimpleAppInfo(installTime, info.activityInfo.name, info.activityInfo.packageName));
+                Log.d(TAG, "app: " + info.activityInfo.name + ", " + new Date(installTime).toString());
+                mAppList.add(new SimpleAppInfo(installTime, appFile, info.activityInfo.name, info.activityInfo.packageName));
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
@@ -235,10 +238,8 @@ public class AppManager extends SearchableItemManager {
         } else {
             info = getResolveByPackage(split[0]);
         }
-
         return info;
     }
-
 
     private void onUninstall(String packageName) {
         ResolveInfo info = getResolveByPackage(packageName);

@@ -2,16 +2,10 @@ package com.shinado.piping.geek;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.view.KeyEvent;
 
 import indi.shinado.piping.launcher.CharacterInputCallback;
-import indi.shinado.piping.launcher.Console;
-import indi.shinado.piping.launcher.KeyDownCallback;
-import indi.shinado.piping.launcher.UserInputCallback;
 import indi.shinado.piping.launcher.impl.DeviceConsole;
-import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.entity.Keys;
-import shinado.indi.vender.base.HackerLauncher;
 
 /**
  * Created by shinado on 16/5/13.

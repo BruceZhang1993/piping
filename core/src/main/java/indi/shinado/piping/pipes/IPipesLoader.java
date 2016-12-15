@@ -12,8 +12,8 @@ import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
 public interface IPipesLoader {
 
-    ArrayList<BasePipe> load(BaseLauncherView context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener);
+    ArrayList<BasePipe> load(Context context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener);
 
-    BasePipe load(PipeEntity entity, BaseLauncherView context, Console console, AbsTranslator translator, BasePipe.OnItemsLoadedListener listener);
+    BasePipe load(PipeEntity entity, Context context, Console console, AbsTranslator translator, BasePipe.OnItemsLoadedListener listener);
 
 }

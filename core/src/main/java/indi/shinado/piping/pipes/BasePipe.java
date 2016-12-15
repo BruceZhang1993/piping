@@ -1,16 +1,11 @@
 package indi.shinado.piping.pipes;
 
 import android.content.Context;
-
 import com.shinado.annotation.TargetVersion;
-
 import java.util.TreeSet;
-
-import indi.shinado.piping.launcher.BaseLauncherView;
 import indi.shinado.piping.launcher.Console;
 import indi.shinado.piping.launcher.InputCallback;
 import indi.shinado.piping.pipes.entity.Instruction;
-import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
@@ -19,7 +14,7 @@ public abstract class BasePipe {
     protected int id;
 
     //from version 3
-    private BaseLauncherView baseLauncherView;
+//    private BaseLauncherView baseLauncherView;
 
     //same as baseLauncherView, to support old version
     protected Context context;
@@ -133,16 +128,6 @@ public abstract class BasePipe {
         this.pipeManager = pipeManager;
     }
 
-    @TargetVersion(4)
-    public void addInputCallback(InputCallback inputCallback) {
-        getPipeManager().addInputCallback(inputCallback);
-    }
-
-    @TargetVersion(4)
-    public void removeInputCallback(InputCallback inputCallback) {
-        getPipeManager().removeInputCallback(inputCallback);
-    }
-
     public Console getConsole() {
         return console;
     }
@@ -151,8 +136,7 @@ public abstract class BasePipe {
         this.console = console;
     }
 
-    public void setContext(BaseLauncherView context){
-        this.baseLauncherView = context;
+    public void setContext(Context context){
         this.context = context;
     }
 
@@ -201,8 +185,8 @@ public abstract class BasePipe {
 
     }
 
-    public BaseLauncherView getLauncher(){
-        return baseLauncherView;
+    public Context getLauncher(){
+        return context;
     }
 
     public interface OnItemsLoadedListener {

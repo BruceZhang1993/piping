@@ -17,6 +17,7 @@ public class PipeSearcher {
      * searching results
      */
     private TreeSet<Pipe> mResults = new TreeSet<>();
+    private int mCurrentSelection = 0;
 
     protected ArrayList<BasePipe> mBasePipes = new ArrayList<>();
     protected Pipe.PreviousPipes mPrevious = new Pipe.PreviousPipes();
@@ -24,15 +25,16 @@ public class PipeSearcher {
     private OnResultChangeListener mOnResultChangeListener;
 
     private int recallTimes = 0;
+    private int searchOnlyId = -1;
 
     public void addPipe(BasePipe pipe) {
         mBasePipes.add(pipe);
     }
 
-    public boolean removePipe(int id){
+    public boolean removePipe(int id) {
         int i = 0;
-        for (BasePipe pipe : mBasePipes){
-            if (pipe.getId() == id){
+        for (BasePipe pipe : mBasePipes) {
+            if (pipe.getId() == id) {
                 mBasePipes.remove(i);
                 return true;
             }
@@ -46,12 +48,26 @@ public class PipeSearcher {
     }
 
     public void search(String input, int before, int count, int pointer) {
-        if (before < count){
+        if (before < count) {
             getPreviousPipes(input, pointer);
         }
         resetOnSearch();
 
         doSearch(input, count - before);
+    }
+
+    public void setCurrent(int selection) {
+        removePrevious();
+        mCurrentSelection = selection;
+        setPreviousForSelectedResult();
+    }
+
+    public void searchOnly(int pipeId) {
+        searchOnlyId = pipeId;
+    }
+
+    public void searchAll() {
+        searchOnlyId = -1;
     }
 
     private void getPreviousPipes(String input, int pointer) {
@@ -60,70 +76,83 @@ public class PipeSearcher {
         }
     }
 
-    private void resetOnSearch(){
+    private void resetOnSearch() {
         mResults.clear();
         recallTimes = 0;
     }
 
-    public void clearPrevious(){
+    public void clearPrevious() {
         mPrevious.clear();
     }
 
     private void doSearch(String input, int length) {
         for (BasePipe pipe : mBasePipes) {
-            pipe.search(input, length, mCallback);
+            if (searchOnlyId > 0) {
+                if (pipe.getId() == searchOnlyId){
+                    pipe.search(input, length, mCallback);
+                }
+            }else {
+                pipe.search(input, length, mCallback);
+            }
         }
     }
 
     private BasePipe.SearchResultCallback mCallback = new BasePipe.SearchResultCallback() {
         @Override
         public void onSearchResult(TreeSet<Pipe> results, String input) {
-            if (results != null && results.size() != 0){
+            if (results != null && results.size() != 0) {
                 //create a new copy of results
                 //to avoid dead nesting
-                for (Pipe pipe : results){
+                for (Pipe pipe : results) {
                     mResults.add(new Pipe(pipe));
                 }
 //                mResults.addAll(results);
             }
 
-            if (++recallTimes == mBasePipes.size()){
+            if (++recallTimes == (searchOnlyId >= 0 ? 1 : mBasePipes.size())) {
                 removeFirstPreviousInResult(mResults, mPrevious.get());
-                setPreviousForFirstResult();
+                setPreviousForSelectedResult();
                 notifyResultChange(mResults, input, mPrevious);
             }
         }
 
-        //only set previous for the first item
-        //pass it on to next when shifting
-        private void setPreviousForFirstResult(){
-            if (!mResults.isEmpty()){
-                Pipe first = mResults.first();
-                first.setPrevious(mPrevious);
-            }
-        }
-
         //remove the result that matches the previous
-        private void removeFirstPreviousInResult(TreeSet<Pipe> result, Pipe prev){
-            if(!result.isEmpty()){
-                if (prev != null){
+        private void removeFirstPreviousInResult(TreeSet<Pipe> result, Pipe prev) {
+            if (!result.isEmpty()) {
+                if (prev != null) {
                     result.remove(prev);
                 }
             }
         }
     };
 
+    private void removePrevious() {
+        if (mCurrentSelection >= 0 && mCurrentSelection < mResults.size()) {
+            Pipe pipe = (Pipe) mResults.toArray()[mCurrentSelection];
+            pipe.setPrevious(null);
+        }
+    }
+
+    //only set previous for the selected item
+    //pass it on to next when shifting
+    private void setPreviousForSelectedResult() {
+        if (mCurrentSelection >= 0 && mCurrentSelection < mResults.size()) {
+            Pipe pipe = (Pipe) mResults.toArray()[mCurrentSelection];
+            pipe.setPrevious(mPrevious);
+        }
+    }
+
     private void notifyResultChange(TreeSet<Pipe> results, String input, Pipe.PreviousPipes previous) {
-        if (mOnResultChangeListener != null){
+        if (mOnResultChangeListener != null) {
             mOnResultChangeListener.onResultChange(results, input, previous);
         }
     }
 
-    public void setOnResultChangeListener(OnResultChangeListener listener){
+    public void setOnResultChangeListener(OnResultChangeListener listener) {
         mOnResultChangeListener = listener;
     }
 
-    public interface OnResultChangeListener{
+    public interface OnResultChangeListener {
         void onResultChange(TreeSet<Pipe> results, String input, Pipe.PreviousPipes previous);
     }
 

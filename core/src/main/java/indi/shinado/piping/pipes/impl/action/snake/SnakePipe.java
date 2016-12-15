@@ -1,12 +1,11 @@
 package indi.shinado.piping.pipes.impl.action.snake;
 
-import android.os.Handler;
-import android.os.Looper;
+import android.app.Activity;
 
 import com.shinado.annotation.TargetVersion;
 
 import indi.shinado.piping.launcher.InputCallback;
-import indi.shinado.piping.launcher.UserInputCallback;
+import indi.shinado.piping.launcher.SingleLineInputCallback;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
@@ -44,7 +43,7 @@ public class SnakePipe extends DefaultInputActionPipe implements Console {
 
     @Override
     public void die() {
-        getLauncher().runOnUiThread(new Runnable() {
+        ((Activity)getLauncher()).runOnUiThread(new Runnable() {
             public void run() {
                 stop();
             }
@@ -78,7 +77,7 @@ public class SnakePipe extends DefaultInputActionPipe implements Console {
 
     private void ready() {
         getConsole().display("Use 2 for up, 8 for down, 4 for left and 6 for right. Enter anything to start.");
-        getConsole().waitForUserInput(new UserInputCallback() {
+        getConsole().waitForSingleLineInput(new SingleLineInputCallback() {
             @Override
             public void onUserInput(String userInput) {
                 int width = getConsole().getConsoleInfo().width;
@@ -87,7 +86,7 @@ public class SnakePipe extends DefaultInputActionPipe implements Console {
                 getConsole().hideInitText();
                 game.create(maze, new Snake(), SnakePipe.this);
                 game.start();
-                addInputCallback(mInputCallback);
+                getConsole().addInputCallback(mInputCallback);
             }
         });
     }
@@ -101,7 +100,7 @@ public class SnakePipe extends DefaultInputActionPipe implements Console {
         game.stop();
         getConsole().quitBlind();
         getConsole().showInitText();
-        removeInputCallback(mInputCallback);
+        getConsole().removeInputCallback(mInputCallback);
     }
 
     private InputCallback mInputCallback = new InputCallback() {
@@ -123,4 +122,5 @@ public class SnakePipe extends DefaultInputActionPipe implements Console {
             }
         }
     };
+
 }

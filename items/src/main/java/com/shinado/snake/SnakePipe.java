@@ -3,8 +3,7 @@ package com.shinado.snake;
 import com.shinado.annotation.TargetVersion;
 
 import indi.shinado.piping.launcher.InputCallback;
-import indi.shinado.piping.launcher.UserInputCallback;
-import indi.shinado.piping.launcher.impl.DeviceConsole;
+import indi.shinado.piping.launcher.SingleLineInputCallback;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
@@ -58,7 +57,7 @@ public class SnakePipe extends DefaultInputActionPipe implements Console {
 
     private void ready(){
         getConsole().input("Use 8 for up, 2 for down, 4 for left and 6 for right. Enter anything to start.");
-        getConsole().waitForUserInput(new UserInputCallback() {
+        getConsole().waitForSingleLineInput(new SingleLineInputCallback() {
             @Override
             public void onUserInput(String userInput) {
                 int width = getConsole().getConsoleInfo().width;

@@ -1,6 +1,6 @@
 package com.shinado.shell;
 
-import indi.shinado.piping.launcher.UserInputCallback;
+import indi.shinado.piping.launcher.SingleLineInputCallback;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
@@ -35,7 +35,7 @@ public class ShellPipe extends DefaultInputActionPipe{
     }
 
     private void loopForUserInput(){
-        getConsole().waitForUserInput(new UserInputCallback() {
+        getConsole().waitForSingleLineInput(new SingleLineInputCallback() {
             @Override
             public void onUserInput(String userInput) {
                 if (!userInput.equals("exit")){

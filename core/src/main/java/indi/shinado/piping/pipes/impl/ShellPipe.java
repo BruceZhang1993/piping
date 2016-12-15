@@ -1,15 +1,6 @@
 package indi.shinado.piping.pipes.impl;
 
-import android.util.Log;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import indi.shinado.piping.launcher.UserInputCallback;
-import indi.shinado.piping.pipes.BasePipe;
+import indi.shinado.piping.launcher.SingleLineInputCallback;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
@@ -43,7 +34,7 @@ public class ShellPipe extends DefaultInputActionPipe{
     }
 
     private void loopForUserInput(){
-        getConsole().waitForUserInput(new UserInputCallback() {
+        getConsole().waitForSingleLineInput(new SingleLineInputCallback() {
             @Override
             public void onUserInput(String userInput) {
                 if (!userInput.equals("exit")){

@@ -7,7 +7,7 @@ import indi.shinado.piping.pipes.entity.SearchableName;
 
 public class LastInputPipe extends DefaultInputActionPipe{
 
-    private final String NAME = "$latest";
+    private final String NAME = "$input";
 
     public LastInputPipe(int id) {
         super(id);
@@ -20,7 +20,7 @@ public class LastInputPipe extends DefaultInputActionPipe{
 
     @Override
     public SearchableName getSearchable() {
-        return new SearchableName(new String[]{"latest"});
+        return new SearchableName(new String[]{"input"});
     }
 
     @Override

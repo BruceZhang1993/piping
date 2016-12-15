@@ -1,41 +1,31 @@
 package indi.shinado.piping.pipes.impl.action;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
 
-import com.shinado.annotation.TargetVersion;
-
-import indi.shinado.piping.pipes.BasePipe;
+import indi.shinado.piping.launcher.functionality.IText;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 
-@TargetVersion(4)
-public class WidgetPipe extends DefaultInputActionPipe{
+public class InitTextPipe extends DefaultInputActionPipe{
 
-    private static final String NAME = "$widget-store";
-
-    public WidgetPipe(int id) {
+    public InitTextPipe(int id) {
         super(id);
     }
 
     @Override
     public String getDisplayName() {
-        return NAME;
+        return "$Keep";
     }
 
     @Override
     public SearchableName getSearchable() {
-        return new SearchableName(new String[]{"widget", "store"});
+        return new SearchableName("keep");
     }
 
     @Override
     public void onParamsEmpty(Pipe rs, OutputCallback callback) {
-        Activity activity = (Activity) getLauncher();
-        activity.startActivityForResult(
-                new Intent("com.shinado.piping.shopping"),
-                10
-        );
+
     }
 
     @Override
@@ -45,6 +35,12 @@ public class WidgetPipe extends DefaultInputActionPipe{
 
     @Override
     public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
-
+        Context launcher = getLauncher();
+        if (launcher instanceof IText){
+            ((IText) launcher).setInitText(input);
+        }else {
+            getConsole().input("Not supported. ");
+        }
     }
+
 }

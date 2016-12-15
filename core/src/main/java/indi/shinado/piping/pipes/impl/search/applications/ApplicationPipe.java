@@ -2,18 +2,28 @@ package indi.shinado.piping.pipes.impl.search.applications;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
 
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Iterator;
 import java.util.List;
 
 import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
+import indi.shinado.piping.pipes.impl.PipesLoader;
+import indi.shinado.piping.pipes.impl.ShareIntent;
 import indi.shinado.piping.pipes.search.FrequentPipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 import indi.shinado.piping.util.android.AppManager;
 
-public class ApplicationPipe extends FrequentPipe{
+public class ApplicationPipe extends FrequentPipe {
 
     private AppManager appManager;
 
@@ -39,18 +49,26 @@ public class ApplicationPipe extends FrequentPipe{
 
     @Override
     public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
-
         PackageManager pm = getLauncher().getPackageManager();
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, input);
+        sharingIntent.setType("*/*");
+
+        ShareIntent shareIntent = new Gson().fromJson(input, ShareIntent.class);
+        if (shareIntent != null) {
+            sharingIntent.setType(shareIntent.type);
+            for (String key : shareIntent.extras.keySet()) {
+                sharingIntent.putExtra(key, Uri.parse(shareIntent.extras.get(key)));
+            }
+        } else {
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, input);
+        }
 
         //looking for shareable apps
         List<ResolveInfo> list = pm.queryIntentActivities(sharingIntent, 0);
         String[] split = result.getExecutable().split(",");
         String pkg = split[0];
-        for (ResolveInfo info : list){
-            if (pkg.equals(info.activityInfo.packageName)){
+        for (ResolveInfo info : list) {
+            if (pkg.equals(info.activityInfo.packageName)) {
                 sharingIntent.setComponent(new ComponentName(split[0], info.activityInfo.name));
                 getLauncher().startActivity(sharingIntent);
                 return;
@@ -63,7 +81,19 @@ public class ApplicationPipe extends FrequentPipe{
 
     @Override
     public void getOutput(Pipe result, OutputCallback callback) {
-        callback.onOutput(result.getExecutable());
+        ShareIntent shareIntent = new ShareIntent("application/vnd.android.package-archive");
+
+        PackageManager pm = getLauncher().getPackageManager();
+        ResolveInfo info = appManager.getResolveByPackage(result.getExecutable().split(",")[0]);
+        try {
+            ApplicationInfo appInfo = pm.getApplicationInfo(info.activityInfo.packageName, 0);
+            shareIntent.extras.put(Intent.EXTRA_STREAM, appInfo.publicSourceDir);
+//                output.put(Intent.EXTRA_TEXT, "market://details?id="+info.resolvePackageName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        callback.onOutput(shareIntent.toString());
     }
 
     @Override
@@ -117,14 +147,14 @@ public class ApplicationPipe extends FrequentPipe{
 
     @Override
     public void destroy() {
-        if (appManager != null){
+        if (appManager != null) {
             appManager.destroy();
             appManager = null;
         }
     }
 
     @Override
-    public Pipe getByValue(/** package name **/ String value) {
+    public Pipe getByValue(/** package name **/String value) {
         Pipe item = appManager.getResult(value + ",", true);
         item.setBasePipe(this);
         item.setInstruction(new Instruction(""));

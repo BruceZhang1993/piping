@@ -4,7 +4,6 @@ import com.shinado.annotation.TargetVersion;
 
 import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.ConsoleInfo;
-import indi.shinado.piping.pipes.entity.Pipe;
 
 public interface Console {
 
@@ -31,7 +30,7 @@ public interface Console {
      * after user press ENTER key
      */
     @TargetVersion(4)
-    void waitForUserInput(UserInputCallback inputCallback);
+    void waitForSingleLineInput(SingleLineInputCallback inputCallback);
 
     /**
      * for single character input
@@ -88,4 +87,19 @@ public interface Console {
 
     @TargetVersion(4)
     void startTutorial();
+
+    @TargetVersion(4)
+    void addInputCallback(InputCallback inputCallback);
+
+    @TargetVersion(4)
+    void removeInputCallback(InputCallback inputCallback);
+
+    @TargetVersion(4)
+    void setIndicator(String indicator);
+
+    @TargetVersion(4)
+    void searchOnly(int pipeId);
+
+    @TargetVersion(4)
+    void searchAll();
 }

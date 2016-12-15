@@ -2,7 +2,15 @@ package shinado.indi.items;
 
 import android.util.Log;
 
+import java.util.Collection;
+
+import indi.shinado.piping.launcher.CharacterInputCallback;
+import indi.shinado.piping.launcher.InputCallback;
+import indi.shinado.piping.launcher.KeyDownCallback;
+import indi.shinado.piping.launcher.SingleLineInputCallback;
 import indi.shinado.piping.launcher.impl.DeviceConsole;
+import indi.shinado.piping.pipes.BasePipe;
+import indi.shinado.piping.pipes.ConsoleInfo;
 import indi.shinado.piping.pipes.entity.Pipe;
 
 public class SystemConsole  implements DeviceConsole {
@@ -40,13 +48,98 @@ public class SystemConsole  implements DeviceConsole {
     }
 
     @Override
-    public void onSystemReady() {
-        log("onSystemReady");
+    public String getLastInput() {
+        return null;
     }
 
     @Override
-    public void displayResult(Pipe pipe) {
-        log("display result:" + pipe.getDisplayName());
+    public void waitForSingleLineInput(SingleLineInputCallback inputCallback) {
+
+    }
+
+    @Override
+    public void waitForCharacterInput(CharacterInputCallback inputCallback) {
+
+    }
+
+    @Override
+    public void waitForKeyDown(KeyDownCallback inputCallback) {
+
+    }
+
+    @Override
+    public void display(String string) {
+
+    }
+
+    @Override
+    public ConsoleInfo getConsoleInfo() {
+        return null;
+    }
+
+    @Override
+    public void occupyMode() {
+
+    }
+
+    @Override
+    public void quitOccupy() {
+
+    }
+
+    @Override
+    public void hideInitText() {
+
+    }
+
+    @Override
+    public void showInitText() {
+
+    }
+
+    @Override
+    public void blindMode() {
+
+    }
+
+    @Override
+    public void quitBlind() {
+
+    }
+
+    @Override
+    public void notifyUI() {
+
+    }
+
+    @Override
+    public BasePipe getPipeById(int id) {
+        return null;
+    }
+
+    @Override
+    public void startTutorial() {
+
+    }
+
+    @Override
+    public void addInputCallback(InputCallback inputCallback) {
+
+    }
+
+    @Override
+    public void removeInputCallback(InputCallback inputCallback) {
+
+    }
+
+    @Override
+    public void onSystemReady(Collection<BasePipe> pipes) {
+
+    }
+
+    @Override
+    public void displayResult(Collection<Pipe> pipe) {
+
     }
 
     @Override
@@ -60,7 +153,7 @@ public class SystemConsole  implements DeviceConsole {
     }
 
     @Override
-    public void onShift(Pipe pipe) {
+    public void onSelected(Pipe pipe) {
         log("shift:" + pipe.getDisplayName());
     }
 

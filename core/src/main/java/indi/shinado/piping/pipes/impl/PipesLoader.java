@@ -11,7 +11,6 @@ import java.util.List;
 
 import dalvik.system.DexClassLoader;
 import indi.shinado.piping.GlobalDefs;
-import indi.shinado.piping.launcher.BaseLauncherView;
 import indi.shinado.piping.launcher.Console;
 import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.IPipesLoader;
@@ -23,14 +22,13 @@ import indi.shinado.piping.pipes.impl.action.DiaryV4Pipe;
 import indi.shinado.piping.pipes.impl.action.HelpPipe;
 import indi.shinado.piping.pipes.impl.action.InstallPipe;
 import indi.shinado.piping.pipes.impl.action.LastInputPipe;
-import indi.shinado.piping.pipes.impl.action.LastInstallPipe;
 import indi.shinado.piping.pipes.impl.action.NotePipe;
 import indi.shinado.piping.pipes.impl.action.SearchItemPipe;
-import indi.shinado.piping.pipes.impl.action.SettingPipe;
 import indi.shinado.piping.pipes.impl.action.TutorialPipe;
 import indi.shinado.piping.pipes.impl.action.UninstallPipe;
 import indi.shinado.piping.pipes.impl.action.WidgetPipe;
 import indi.shinado.piping.pipes.impl.action.snake.SnakePipe;
+import indi.shinado.piping.pipes.impl.search.WebsitePipe;
 import indi.shinado.piping.pipes.impl.search.applications.ApplicationPipe;
 import indi.shinado.piping.pipes.impl.search.ContactPipe;
 import indi.shinado.piping.pipes.impl.search.DirectoryPipe;
@@ -56,7 +54,7 @@ public class PipesLoader implements IPipesLoader {
         pipes.add(new DirectoryPipe(10));
         pipes.add(new HelpPipe(11));
         pipes.add(new ClearPipe(12));
-        pipes.add(new SettingPipe(13));
+//        pipes.add(new SettingPipe(13));
         pipes.add(new LastInputPipe(14));
         pipes.add(new UserPipe(15));
         pipes.add(new DiaryV4Pipe(16));
@@ -64,12 +62,12 @@ public class PipesLoader implements IPipesLoader {
         pipes.add(new ShellPipe(18));
         pipes.add(new WidgetPipe(19));
         pipes.add(new TutorialPipe(20));
-        pipes.add(new LastInstallPipe(21));
+        pipes.add(new WebsitePipe(22));
 
         return pipes;
     }
 
-    public void register(BasePipe basePipe, BaseLauncherView context, Console console, AbsTranslator translator,
+    public void register(BasePipe basePipe, Context context, Console console, AbsTranslator translator,
                          SearchablePipe.OnItemsLoadedListener listener, int total){
         if (basePipe == null){
             return;
@@ -90,7 +88,7 @@ public class PipesLoader implements IPipesLoader {
     }
 
     @Override
-    public ArrayList<BasePipe> load(BaseLauncherView context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener) {
+    public ArrayList<BasePipe> load(Context context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener) {
         ArrayList<BasePipe> pipes = new ArrayList<>();
         pipes.addAll(loadFromLocal(context));
         pipes.addAll(loadFromStorage(context));
@@ -102,7 +100,7 @@ public class PipesLoader implements IPipesLoader {
     }
 
     @Override
-    public BasePipe load(PipeEntity entity, BaseLauncherView context, Console console, AbsTranslator translator, BasePipe.OnItemsLoadedListener listener) {
+    public BasePipe load(PipeEntity entity, Context context, Console console, AbsTranslator translator, BasePipe.OnItemsLoadedListener listener) {
         BasePipe pipe = loadFromStorage(context, entity);
         register(pipe, context, console, translator, listener, -1);
         return pipe;
