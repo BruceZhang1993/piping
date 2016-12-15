@@ -28,7 +28,7 @@ public class Instruction {
     public Instruction(String input){
         this.input = input;
         int indexOfDot = input.lastIndexOf(Keys.PIPE);
-        String right = null;
+        String right;
         if (indexOfDot < 0) {
             right = input;
         } else {
@@ -43,11 +43,11 @@ public class Instruction {
         String[] splitRight = right.split(Keys.PARAMS);
         int splitLength = splitRight.length;
         if (splitLength > 0) {
-            this.body = splitRight[0].trim();
+            this.body = splitRight[0];
             if (splitLength > 1) {
                 String[] params = new String[splitLength - 1];
                 for (int i = 1; i < splitRight.length; i++) {
-                    params[i - 1] = splitRight[i].trim();
+                    params[i - 1] = splitRight[i];
                 }
                 this.params = params;
             } else {

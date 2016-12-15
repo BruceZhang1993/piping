@@ -23,6 +23,7 @@ public class DiaryV4Pipe extends UserRequireAction {
 
     public DiaryV4Pipe(int id) {
         super(id);
+        mResult.setAcceptableParams(new Pipe(getId(), "ls"));
     }
 
     @Override
@@ -32,7 +33,7 @@ public class DiaryV4Pipe extends UserRequireAction {
 
     @Override
     public SearchableName getSearchable() {
-        return new SearchableName(new String[]{"diary"});
+        return new SearchableName("diary");
     }
 
     @Override

@@ -3,34 +3,63 @@ package indi.shinado.piping.pipes.impl.search;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.FileObserver;
+import android.util.Log;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.impl.ShareIntent;
+import indi.shinado.piping.pipes.search.SearchableActionPipe;
 import indi.shinado.piping.pipes.search.SearchablePipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 import indi.shinado.piping.pipes.search.translator.EnglishTranslator;
 import indi.shinado.piping.util.IntentUtil;
 
-public class DirectoryPipe extends SearchablePipe {
+public class DirectoryPipe extends SearchableActionPipe {
 
+    private static final String TAG = "DirectoryPipe";
     private static final String OPT_ADD = "add";
     private static final String OPT_REMOVE = "rm";
     private AbsTranslator mTranslator;
     private Pipe cdPipe;
     private HashMap<String, Pipe> mPipeMap = new HashMap<>();
+    private FileObserver mFileObserver;
+    private OnQuitSearchActionListener mListener;
 
     public DirectoryPipe(int id) {
         super(id);
-        cdPipe = new Pipe(getId(), "$cd", new SearchableName("cd .."), "");
+        cdPipe = new Pipe(getId(), "$cd ..", new SearchableName("cd"), "");
+
+        mFileObserver = new FileObserver(Environment.getExternalStorageState()) {
+            @Override
+            public void onEvent(int i, String s) {
+                Log.d(TAG, "onEvent: " + s);
+                addFile(s);
+            }
+        };
+        mFileObserver.startWatching();
+    }
+
+    @Override
+    public String getKeyword() {
+        return "cd";
+    }
+
+    @Override
+    public void start(OnQuitSearchActionListener listener) {
+        this.mListener = listener;
+        File root = Environment.getExternalStorageDirectory();
+        add(new Pipe(getId(), "/", new SearchableName(""), root.getAbsolutePath()), true);
     }
 
     @Override
     public void destroy() {
-        //do nothing
+        mFileObserver.stopWatching();
     }
 
     @Override
@@ -71,6 +100,7 @@ public class DirectoryPipe extends SearchablePipe {
 
     @Override
     protected void execute(Pipe rs) {
+        //TODO
         Instruction instruction = rs.getInstruction();
         String params[] = instruction.params;
         if (params != null && params.length != 0) {
@@ -121,10 +151,10 @@ public class DirectoryPipe extends SearchablePipe {
             addFiles(file);
         }
 
-        if (!isRoot){
+        if (!isRoot) {
             cdPipe.setExecutable(file.getParent());
             putItemInMap(cdPipe);
-        }else {
+        } else {
             removeItemInMap(cdPipe);
         }
     }
@@ -163,7 +193,6 @@ public class DirectoryPipe extends SearchablePipe {
         }
     }
 
-
     private void removeFile(String path) {
         Pipe pipe = mPipeMap.get(path);
         removeItemInMap(pipe);
@@ -180,29 +209,27 @@ public class DirectoryPipe extends SearchablePipe {
             String type = IntentUtil.getMIMEType(rs.getExecutable());
             intent.setDataAndType(/*uri*/Uri.fromFile(new File(rs.getExecutable())), type);
             getLauncher().startActivity(intent);
+            clear();
+            quit();
+        }
+    }
+
+    private void quit() {
+        if (mListener != null) {
+            mListener.onQuit();
         }
     }
 
     @Override
     public void load(final AbsTranslator translator, final OnItemsLoadedListener listener, final int total) {
-        new Thread() {
-            public void run() {
-                while (!translator.ready()) ;
-                reset();
-                listener.onItemsLoaded(DirectoryPipe.this.getId(), total);
-            }
-        }.start();
+        //nothing to search unless cd is handled
+        putItemInMap(cdPipe);
+        listener.onItemsLoaded(DirectoryPipe.this.getId(), total);
     }
 
     private void clear() {
         resultMap.clear();
         mPipeMap.clear();
-    }
-
-    private void reset() {
-        File root = Environment.getExternalStorageDirectory();
-
-        add(new Pipe(getId(), "/", new SearchableName(""), root.getAbsolutePath()), true);
     }
 
     public ArrayList<String> getAllDirectoriesFromSDCard() {

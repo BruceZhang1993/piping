@@ -9,10 +9,13 @@ import java.util.TreeSet;
 
 import indi.shinado.piping.launcher.InputCallback;
 import indi.shinado.piping.launcher.SingleLineInputCallback;
+import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.IPipeManager;
 import indi.shinado.piping.pipes.PipeSearcher;
 import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
+import indi.shinado.piping.pipes.search.SearchableActionPipe;
+import indi.shinado.piping.pipes.search.SearchablePipe;
 
 public class ConsoleHelper {
 
@@ -38,7 +41,7 @@ public class ConsoleHelper {
     private OnHistoryListener mOnHistoryListener;
     private IPipeManager mPipeManager;
 
-    public ConsoleHelper(final DeviceConsole console, IPipeManager pipeManager) {
+    public ConsoleHelper(final DeviceConsole console, final IPipeManager pipeManager) {
         this.console = console;
         this.mPipeManager = pipeManager;
 
@@ -57,10 +60,22 @@ public class ConsoleHelper {
 
                 if (input.endsWith(Keys.PARAMS)) {
                     if (!mResults.isEmpty()) {
+                        //TODO
                         Pipe current = getCurrent();
                         List<Pipe> acceptableParams = current.getAcceptableParams();
                         if (acceptableParams != null && acceptableParams.size() > 0) {
                             console.displayResult(acceptableParams);
+                        }
+                        BasePipe basePipe = current.getBasePipe();
+                        if (basePipe instanceof SearchableActionPipe){
+                            SearchableActionPipe searchableActionPipe = (SearchableActionPipe) basePipe;
+                            pipeManager.getSearcher().searchAction(searchableActionPipe);
+                            searchableActionPipe.start(new SearchableActionPipe.OnQuitSearchActionListener() {
+                                @Override
+                                public void onQuit() {
+                                    mPipeManager.getSearcher().searchAll();
+                                }
+                            });
                         }
                     }
                 } else {

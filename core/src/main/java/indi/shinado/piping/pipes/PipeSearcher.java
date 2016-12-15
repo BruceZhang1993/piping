@@ -6,6 +6,7 @@ import java.util.TreeSet;
 
 import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
+import indi.shinado.piping.pipes.search.SearchableActionPipe;
 
 /**
  * organize searching from every BasePipe added
@@ -25,7 +26,8 @@ public class PipeSearcher {
     private OnResultChangeListener mOnResultChangeListener;
 
     private int recallTimes = 0;
-    private int searchOnlyId = -1;
+    private SearchableActionPipe searchableAction = null;
+//    private int searchOnlyId = -1;
 
     public void addPipe(BasePipe pipe) {
         mBasePipes.add(pipe);
@@ -62,12 +64,12 @@ public class PipeSearcher {
         setPreviousForSelectedResult();
     }
 
-    public void searchOnly(int pipeId) {
-        searchOnlyId = pipeId;
+    public void searchAction(SearchableActionPipe only) {
+        searchableAction = only;
     }
 
     public void searchAll() {
-        searchOnlyId = -1;
+        searchableAction = null;
     }
 
     private void getPreviousPipes(String input, int pointer) {
@@ -86,15 +88,15 @@ public class PipeSearcher {
     }
 
     private void doSearch(String input, int length) {
-        for (BasePipe pipe : mBasePipes) {
-            if (searchOnlyId > 0) {
-                if (pipe.getId() == searchOnlyId){
-                    pipe.search(input, length, mCallback);
-                }
-            }else {
+        if (searchableAction != null) {
+            input = input.replace(searchableAction.getKeyword() + Keys.PARAMS, "");
+            searchableAction.search(input, length, mCallback);
+        } else {
+            for (BasePipe pipe : mBasePipes) {
                 pipe.search(input, length, mCallback);
             }
         }
+
     }
 
     private BasePipe.SearchResultCallback mCallback = new BasePipe.SearchResultCallback() {
@@ -109,7 +111,7 @@ public class PipeSearcher {
 //                mResults.addAll(results);
             }
 
-            if (++recallTimes == (searchOnlyId >= 0 ? 1 : mBasePipes.size())) {
+            if (++recallTimes == (searchableAction != null ? 1 : mBasePipes.size())) {
                 removeFirstPreviousInResult(mResults, mPrevious.get());
                 setPreviousForSelectedResult();
                 notifyResultChange(mResults, input, mPrevious);

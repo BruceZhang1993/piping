@@ -4,6 +4,6 @@ public class Keys {
 
     public static final String PIPE = ".";
 
-    public static final String PARAMS = "-";
+    public static final String PARAMS = " ";
 
 }

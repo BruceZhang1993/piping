@@ -39,7 +39,6 @@ public class Pipe implements Comparable<Pipe> {
     private boolean ignoreInput = false;
 
     public Pipe() {
-
     }
 
     public Pipe(int id) {
@@ -47,9 +46,11 @@ public class Pipe implements Comparable<Pipe> {
         this.id = id;
     }
 
-    public Pipe(int id, String displayName) {
+    public Pipe(int id, String simple) {
         this(id);
-        this.displayName = displayName;
+        this.displayName = simple;
+        this.searchableName = new SearchableName(simple);
+        this.executable = simple;
     }
 
     public Pipe(int id, Instruction instruction) {
@@ -58,12 +59,14 @@ public class Pipe implements Comparable<Pipe> {
     }
 
     public Pipe(int id, String displayName, SearchableName searchableName) {
-        this(id, displayName);
+        this.id = id;
+        this.searchableName = searchableName;
         this.searchableName = searchableName;
     }
 
     public Pipe(int id, String displayName, SearchableName searchableName, String executable) {
-        this(id, displayName);
+        this.id = id;
+        this.searchableName = searchableName;
         this.searchableName = searchableName;
         this.executable = executable;
     }
@@ -218,6 +221,13 @@ public class Pipe implements Comparable<Pipe> {
 
     public void setAcceptableParams(List<Pipe> acceptableParams) {
         this.acceptableParams = acceptableParams;
+    }
+
+    public void setAcceptableParams(Pipe... params) {
+        acceptableParams = new ArrayList<>();
+        for (Pipe pipe : params){
+            acceptableParams.add(pipe);
+        }
     }
 
     public static class PreviousPipes{

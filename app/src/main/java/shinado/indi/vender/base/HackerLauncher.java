@@ -18,11 +18,14 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.shinado.piping.geek.HeadLoadder;
 import com.shinado.piping.geek.ShoppingHeadView;
 import com.shinado.piping.geek.Tutorial;
 import com.shinado.piping.geek.header.IHeadView;
+
 import java.util.Collection;
+
 import indi.shinado.piping.GlobalDefs;
 import indi.shinado.piping.color.ColorActivity;
 import indi.shinado.piping.feed.Feedable;
@@ -108,7 +111,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
     }
 
-    private void reloadKey(){
+    private void reloadKey() {
         KEY_SHIFT = preferences.getShiftKey();
     }
 
@@ -118,7 +121,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         mHackerView.stop();
         unregisterReceiver(mWallpaperSetReceiver);
         mPipeManager.destroy();
-        if (mHeadView != null){
+        if (mHeadView != null) {
             mHeadView.onDestroy();
         }
     }
@@ -131,7 +134,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     public void onResume() {
         super.onResume();
         log("onResume");
-        if(mHeadView != null){
+        if (mHeadView != null) {
             mHeadView.onResume();
         }
     }
@@ -139,26 +142,26 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     @Override
     protected void onPause() {
         super.onPause();
-        if (mHeadView != null){
+        if (mHeadView != null) {
             mHeadView.onPause();
         }
     }
 
-    private void initHeadView(){
+    private void initHeadView() {
         mHeadView = HeadLoadder.load(this);
-        if (mHeadView != null){
+        if (mHeadView != null) {
             FrameLayout headLayout = (FrameLayout) findViewById(R.id.head_fl);
             View view = mHeadView.getView(this, headLayout);
             headLayout.addView(view);
             mHeadView.onCreate();
-            if (view instanceof ViewGroup){
+            if (view instanceof ViewGroup) {
                 setTextSize((ViewGroup) view, mPref.getTextSize());
             }
         }
     }
 
-    private void reloadHeadView(){
-        if (mHeadView != null){
+    private void reloadHeadView() {
+        if (mHeadView != null) {
             mHeadView.onDestroy();
         }
         initHeadView();
@@ -227,7 +230,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
     @Override
     public void displayResult(Collection<Pipe> results) {
-        if (results.size() > 0){
+        if (results.size() > 0) {
             replaceItem(true, (Pipe) results.toArray()[0]);
         }
     }
@@ -321,16 +324,6 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     }
 
     @Override
-    public void searchOnly(int pipeId) {
-        mPipeManager.getSearcher().searchOnly(pipeId);
-    }
-
-    @Override
-    public void searchAll() {
-        mPipeManager.getSearcher().searchAll();
-    }
-
-    @Override
     public ConsoleInfo getConsoleInfo() {
         return new ConsoleInfo(mConsoleWidth, /**TODO**/consoleTextView.getLineCount());
     }
@@ -372,15 +365,15 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
     @Override
     public void notifyUI() {
-        if (mHeadView != null){
+        if (mHeadView != null) {
             mHeadView.notifyUI();
         }
     }
 
     @Override
     public BasePipe getPipeById(int id) {
-        for (BasePipe item : mPipeManager.getAllPipes()){
-            if (item.getId() == id){
+        for (BasePipe item : mPipeManager.getAllPipes()) {
+            if (item.getId() == id) {
                 return item;
             }
         }
@@ -424,8 +417,8 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (waitingForKeyDown){
-            if (mKeyDownCallback != null){
+        if (waitingForKeyDown) {
+            if (mKeyDownCallback != null) {
                 mKeyDownCallback.onKeyDown(keyCode);
             }
             reloadKey();
@@ -434,7 +427,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
             return true;
         }
 
-        if (keyCode == KEY_SHIFT){
+        if (keyCode == KEY_SHIFT) {
             mConsoleHelper.onShift();
             return true;
         }
@@ -488,110 +481,109 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     public void onBackPressed() {
     }
 
-    private void log(String msg){
+    private void log(String msg) {
         Log.d("HackerLauncher", msg);
     }
 
 
-	protected void initWallpaper(){
-		if (mPref.isWallpaperSet()){
-			setWallpaper();
-		}
-	}
+    protected void initWallpaper() {
+        if (mPref.isWallpaperSet()) {
+            setWallpaper();
+        }
+    }
 
-	@SuppressWarnings("deprecation")
-	private void setWallpaper(){
-		WallpaperManager wallpaperManager
-				= WallpaperManager.getInstance(getApplicationContext());
-		Drawable drawable = wallpaperManager.getDrawable();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-			getBackgroundView().setBackground(drawable);
-		}else {
-			getBackgroundView().setBackgroundDrawable(drawable);
-		}
-	}
+    @SuppressWarnings("deprecation")
+    private void setWallpaper() {
+        WallpaperManager wallpaperManager
+                = WallpaperManager.getInstance(getApplicationContext());
+        Drawable drawable = wallpaperManager.getDrawable();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            getBackgroundView().setBackground(drawable);
+        } else {
+            getBackgroundView().setBackgroundDrawable(drawable);
+        }
+    }
 
-	protected void setBoundaryColor(int color){
-		getBoundaryView().setBoundaryColor(color);
-	}
+    protected void setBoundaryColor(int color) {
+        getBoundaryView().setBoundaryColor(color);
+    }
 
-	public void setBoundaryWidth(float width){
-		getBoundaryView().setBoundaryWidth(width);
-	}
+    public void setBoundaryWidth(float width) {
+        getBoundaryView().setBoundaryWidth(width);
+    }
 
-	public void setTextSize(float size){
-		setTextSize(getBackgroundView(), size);
-	}
+    public void setTextSize(float size) {
+        setTextSize(getBackgroundView(), size);
+    }
 
-	protected void setTextSize(ViewGroup viewGroup, float size){
-		for (int i=0;  i < viewGroup.getChildCount(); i++){
-			View view = viewGroup.getChildAt(i);
-			if (view instanceof TextView){
-				TextView textView = (TextView) view;
-				textView.setTextSize(size);
-			}else if (view instanceof ViewGroup){
-				setTextSize((ViewGroup) view, size);
-			}
-		}
-	}
+    protected void setTextSize(ViewGroup viewGroup, float size) {
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View view = viewGroup.getChildAt(i);
+            if (view instanceof TextView) {
+                TextView textView = (TextView) view;
+                textView.setTextSize(size);
+            } else if (view instanceof ViewGroup) {
+                setTextSize((ViewGroup) view, size);
+            }
+        }
+    }
 
-	protected void setTextColor(ViewGroup viewGroup, int color){
-		if (viewGroup.getTag() != null && viewGroup.getTag().equals("no-format")){
-			return;
-		}
+    protected void setTextColor(ViewGroup viewGroup, int color) {
+        if (viewGroup.getTag() != null && viewGroup.getTag().equals("no-format")) {
+            return;
+        }
 
-		for (int i=0;  i < viewGroup.getChildCount(); i++){
-			View view = viewGroup.getChildAt(i);
-			if (view instanceof TextView && ! (view instanceof EditText)){
-				TextView textView = (TextView) view;
-				textView.setTextColor(color);
-			}else if (view instanceof ViewGroup){
-				setTextColor((ViewGroup) view, color);
-			}
-		}
-	}
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View view = viewGroup.getChildAt(i);
+            if (view instanceof TextView && !(view instanceof EditText)) {
+                TextView textView = (TextView) view;
+                textView.setTextColor(color);
+            } else if (view instanceof ViewGroup) {
+                setTextColor((ViewGroup) view, color);
+            }
+        }
+    }
 
-	public void selectWallpaper(){
-		Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
-		startActivity(Intent.createChooser(intent, "Select Wallpaper"));
-	}
+    public void selectWallpaper() {
+        Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
+        startActivity(Intent.createChooser(intent, "Select Wallpaper"));
+    }
 
-	public void selectColor(){
-		Intent intent = new Intent(this, ColorActivity.class);
-		startActivityForResult(intent, REQUEST_COLOR);
-	}
+    public void selectColor() {
+        Intent intent = new Intent(this, ColorActivity.class);
+        startActivityForResult(intent, REQUEST_COLOR);
+    }
 
-	public void setColor(int color){
-		setTextColor(getBackgroundView(), color);
-		setBoundaryColor(color);
-	}
+    public void setColor(int color) {
+        setTextColor(getBackgroundView(), color);
+        setBoundaryColor(color);
+    }
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent intent){
-		switch (requestCode) {
-			case REQUEST_COLOR:
-				if(resultCode == RESULT_OK){
-					int color = intent.getIntExtra(GlobalDefs.EXTRA_COLOR, 0);
-					mPref.setColor(color);
-					setColor(color);
-				}
-				break;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        switch (requestCode) {
+            case REQUEST_COLOR:
+                if (resultCode == RESULT_OK) {
+                    int color = intent.getIntExtra(GlobalDefs.EXTRA_COLOR, 0);
+                    mPref.setColor(color);
+                    setColor(color);
+                }
+                break;
             case ShoppingHeadView.REQUEST_SHOPPING:
-                if (resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     reloadHeadView();
                 }
                 break;
-		}
-	}
+        }
+    }
 
-	private BroadcastReceiver mWallpaperSetReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			mPref.setWallpaper(true);
-			setWallpaper();
-		}
-	};
-
+    private BroadcastReceiver mWallpaperSetReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mPref.setWallpaper(true);
+            setWallpaper();
+        }
+    };
 
 
 }
