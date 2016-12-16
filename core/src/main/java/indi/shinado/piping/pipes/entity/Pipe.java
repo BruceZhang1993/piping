@@ -60,13 +60,13 @@ public class Pipe implements Comparable<Pipe> {
 
     public Pipe(int id, String displayName, SearchableName searchableName) {
         this.id = id;
-        this.searchableName = searchableName;
+        this.displayName = displayName;
         this.searchableName = searchableName;
     }
 
     public Pipe(int id, String displayName, SearchableName searchableName, String executable) {
         this.id = id;
-        this.searchableName = searchableName;
+        this.displayName = displayName;
         this.searchableName = searchableName;
         this.executable = executable;
     }
@@ -120,7 +120,7 @@ public class Pipe implements Comparable<Pipe> {
 
     public BasePipe getBasePipe() {
         if (basePipe == null) {
-            throw new BasePipeNotSetException("Must set BasePipe in getResult() in BasePipe");
+            throw new BasePipeNotSetException(getClass().getSimpleName() + " must set BasePipe in getResult() in BasePipe");
         }
         return basePipe;
     }

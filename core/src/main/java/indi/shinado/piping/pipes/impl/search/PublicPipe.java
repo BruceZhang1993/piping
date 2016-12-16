@@ -1,7 +1,6 @@
 package indi.shinado.piping.pipes.impl.search;
 
 import java.util.TreeSet;
-
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.search.SearchableActionPipe;
@@ -14,8 +13,6 @@ import indi.shinado.piping.storage.StorageFactory;
 public class PublicPipe extends SearchableActionPipe {
 
     private Pipe nullPipe;
-    private boolean hasStarted = false;
-    private OnQuitSearchActionListener mListener;
     private IDataBaseReference mDatabase;
 
     public PublicPipe(int id) {
@@ -29,13 +26,10 @@ public class PublicPipe extends SearchableActionPipe {
     }
 
     @Override
-    public void start(OnQuitSearchActionListener listener) {
-        hasStarted = true;
-        this.mListener = listener;
+    public void start() {
+        super.start();
         mDatabase = StorageFactory.getStorage().child("public").child("user");
-//        mDatabase.addChildEventListener(eventListener);
     }
-
 
     @Override
     public void destroy() {
@@ -117,7 +111,6 @@ public class PublicPipe extends SearchableActionPipe {
 
         @Override
         public void onCancelled(IDatabaseError databaseError) {
-
         }
     };
 }

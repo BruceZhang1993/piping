@@ -59,25 +59,32 @@ public class ConsoleHelper {
                 mResults.addAll(results);
 
                 if (input.endsWith(Keys.PARAMS)) {
-                    if (!mResults.isEmpty()) {
-                        //TODO
-                        Pipe current = getCurrent();
-                        List<Pipe> acceptableParams = current.getAcceptableParams();
-                        if (acceptableParams != null && acceptableParams.size() > 0) {
-                            console.displayResult(acceptableParams);
-                        }
-                        BasePipe basePipe = current.getBasePipe();
-                        if (basePipe instanceof SearchableActionPipe){
-                            SearchableActionPipe searchableActionPipe = (SearchableActionPipe) basePipe;
-                            pipeManager.getSearcher().searchAction(searchableActionPipe);
-                            searchableActionPipe.start(new SearchableActionPipe.OnQuitSearchActionListener() {
-                                @Override
-                                public void onQuit() {
-                                    mPipeManager.getSearcher().searchAll();
-                                }
-                            });
-                        }
+                    //TODO is that right?
+                    Pipe current = getCurrent();
+                    List<Pipe> acceptableParams = current.getAcceptableParams();
+                    if (acceptableParams != null && acceptableParams.size() > 0) {
+                        console.displayResult(acceptableParams);
                     }
+
+//                    if (!mResults.isEmpty()) {
+//                        //TODO
+//                        Pipe current = getCurrent();
+//                        List<Pipe> acceptableParams = current.getAcceptableParams();
+//                        if (acceptableParams != null && acceptableParams.size() > 0) {
+//                            console.displayResult(acceptableParams);
+//                        }
+//                        BasePipe basePipe = current.getBasePipe();
+//                        if (basePipe instanceof SearchableActionPipe){
+//                            SearchableActionPipe searchableActionPipe = (SearchableActionPipe) basePipe;
+//                            pipeManager.getSearcher().searchAction(searchableActionPipe);
+//                            searchableActionPipe.start(new SearchableActionPipe.OnQuitSearchActionListener() {
+//                                @Override
+//                                public void onQuit() {
+//                                    mPipeManager.getSearcher().searchAll();
+//                                }
+//                            });
+//                        }
+//                    }
                 } else {
                     if (!mResults.isEmpty()) {
                         console.displayResult(mResults);

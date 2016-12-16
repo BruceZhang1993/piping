@@ -24,11 +24,12 @@ public class TempPipesLoader implements IPipesLoader {
 
     @Override
     public ArrayList<BasePipe> load(Context context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener) {
+        int size = 6;
         ArrayList<BasePipe> pipes = new ArrayList<>();
 
         TestActionPipe actionPipe = new TestActionPipe();
         pipes.add(actionPipe);
-        register(actionPipe, context, console, translator, listener, 2);
+        register(actionPipe, context, console, translator, listener, size);
 
         TestDefaultInputActionPipe defaultPipe = new TestDefaultInputActionPipe() {
             @Override
@@ -48,19 +49,23 @@ public class TempPipesLoader implements IPipesLoader {
 
         };
         pipes.add(defaultPipe);
-        register(defaultPipe, context, console, translator, listener, 4);
+        register(defaultPipe, context, console, translator, listener, size);
 
         TestAppPipe appPipe = new TestAppPipe();
         pipes.add(appPipe);
-        register(appPipe, context, console, translator, listener, 4);
+        register(appPipe, context, console, translator, listener, size);
 
         TestContactPipe contactPipe  = new TestContactPipe();
         pipes.add(contactPipe);
-        register(contactPipe, context, console, translator, listener, 4);
+        register(contactPipe, context, console, translator, listener, size);
+
+        TestSearchableActionPipe saPipe = new TestSearchableActionPipe(1000);
+        pipes.add(saPipe);
+        register(saPipe, context, console, translator, listener, size);
 
         TestPythonActionPipe pythonPipe = new TestPythonActionPipe();
         pipes.add(pythonPipe);
-        register(pythonPipe, context, console, translator, listener, 4);
+        register(pythonPipe, context, console, translator, listener, size);
 
         return pipes;
     }

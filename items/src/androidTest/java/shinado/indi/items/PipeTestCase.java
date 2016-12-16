@@ -1,10 +1,9 @@
 package shinado.indi.items;
 
-import android.content.Context;
 import android.test.AndroidTestCase;
 
 import indi.shinado.piping.launcher.impl.ConsoleHelper;
-import indi.shinado.piping.pipes.search.translator.EnglishTranslator;
+import indi.shinado.piping.pipes.PipeManager;
 
 public class PipeTestCase extends AndroidTestCase{
 
@@ -14,8 +13,7 @@ public class PipeTestCase extends AndroidTestCase{
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        Context context = getContext();
-        ConsoleHelper helper = new ConsoleHelper(context, console, new PipesLoader(), new EnglishTranslator(context));
+        ConsoleHelper helper = new ConsoleHelper(console, new PipeManager());
         vi = new VirtualInput(helper);
     }
 

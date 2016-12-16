@@ -54,7 +54,6 @@ public class Launcher implements DeviceConsole {
 
     @Test
     public void testSearch() {
-
 //        inputString("test");
 //        doClear();
 //        inputString("qq" + Keys.PIPE + "test");
@@ -107,41 +106,45 @@ public class Launcher implements DeviceConsole {
 //        pressKey("k");
 //        pressKey(KEY_ENTER);
 
-        System.out.println("------ new test ------");
-        pressKey("k");
-        pressKey("a");
-        pressKey(Keys.PIPE);
-        pressKey("c");
-        pressKey(KEY_ENTER);
+//        System.out.println("------ new test ------");
+//        pressKey("k");
+//        pressKey("a");
+//        pressKey(Keys.PIPE);
+//        pressKey("c");
+//        pressKey(KEY_ENTER);
+//
+//        pressKey("k");
+//        pressKey("a");
+//        pressKey(KEY_SHIFT);
+//        pressKey(Keys.PIPE);
+//        pressKey("c");
+//        pressKey(KEY_ENTER);
+//
+//        System.out.println("----------------------- test select -------------------------");
+//        pressKey("k");
+//        pressKey("a");
+//        helper.select(2);
+//        pressKey(Keys.PIPE);
+//        pressKey("c");
+//        pressKey(KEY_ENTER);
+//
+//
+//        System.out.println("----------------------- test python -------------------------");
+//        inputString("python");
+//        pressKey(KEY_ENTER);
+//
+//        inputString("what");
+//        pressKey("t");
+//        pressKey("f");
+//        pressKey(KEY_ENTER);
+//        inputString("quit");
+//        pressKey(KEY_ENTER);
+//        pressKey("k");
 
-        pressKey("k");
-        pressKey("a");
-        pressKey(KEY_SHIFT);
-        pressKey(Keys.PIPE);
-        pressKey("c");
+        inputString("key");
+        pressKey(Keys.PARAMS);
+        inputString("dow");
         pressKey(KEY_ENTER);
-
-        System.out.println("----------------------- test select -------------------------");
-        pressKey("k");
-        pressKey("a");
-        helper.select(2);
-        pressKey(Keys.PIPE);
-        pressKey("c");
-        pressKey(KEY_ENTER);
-
-
-        System.out.println("----------------------- test python -------------------------");
-        inputString("python");
-        pressKey(KEY_ENTER);
-
-        inputString("what");
-        pressKey("t");
-        pressKey("f");
-        pressKey(KEY_ENTER);
-        inputString("quit");
-        pressKey(KEY_ENTER);
-        pressKey("k");
-
     }
 
     @Test
@@ -340,16 +343,6 @@ public class Launcher implements DeviceConsole {
     @Override
     public void setIndicator(String indicator) {
         System.out.print("set indicator: " + indicator);
-    }
-
-    @Override
-    public void searchOnly(int pipeId) {
-        System.out.print("search only: " + pipeId);
-    }
-
-    @Override
-    public void searchAll() {
-        System.out.print("search all: " );
     }
 
     @Override

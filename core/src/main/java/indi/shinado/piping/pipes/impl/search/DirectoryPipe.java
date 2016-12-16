@@ -5,17 +5,13 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.util.Log;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.impl.ShareIntent;
 import indi.shinado.piping.pipes.search.SearchableActionPipe;
-import indi.shinado.piping.pipes.search.SearchablePipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 import indi.shinado.piping.pipes.search.translator.EnglishTranslator;
 import indi.shinado.piping.util.IntentUtil;
@@ -23,18 +19,15 @@ import indi.shinado.piping.util.IntentUtil;
 public class DirectoryPipe extends SearchableActionPipe {
 
     private static final String TAG = "DirectoryPipe";
-    private static final String OPT_ADD = "add";
-    private static final String OPT_REMOVE = "rm";
     private AbsTranslator mTranslator;
     private Pipe cdPipe;
     private Pipe exitPipe;
     private HashMap<String, Pipe> mPipeMap = new HashMap<>();
     private FileObserver mFileObserver;
-    private OnQuitSearchActionListener mListener;
 
     public DirectoryPipe(int id) {
         super(id);
-        cdPipe = new Pipe(getId(), "$cd", new SearchableName("cd"), "$#cd");
+        cdPipe = new Pipe(getId(), "cd..", new SearchableName("cd"), "$#cd");
         exitPipe = new Pipe(getId(), "$exit", new SearchableName("exit"), "$#exit");
 
         mFileObserver = new FileObserver(Environment.getExternalStorageState()) {
@@ -53,8 +46,9 @@ public class DirectoryPipe extends SearchableActionPipe {
     }
 
     @Override
-    public void start(OnQuitSearchActionListener listener) {
-        this.mListener = listener;
+    public void start() {
+        super.start();
+
         File root = Environment.getExternalStorageDirectory();
         add(new Pipe(getId(), "/", new SearchableName(""), root.getAbsolutePath()), true);
     }
@@ -102,23 +96,25 @@ public class DirectoryPipe extends SearchableActionPipe {
 
     @Override
     protected void execute(Pipe rs) {
-        Instruction instruction = rs.getInstruction();
-        String params[] = instruction.params;
-        if (params != null && params.length != 0) {
-            if (params.length > 1) {
-
-            }
-            switch (params[0]) {
-                case OPT_ADD:
-                    add(rs, false);
-                    break;
-                case OPT_REMOVE:
-                    remove(rs);
-                    break;
-            }
+        if (rs.equals(exitPipe)) {
+            clear();
+            quit();
         } else {
-            open(rs, getConsoleCallback());
+            File file = new File(rs.getExecutable());
+            if (file.isDirectory()) {
+                cd(rs, getConsoleCallback());
+            } else {
+                Intent intent = new Intent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setAction(Intent.ACTION_VIEW);
+                String type = IntentUtil.getMIMEType(rs.getExecutable());
+                intent.setDataAndType(/*uri*/Uri.fromFile(new File(rs.getExecutable())), type);
+                getLauncher().startActivity(intent);
+                clear();
+                quit();
+            }
         }
+
     }
 
     private void remove(Pipe rs) {
@@ -158,12 +154,12 @@ public class DirectoryPipe extends SearchableActionPipe {
         } else {
             removeItemInMap(cdPipe);
         }
+        putItemInMap(exitPipe);
     }
 
     private void addFile(String path) {
         int index = path.lastIndexOf('/');
         String displayName = path.substring(index + 1, path.length());
-        //TODO add Chinese Translator
         if (mTranslator == null) {
             mTranslator = new EnglishTranslator(getLauncher());
         }
@@ -196,28 +192,6 @@ public class DirectoryPipe extends SearchableActionPipe {
     private void removeFile(String path) {
         Pipe pipe = mPipeMap.get(path);
         removeItemInMap(pipe);
-    }
-
-    private void open(Pipe rs, OutputCallback callback) {
-        File file = new File(rs.getExecutable());
-        if (file.isDirectory()) {
-            cd(rs, callback);
-        } else {
-            Intent intent = new Intent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setAction(Intent.ACTION_VIEW);
-            String type = IntentUtil.getMIMEType(rs.getExecutable());
-            intent.setDataAndType(/*uri*/Uri.fromFile(new File(rs.getExecutable())), type);
-            getLauncher().startActivity(intent);
-            clear();
-            quit();
-        }
-    }
-
-    private void quit() {
-        if (mListener != null) {
-            mListener.onQuit();
-        }
     }
 
     @Override
