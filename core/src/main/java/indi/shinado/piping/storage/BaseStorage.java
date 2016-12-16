@@ -1,11 +1,7 @@
 package indi.shinado.piping.storage;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class BaseStorage {
 

@@ -6,11 +6,6 @@ import android.net.wifi.WifiManager;
 import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.json.JSONException;
@@ -23,6 +18,10 @@ import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.search.SearchablePipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
+import indi.shinado.piping.storage.IDataBaseReference;
+import indi.shinado.piping.storage.IDataSnapshot;
+import indi.shinado.piping.storage.IDatabaseError;
+import indi.shinado.piping.storage.StorageFactory;
 
 /**
  * format
@@ -31,7 +30,7 @@ public class APIPipe extends SearchablePipe {
 
     private static String NAME_ADD = "$addAPI";
     private static String TAG = "APIPipe";
-    private DatabaseReference mDatabase;
+    private IDataBaseReference mDatabase;
 
     public APIPipe(int id) {
         super(id);
@@ -150,10 +149,10 @@ public class APIPipe extends SearchablePipe {
         Pipe pipe = new Pipe(getId(), "$addAPI", new SearchableName("add", "api"), "");
         putItemInMap(pipe);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("local").child(address).child("Apis");
-        mDatabase.addChildEventListener(new ChildEventListener() {
+        mDatabase = StorageFactory.getStorage().child("local").child(address).child("Apis");
+        mDatabase.addChildEventListener(new IDataBaseReference.OnChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onChildAdded(IDataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot != null) {
                     API item = dataSnapshot.getValue(API.class);
                     Pipe pipe = new Pipe(getId(), "#" + item.name, new SearchableName(item.name), new Gson().toJson(item));
@@ -162,22 +161,22 @@ public class APIPipe extends SearchablePipe {
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            public void onChildChanged(IDataSnapshot dataSnapshot, String s) {
 
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            public void onChildRemoved(IDataSnapshot dataSnapshot) {
 
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            public void onChildMoved(IDataSnapshot dataSnapshot, String s) {
 
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(IDatabaseError databaseError) {
 
             }
         });

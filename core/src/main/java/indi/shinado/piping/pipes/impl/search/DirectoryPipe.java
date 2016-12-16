@@ -27,13 +27,15 @@ public class DirectoryPipe extends SearchableActionPipe {
     private static final String OPT_REMOVE = "rm";
     private AbsTranslator mTranslator;
     private Pipe cdPipe;
+    private Pipe exitPipe;
     private HashMap<String, Pipe> mPipeMap = new HashMap<>();
     private FileObserver mFileObserver;
     private OnQuitSearchActionListener mListener;
 
     public DirectoryPipe(int id) {
         super(id);
-        cdPipe = new Pipe(getId(), "$cd ..", new SearchableName("cd"), "");
+        cdPipe = new Pipe(getId(), "$cd", new SearchableName("cd"), "$#cd");
+        exitPipe = new Pipe(getId(), "$exit", new SearchableName("exit"), "$#exit");
 
         mFileObserver = new FileObserver(Environment.getExternalStorageState()) {
             @Override
@@ -100,7 +102,6 @@ public class DirectoryPipe extends SearchableActionPipe {
 
     @Override
     protected void execute(Pipe rs) {
-        //TODO
         Instruction instruction = rs.getInstruction();
         String params[] = instruction.params;
         if (params != null && params.length != 0) {
