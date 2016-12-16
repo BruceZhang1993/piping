@@ -37,11 +37,6 @@ public class PublicPipe extends SearchableActionPipe {
     }
 
     @Override
-    public Pipe getByValue(String value) {
-        return null;
-    }
-
-    @Override
     public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
 
     }

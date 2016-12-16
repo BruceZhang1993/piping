@@ -146,9 +146,16 @@ public class Launcher implements DeviceConsole {
 //        inputString("dow");
 //        pressKey(KEY_ENTER);
 
-        inputString("copy");
+//        inputString("copy");
+//        pressKey(Keys.PARAMS);
+//        pressKey("a");
+//        pressKey(KEY_ENTER);
+
+        inputString("db");
         pressKey(Keys.PARAMS);
-        pressKey("a");
+        inputString("whataboutmedamnit");
+//        pressKey(Keys.PIPE);
+//        inputString("add");
         pressKey(KEY_ENTER);
     }
 

@@ -3,6 +3,7 @@ package indi.shinado.piping.pipes.action;
 import java.util.TreeSet;
 
 import indi.shinado.piping.pipes.BasePipe;
+import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.translator.AbsTranslator;
 
@@ -14,12 +15,13 @@ public abstract class ActionPipe extends BasePipe{
 
     @Override
     public void search(String input, int length, SearchResultCallback callback) {
-        Pipe result = search(input);
+        Instruction instruction = new Instruction(input);
+        Pipe result = search(instruction);
 
-        callback(result, input, callback);
+        callback(result, instruction, callback);
     }
 
-    private void callback(Pipe result, String input, SearchResultCallback callback){
+    private void callback(Pipe result, Instruction input, SearchResultCallback callback){
         TreeSet<Pipe> list = new TreeSet<>();
         if (result != null) {
             list.add(result);
@@ -27,12 +29,9 @@ public abstract class ActionPipe extends BasePipe{
         callback.onSearchResult(list, input);
     }
 
-    public Pipe search(String input) {
+    public Pipe search(Instruction input) {
         if (input.isEmpty()){
             return null;
-        }
-        if (input.startsWith("$")){
-            input = input.substring(1);
         }
 
         //create a new pipe

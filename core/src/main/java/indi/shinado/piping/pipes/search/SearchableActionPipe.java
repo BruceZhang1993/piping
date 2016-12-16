@@ -1,6 +1,7 @@
 package indi.shinado.piping.pipes.search;
 
 
+import java.security.Key;
 import java.util.TreeSet;
 
 import indi.shinado.piping.pipes.entity.Keys;
@@ -16,7 +17,13 @@ public abstract class SearchableActionPipe extends SearchablePipe {
 
     public abstract String getKeyword();
 
+    @Override
+    public Pipe getByValue(String value) {
+        return null;
+    }
+
     public void start() {
+        pipeManager.getSearcher().searchAction(this);
         hasStarted = true;
     }
 
@@ -31,13 +38,13 @@ public abstract class SearchableActionPipe extends SearchablePipe {
             return super.search(input);
         } else {
             TreeSet<Pipe> result = new TreeSet<>();
-            if (getKeyword().contains(input) || input.equals(getKeyword() + Keys.PARAMS)){
+            if (getKeyword().contains(input) ||
+                    (input.endsWith(Keys.PARAMS) && getKeyword().contains(input.replace(Keys.PARAMS, "")))){
                 Pipe pipe = new Pipe(getId(), getKeyword());
                 pipe.setBasePipe(this);
                 result.add(pipe);
 
-                if (input.equals(getKeyword() + Keys.PARAMS)) {
-                    pipeManager.getSearcher().searchAction(this);
+                if (input.endsWith(Keys.PARAMS)) {
                     start();
                 }
             }

@@ -12,6 +12,7 @@ import indi.shinado.piping.launcher.SingleLineInputCallback;
 import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.IPipeManager;
 import indi.shinado.piping.pipes.PipeSearcher;
+import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.SearchableActionPipe;
@@ -48,7 +49,7 @@ public class ConsoleHelper {
         pipeManager.getSearcher().setOnResultChangeListener(new PipeSearcher.OnResultChangeListener() {
 
             @Override
-            public void onResultChange(TreeSet<Pipe> results, String input, Pipe.PreviousPipes previous) {
+            public void onResultChange(TreeSet<Pipe> results, Instruction input, Pipe.PreviousPipes previous) {
                 log("on result change");
                 if (inOccupyMode()) {
                     console.onNothing();
@@ -57,9 +58,7 @@ public class ConsoleHelper {
 
                 log("get results from input:" + input + ", size:" + results.size());
                 mResults.addAll(results);
-
                 if (input.endsWith(Keys.PARAMS)) {
-                    //TODO is that right?
                     Pipe current = getCurrent();
                     List<Pipe> acceptableParams = current.getAcceptableParams();
                     if (acceptableParams != null && acceptableParams.size() > 0) {
@@ -70,7 +69,7 @@ public class ConsoleHelper {
                         console.displayResult(mResults);
                     } else {
                         if (!previous.isEmpty()) {
-                            if (input.endsWith(Keys.PIPE)) {
+                            if (input.isBodyEmpty()) {
                                 console.displayPrevious(previous.get());
                             } else {
                                 console.onNothing();

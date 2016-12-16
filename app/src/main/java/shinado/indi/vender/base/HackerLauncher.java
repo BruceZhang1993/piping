@@ -18,14 +18,11 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.shinado.piping.geek.HeadLoadder;
 import com.shinado.piping.geek.ShoppingHeadView;
 import com.shinado.piping.geek.Tutorial;
 import com.shinado.piping.geek.header.IHeadView;
-
 import java.util.Collection;
-
 import indi.shinado.piping.GlobalDefs;
 import indi.shinado.piping.color.ColorActivity;
 import indi.shinado.piping.feed.Feedable;

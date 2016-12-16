@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeSet;
 
+import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.search.SearchableActionPipe;
@@ -96,12 +97,11 @@ public class PipeSearcher {
                 pipe.search(input, length, mCallback);
             }
         }
-
     }
 
     private BasePipe.SearchResultCallback mCallback = new BasePipe.SearchResultCallback() {
         @Override
-        public void onSearchResult(TreeSet<Pipe> results, String input) {
+        public void onSearchResult(TreeSet<Pipe> results, Instruction input) {
             if (results != null && results.size() != 0) {
                 //create a new copy of results
                 //to avoid dead nesting
@@ -144,7 +144,7 @@ public class PipeSearcher {
         }
     }
 
-    private void notifyResultChange(TreeSet<Pipe> results, String input, Pipe.PreviousPipes previous) {
+    private void notifyResultChange(TreeSet<Pipe> results, Instruction input, Pipe.PreviousPipes previous) {
         if (mOnResultChangeListener != null) {
             mOnResultChangeListener.onResultChange(results, input, previous);
         }
@@ -155,7 +155,7 @@ public class PipeSearcher {
     }
 
     public interface OnResultChangeListener {
-        void onResultChange(TreeSet<Pipe> results, String input, Pipe.PreviousPipes previous);
+        void onResultChange(TreeSet<Pipe> results, Instruction input, Pipe.PreviousPipes previous);
     }
 
 }

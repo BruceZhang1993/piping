@@ -34,7 +34,8 @@ public class APIPipe extends SearchablePipe {
 
     public APIPipe(int id) {
         super(id);
-        addPipe = new Pipe(getId(), "$addAPI", new SearchableName("add", "api"), "$#add");
+        addPipe = new Pipe(id, "$addAPI", new SearchableName("add", "api"), "$#add");
+        putItemInMap(addPipe);
     }
 
     @Override
@@ -147,7 +148,6 @@ public class APIPipe extends SearchablePipe {
         WifiInfo info = manager.getConnectionInfo();
         String address = info.getMacAddress();
 
-        putItemInMap(addPipe);
 
         mDatabase = StorageFactory.getStorage().child("local").child(address).child("Apis");
         mDatabase.addChildEventListener(new IDataBaseReference.OnChildEventListener() {

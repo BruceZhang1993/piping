@@ -85,8 +85,7 @@ public abstract class BasePipe {
     }
 
     //fulfill with KeyIndex and Instruction
-    protected void fulfill(Pipe item, String input){
-        Instruction instruction = new Instruction(input);
+    protected void fulfill(Pipe item, Instruction instruction){
         int keyIndex = getKeyIndex(item, instruction.body);
         item.setKeyIndex(keyIndex);
         item.setInstruction(instruction);
@@ -199,6 +198,6 @@ public abstract class BasePipe {
     }
 
     public interface SearchResultCallback{
-        void onSearchResult(TreeSet<Pipe> results, String input);
+        void onSearchResult(TreeSet<Pipe> results, Instruction input);
     }
 }

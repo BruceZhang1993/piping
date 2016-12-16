@@ -24,7 +24,7 @@ public class TempPipesLoader implements IPipesLoader {
 
     @Override
     public ArrayList<BasePipe> load(Context context, Console console, AbsTranslator translator, SearchablePipe.OnItemsLoadedListener listener) {
-        int size = 6;
+        int size = 7;
         ArrayList<BasePipe> pipes = new ArrayList<>();
 
         TestActionPipe actionPipe = new TestActionPipe();
@@ -62,6 +62,10 @@ public class TempPipesLoader implements IPipesLoader {
         TestSearchableActionPipe saPipe = new TestSearchableActionPipe(1000);
         pipes.add(saPipe);
         register(saPipe, context, console, translator, listener, size);
+
+        TestStoragePipe storagePipe = new TestStoragePipe(1000);
+        pipes.add(storagePipe);
+        register(storagePipe, context, console, translator, listener, size);
 
         TestPythonActionPipe pythonPipe = new TestPythonActionPipe();
         pipes.add(pythonPipe);
