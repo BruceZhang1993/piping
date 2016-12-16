@@ -168,7 +168,6 @@ public class DirectoryPipe extends SearchableActionPipe {
             mTranslator = new EnglishTranslator(getLauncher());
         }
         Pipe pipe = new Pipe(getId(), "/" + displayName, mTranslator.getName(displayName), path);
-        pipe.setBasePipe(DirectoryPipe.this);
         putItemInMap(pipe);
     }
 
@@ -224,6 +223,7 @@ public class DirectoryPipe extends SearchableActionPipe {
     @Override
     public void load(final AbsTranslator translator, final OnItemsLoadedListener listener, final int total) {
         //nothing to search unless cd is handled
+        //TODO
         putItemInMap(cdPipe);
         listener.onItemsLoaded(DirectoryPipe.this.getId(), total);
     }

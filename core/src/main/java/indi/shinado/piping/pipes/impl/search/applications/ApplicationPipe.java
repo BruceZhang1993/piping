@@ -123,7 +123,6 @@ public class ApplicationPipe extends FrequentPipe {
                     @Override
                     public void onAppChange(int flag, Pipe vo) {
                         if (flag == AppManager.OnAppChangeListener.FLAG_ADD) {
-                            vo.setBasePipe(ApplicationPipe.this);
                             putItemInMap(vo);
                             addFrequency(vo);
                             getConsole().input("Application " + vo.getDisplayName() + " has been installed.");
@@ -136,7 +135,6 @@ public class ApplicationPipe extends FrequentPipe {
                 });
                 for (int i = 0; i < appManager.getAppCount(); i++) {
                     Pipe vo = appManager.getResult(i);
-                    vo.setBasePipe(ApplicationPipe.this);
                     putItemInMap(vo);
                 }
                 listener.onItemsLoaded(ApplicationPipe.this.getId(), total);

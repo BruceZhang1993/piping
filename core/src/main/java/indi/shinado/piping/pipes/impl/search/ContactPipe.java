@@ -81,7 +81,6 @@ public class ContactPipe extends FrequentPipe {
     private void refreshContacts() {
         for (int i = 0; i < contactManager.getContactCount(); i++) {
             Pipe vo = contactManager.getResult(i);
-            vo.setBasePipe(this);
             putItemInMap(vo);
         }
         contactManager.destroy();

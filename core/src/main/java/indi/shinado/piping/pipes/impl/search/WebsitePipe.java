@@ -61,7 +61,6 @@ public class WebsitePipe extends FrequentPipe{
 
                 for (String key : mWebsites.keySet()) {
                     Pipe pipe = new Pipe(WebsitePipe.this.getId(), key, translator.getName(key), mWebsites.get(key));
-                    pipe.setBasePipe(WebsitePipe.this);
                     putItemInMap(pipe);
                 }
 

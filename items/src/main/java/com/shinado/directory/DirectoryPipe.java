@@ -101,7 +101,6 @@ public class DirectoryPipe extends SearchablePipe {
             mTranslator = new EnglishTranslator(getLauncher());
         }
         Pipe pipe = new Pipe(DirectoryPipe.this.getId(), "/" + displayName, mTranslator.getName(displayName), path);
-        pipe.setBasePipe(DirectoryPipe.this);
         putItemInMap(pipe);
     }
 

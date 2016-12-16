@@ -118,6 +118,7 @@ public abstract class SearchablePipe extends BasePipe {
      * ["face", "book"] = > ["f" -> "facebook", "b" -> "facebook"]
      */
     protected void putItemInMap(Pipe vo) {
+        vo.setBasePipe(this);
         String[] name = vo.getSearchableName().getNames();
         for (String n : name) {
             String c = n.charAt(0) + "";
