@@ -16,8 +16,9 @@ public class TestActionPipe extends ActionPipe{
         mResult = new Pipe();
         mResult.setId(id);
         mResult.setDisplayName("$copy");
-        mResult.setSearchableName(new SearchableName(new String[]{"co", "py"}));
+        mResult.setSearchableName(new SearchableName("co", "py"));
         mResult.setBasePipe(this);
+        mResult.setAcceptableParams(new Pipe(getId(), "add"), new Pipe(getId(), "remove"));
     }
 
     @Override

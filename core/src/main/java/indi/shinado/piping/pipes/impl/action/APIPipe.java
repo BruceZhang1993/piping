@@ -28,12 +28,13 @@ import indi.shinado.piping.storage.StorageFactory;
  */
 public class APIPipe extends SearchablePipe {
 
-    private static String NAME_ADD = "$addAPI";
+    private Pipe addPipe;
     private static String TAG = "APIPipe";
     private IDataBaseReference mDatabase;
 
     public APIPipe(int id) {
         super(id);
+        addPipe = new Pipe(getId(), "$addAPI", new SearchableName("add", "api"), "$#add");
     }
 
     @Override
@@ -48,7 +49,7 @@ public class APIPipe extends SearchablePipe {
 
     @Override
     public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, final OutputCallback callback) {
-        if (NAME_ADD.equals(result.getDisplayName())){
+        if (addPipe.equals(result)){
             addAPI(input);
         }else {
             callAPI(input, result.getExecutable(), callback);
@@ -57,7 +58,7 @@ public class APIPipe extends SearchablePipe {
 
     @Override
     public void getOutput(Pipe result, OutputCallback callback) {
-        if (NAME_ADD.equals(result.getDisplayName())){
+        if (addPipe.equals(result)){
             callback.onOutput("Should take input");
         }else {
             callAPI("", result.getExecutable(), callback);
@@ -146,8 +147,7 @@ public class APIPipe extends SearchablePipe {
         WifiInfo info = manager.getConnectionInfo();
         String address = info.getMacAddress();
 
-        Pipe pipe = new Pipe(getId(), "$addAPI", new SearchableName("add", "api"), "");
-        putItemInMap(pipe);
+        putItemInMap(addPipe);
 
         mDatabase = StorageFactory.getStorage().child("local").child(address).child("Apis");
         mDatabase.addChildEventListener(new IDataBaseReference.OnChildEventListener() {

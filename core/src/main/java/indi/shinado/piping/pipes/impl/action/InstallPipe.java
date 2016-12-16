@@ -34,6 +34,7 @@ public class InstallPipe extends DefaultInputActionPipe{
 
     public InstallPipe(int id) {
         super(id);
+        mResult.setAcceptableParams(new Pipe(getId(), OPT_LS), new Pipe(getId(), OPT_M));
         setupDownload();
     }
 
