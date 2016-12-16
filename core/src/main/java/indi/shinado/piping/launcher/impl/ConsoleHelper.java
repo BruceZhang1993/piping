@@ -233,6 +233,9 @@ public class ConsoleHelper {
                 current.getBasePipe().startExecution(current);
                 current.setPrevious(null);
                 mCurrent = current;
+            }else {
+
+                console.onEnter(null);
             }
         }
         reset();
