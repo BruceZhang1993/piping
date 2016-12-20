@@ -45,7 +45,6 @@ public class StoragePipe extends SearchableActionPipe{
     private IDataBaseReference.OnChildEventListener mOnChildEventListener = new IDataBaseReference.OnChildEventListener() {
         @Override
         public void onChildAdded(IDataSnapshot dataSnapshot, String s) {
-
         }
 
         @Override

@@ -51,9 +51,6 @@ public interface Console {
     @TargetVersion(4)
     void display(String string);
 
-    @TargetVersion(4)
-    ConsoleInfo getConsoleInfo();
-
     /**
      * under this mode, you won't get any result from system
      * However, you will still find your input in the console
@@ -63,12 +60,6 @@ public interface Console {
 
     @TargetVersion(4)
     void quitOccupy();
-
-    @TargetVersion(4)
-    void hideInitText();
-
-    @TargetVersion(4)
-    void showInitText();
 
     /**
      * under this mode, any input will not be received
@@ -82,12 +73,6 @@ public interface Console {
 
     @TargetVersion(4)
     void notifyUI();
-
-    @TargetVersion(4)
-    BasePipe getPipeById(int id);
-
-    @TargetVersion(4)
-    void startTutorial();
 
     @TargetVersion(4)
     void addInputCallback(InputCallback inputCallback);

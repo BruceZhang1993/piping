@@ -16,7 +16,7 @@ public class TestValue {
         Assert.assertEquals(true, value.isPreEmpty());
         Assert.assertEquals(true, value.isBodyEmpty());
 
-        value = getValue("trans-ls");
+        value = getValue("trans ls");
         Assert.assertEquals(false, value.isEmpty());
         Assert.assertEquals(false, value.isParamsEmpty());
         Assert.assertEquals(true, value.isPreEmpty());
@@ -40,7 +40,7 @@ public class TestValue {
         Assert.assertEquals("what", value.pre);
         Assert.assertEquals("trans", value.body);
 
-        value = getValue("what.trans -ls");
+        value = getValue("what.trans ls");
         Assert.assertEquals(false, value.isEmpty());
         Assert.assertEquals(false, value.isParamsEmpty());
         Assert.assertEquals(false, value.isPreEmpty());
@@ -48,7 +48,7 @@ public class TestValue {
         Assert.assertEquals("trans", value.body);
         Assert.assertEquals("ls", value.params[0]);
 
-        value = getValue("what.trans -ls -a");
+        value = getValue("what.trans ls a");
         Assert.assertEquals(false, value.isEmpty());
         Assert.assertEquals(false, value.isParamsEmpty());
         Assert.assertEquals(false, value.isPreEmpty());
@@ -57,7 +57,7 @@ public class TestValue {
         Assert.assertEquals("ls", value.params[0]);
         Assert.assertEquals("a", value.params[1]);
 
-        value = getValue(".trans-ls");
+        value = getValue(".trans ls");
         Assert.assertEquals(false, value.isEmpty());
         Assert.assertEquals(false, value.isParamsEmpty());
         Assert.assertEquals(true, value.isPreEmpty());
@@ -65,7 +65,7 @@ public class TestValue {
         Assert.assertEquals("trans", value.body);
         Assert.assertEquals("ls", value.params[0]);
 
-        value = getValue("what the.trans -ls-a");
+        value = getValue("what the.trans ls a");
         Assert.assertEquals(false, value.isEmpty());
         Assert.assertEquals(false, value.isParamsEmpty());
         Assert.assertEquals(false, value.isPreEmpty());
@@ -74,7 +74,7 @@ public class TestValue {
         Assert.assertEquals("ls", value.params[0]);
         Assert.assertEquals("a", value.params[1]);
 
-        value = getValue("maya.txt.play -ls-a");
+        value = getValue("maya.txt.play ls a");
         Assert.assertEquals(false, value.isEmpty());
         Assert.assertEquals(false, value.isParamsEmpty());
         Assert.assertEquals(false, value.isPreEmpty());
@@ -103,11 +103,34 @@ public class TestValue {
         Assert.assertEquals("maya.txt", value.pre);
         Assert.assertEquals("", value.body);
 
-        value = getValue("-a");
+        value = getValue(" a");
+        Assert.assertEquals(true, value.isEmpty());
+        Assert.assertEquals(true, value.isParamsEmpty());
+        Assert.assertEquals(true, value.isPreEmpty());
+        Assert.assertEquals(0, value.params.length);
+        Assert.assertEquals("a", value.body);
+
+        value = getValue("\"what. the .f");
+        Assert.assertEquals(true, value.isEmpty());
+        Assert.assertEquals(true, value.isParamsEmpty());
+        Assert.assertEquals(true, value.isPreEmpty());
+
+        value = getValue("\"what. the .f\".ok");
+        Assert.assertEquals(false, value.isEmpty());
+        Assert.assertEquals(true, value.isParamsEmpty());
+        Assert.assertEquals(false, value.isPreEmpty());
+        Assert.assertEquals("what. the .f", value.pre);
+        Assert.assertEquals("ok", value.body);
+
+        value = getValue("cd  what");
+
         Assert.assertEquals(false, value.isEmpty());
         Assert.assertEquals(false, value.isParamsEmpty());
         Assert.assertEquals(true, value.isPreEmpty());
+        Assert.assertEquals("cd", value.body);
         Assert.assertEquals(1, value.params.length);
+        Assert.assertEquals("what", value.params[0]);
+
     }
 
     private Instruction getValue(String key){

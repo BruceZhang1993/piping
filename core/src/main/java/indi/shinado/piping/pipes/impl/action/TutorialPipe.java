@@ -28,18 +28,18 @@ public class TutorialPipe extends DefaultInputActionPipe{
 
     @Override
     public void onParamsEmpty(Pipe rs, OutputCallback callback) {
-        getConsole().startTutorial();
+//        getConsole().startTutorial();
     }
 
     @Override
     public void onParamsNotEmpty(Pipe rs, OutputCallback callback) {
-        getConsole().startTutorial();
+//        getConsole().startTutorial();
 
     }
 
     @Override
     public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, OutputCallback callback) {
-        getConsole().startTutorial();
+//        getConsole().startTutorial();
 
     }
 }

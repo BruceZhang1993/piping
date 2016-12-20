@@ -63,6 +63,7 @@ public class PipesLoader implements IPipesLoader {
         pipes.add(new WidgetPipe(19));
         pipes.add(new TutorialPipe(20));
         pipes.add(new WebsitePipe(22));
+        pipes.add(new DirectoryPipe(23));
 
         return pipes;
     }

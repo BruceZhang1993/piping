@@ -188,6 +188,10 @@ public abstract class BasePipe {
         return context;
     }
 
+    public void reset(){
+
+    }
+
     public interface OnItemsLoadedListener {
         void onItemsLoaded(int id, int total);
     }

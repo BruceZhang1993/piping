@@ -5,9 +5,11 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.util.Log;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
 import indi.shinado.piping.pipes.impl.ShareIntent;
@@ -51,6 +53,11 @@ public class DirectoryPipe extends SearchableActionPipe {
 
         File root = Environment.getExternalStorageDirectory();
         add(new Pipe(getId(), "/", new SearchableName(""), root.getAbsolutePath()), true);
+    }
+
+    @Override
+    public void reset() {
+
     }
 
     @Override
@@ -108,7 +115,6 @@ public class DirectoryPipe extends SearchableActionPipe {
                 quit();
             }
         }
-
     }
 
     private void remove(Pipe rs) {
@@ -139,7 +145,7 @@ public class DirectoryPipe extends SearchableActionPipe {
     private void add(Pipe rs, boolean isRoot) {
         File file = new File(rs.getExecutable());
         if (file.isDirectory()) {
-            addFiles(file);
+            addFiles(file, isRoot);
         }
 
         if (!isRoot) {
@@ -161,14 +167,18 @@ public class DirectoryPipe extends SearchableActionPipe {
         putItemInMap(pipe);
     }
 
-    private void addFiles(File dir) {
+    private void addFiles(File dir, boolean isRoot) {
         File files[] = dir.listFiles();
         for (File file : files) {
-            if (file.isFile()) {
+//            if (isRoot) {
                 addFile(file.getPath());
-            } else if (file.isDirectory()) {
-                addFiles(file);
-            }
+//            } else {
+//                if (file.isFile()) {
+//                    addFile(file.getPath());
+//                } else if (file.isDirectory()) {
+//                    addFiles(file, isRoot);
+//                }
+//            }
         }
     }
 

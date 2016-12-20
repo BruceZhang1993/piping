@@ -2,6 +2,7 @@ package indi.shinado.piping.pipes.search;
 
 import java.util.TreeSet;
 
+import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
 
 public abstract class FrequentPipe extends SearchablePipe {
@@ -32,7 +33,7 @@ public abstract class FrequentPipe extends SearchablePipe {
      * fulfill result with frequency
      */
     @Override
-    protected void fulfill(Pipe vo, String input) {
+    protected void fulfill(Pipe vo, Instruction input) {
         super.fulfill(vo, input);
         Integer freq = mFrequentMap.get(vo.getExecutable());
         if (freq != null) {

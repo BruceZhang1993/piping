@@ -9,14 +9,11 @@ import java.util.TreeSet;
 
 import indi.shinado.piping.launcher.InputCallback;
 import indi.shinado.piping.launcher.SingleLineInputCallback;
-import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.IPipeManager;
 import indi.shinado.piping.pipes.PipeSearcher;
 import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
-import indi.shinado.piping.pipes.search.SearchableActionPipe;
-import indi.shinado.piping.pipes.search.SearchablePipe;
 
 public class ConsoleHelper {
 
@@ -56,13 +53,15 @@ public class ConsoleHelper {
                     return;
                 }
 
-                log("get results from input:" + input + ", size:" + results.size());
+                log("get results from input:" + input.input + ", size:" + results.size());
                 mResults.addAll(results);
                 if (input.endsWith(Keys.PARAMS)) {
                     Pipe current = getCurrent();
-                    List<Pipe> acceptableParams = current.getAcceptableParams();
-                    if (acceptableParams != null && acceptableParams.size() > 0) {
-                        console.displayResult(acceptableParams);
+                    if (current != null) {
+                        List<Pipe> acceptableParams = current.getAcceptableParams();
+                        if (acceptableParams != null && acceptableParams.size() > 0) {
+                            console.displayResult(acceptableParams);
+                        }
                     }
                 } else {
                     if (!mResults.isEmpty()) {
@@ -138,7 +137,7 @@ public class ConsoleHelper {
         mCurrentSelection = 0;
         mCurrentInput = "";
         mResults.clear();
-        mPipeManager.getSearcher().clearPrevious();
+        mPipeManager.getSearcher().reset();
     }
 
     /**
@@ -268,8 +267,6 @@ public class ConsoleHelper {
     }
 
     /**
-     * TODO
-     *
      * @return the next item
      */
     private Pipe passPreviousTo(Pipe pipe) {

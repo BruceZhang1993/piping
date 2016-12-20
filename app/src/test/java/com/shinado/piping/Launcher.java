@@ -48,8 +48,8 @@ public class Launcher implements DeviceConsole {
 
     @Test
     public void testSearch1() {
-        inputString("ins");
-        doInput("-");
+//        inputString("ins");
+//        doInput("-");
     }
 
     @Test
@@ -151,19 +151,25 @@ public class Launcher implements DeviceConsole {
 //        pressKey("a");
 //        pressKey(KEY_ENTER);
 
-        inputString("db");
-        pressKey(Keys.PARAMS);
-        inputString("whataboutmedamnit");
-//        pressKey(Keys.PIPE);
-//        inputString("add");
+//        inputString("db");
+//        pressKey(Keys.PARAMS);
+//        inputString("whataboutmedamnit");
+//        pressKey(KEY_ENTER);
+
+        inputString("\"what the\"");
+        pressKey(Keys.PIPE);
+        inputString("key");
+        pressKey(KEY_ENTER);
+
+        inputString("key do");
         pressKey(KEY_ENTER);
     }
 
     @Test
     public void testHistory() {
-        helper.onUserInput("kakao", 0, 5);
-        doClear();
-        helper.onUserInput("google", 0, 6);
+//        helper.onUserInput("kakao", 0, 5);
+//        doClear();
+//        helper.onUserInput("google", 0, 6);
     }
 
     private void inputString(String string) {

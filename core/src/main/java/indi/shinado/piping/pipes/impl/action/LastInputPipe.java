@@ -1,6 +1,5 @@
 package indi.shinado.piping.pipes.impl.action;
 
-import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.action.DefaultInputActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
@@ -20,7 +19,7 @@ public class LastInputPipe extends DefaultInputActionPipe{
 
     @Override
     public SearchableName getSearchable() {
-        return new SearchableName(new String[]{"input"});
+        return new SearchableName("input");
     }
 
     @Override

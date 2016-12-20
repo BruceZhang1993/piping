@@ -1,7 +1,6 @@
 package indi.shinado.piping.pipes.impl.action;
 
 import java.util.TreeSet;
-
 import indi.shinado.piping.pipes.action.ActionPipe;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.entity.SearchableName;
@@ -18,7 +17,7 @@ public class SearchItemPipe extends ActionPipe {
         mResult = new Pipe();
         mResult.setId(id);
         mResult.setDisplayName("$list");
-        mResult.setSearchableName(new SearchableName(new String[]{"list"}));
+        mResult.setSearchableName(new SearchableName("list"));
         mResult.setBasePipe(this);
     }
 

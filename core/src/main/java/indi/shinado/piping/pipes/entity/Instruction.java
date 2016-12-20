@@ -1,6 +1,7 @@
 package indi.shinado.piping.pipes.entity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -10,7 +11,6 @@ import java.util.List;
  * ".txt.play" -> [".txt.", "play", null]
  * "what the -> [null, "what the", null]
  * "what the" -> [null, "what the", null]
- *
  */
 public class Instruction {
 
@@ -18,7 +18,7 @@ public class Instruction {
 
     public String pre;
 
-    public String body;
+    public String body = "";
 
     public String[] params;
 
@@ -34,66 +34,68 @@ public class Instruction {
      */
     public Instruction(String input) {
         this.input = input;
-        int indexOfDot = input.lastIndexOf(Keys.PIPE);
-        String right;
-        if (indexOfDot < 0) {
-            right = input;
-        } else {
-            if (indexOfDot == 0) {
-                this.pre = null;
-            } else {
-                this.pre = input.substring(0, indexOfDot);
-            }
-            right = input.substring(indexOfDot + 1, input.length());
-        }
 
-        boolean start = false;
-        boolean paramStart = false;
-        List<String> params = new ArrayList<>();
-        StringBuilder body = new StringBuilder();
-        StringBuilder param = new StringBuilder();
-        for (int i = 0; i < right.length(); i++) {
-            char c = right.charAt(i);
-            if (c == '\"') {
-                start = !start;
-                continue;
-            }
-
-            if (!start && (c + "").equals(Keys.PARAMS)) {
-                paramStart = !paramStart;
-                if (!paramStart){
-                    params.add(param.toString());
-                    param = new StringBuilder();
+        String right = "";
+        if (input.contains("\"")) {
+            String split[] = input.split("\"");
+            String left = "";
+            int i = split.length - 1;
+            for (; i >= 0; i--) {
+                String s = split[i];
+                if (i % 2 == 1) {
+                    //ignore
+                } else {
+                    if (s.contains(Keys.PIPE)) {
+                        int indexDot = s.lastIndexOf(Keys.PIPE);
+                        right = s.substring(indexDot + 1);
+                        left = s.substring(0, indexDot);
+                        break;
+                    }
                 }
-                continue;
             }
 
-            if (paramStart){
-                param.append(c);
-            }else {
-                body.append(c);
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < i; j++) {
+                sb.append(split[j]);
+            }
+            sb.append(left);
+
+            this.pre = sb.toString();
+        } else {
+            int indexOfDot = input.lastIndexOf(Keys.PIPE);
+            if (indexOfDot < 0) {
+                right = input;
+            } else {
+                if (indexOfDot == 0) {
+                    this.pre = null;
+                } else {
+                    this.pre = input.substring(0, indexOfDot);
+                }
+                right = input.substring(indexOfDot + 1, input.length());
             }
         }
-        this.body = body.toString();
-        this.params = (String[]) params.toArray();
 
-//        String[] splitRight = right.split(Keys.PARAMS);
-//        int splitLength = splitRight.length;
-//        if (splitLength > 0) {
-//            this.body = splitRight[0];
-//            if (splitLength > 1) {
-//                String[] params = new String[splitLength - 1];
-//                for (int i = 1; i < splitRight.length; i++) {
-//                    params[i - 1] = splitRight[i];
-//                }
-//                this.params = params;
-//            } else {
-//                this.params = null;
-//            }
-//        } else {
-//            this.body = null;
-//            this.params = null;
-//        }
+        if (right.contains("\"")) {
+            //not allowed, for now
+        }else {
+            String split[] = right.split(Keys.PARAMS);
+            if (split.length > 0){
+                boolean bodyFound = false;
+                List<String> parameters = new ArrayList<>();
+                for (int i=0; i<split.length; i++){
+                    if (!split[i].isEmpty()){
+                        if (!bodyFound){
+                            body = split[i];
+                            bodyFound = true;
+                        }else {
+                            parameters.add(split[i]);
+                        }
+                    }
+                }
+
+                this.params = parameters.toArray(new String[parameters.size()]);
+            }
+        }
     }
 
     public boolean isEmpty() {
@@ -112,7 +114,7 @@ public class Instruction {
         return body == null || body.isEmpty();
     }
 
-    public boolean endsWith(String s){
+    public boolean endsWith(String s) {
         return input.endsWith(s);
     }
 }

@@ -36,6 +36,7 @@ import indi.shinado.piping.launcher.SingleLineInputCallback;
 import indi.shinado.piping.launcher.functionality.IAnimation;
 import indi.shinado.piping.launcher.functionality.IBase;
 import indi.shinado.piping.launcher.functionality.IText;
+import indi.shinado.piping.launcher.functionality.ITutorial;
 import indi.shinado.piping.launcher.impl.ConsoleHelper;
 import indi.shinado.piping.launcher.impl.DeviceConsole;
 import indi.shinado.piping.launcher.impl.HackerView;
@@ -52,7 +53,7 @@ import indi.shinado.piping.view.AnimationTextView;
 import indi.shinado.piping.view.BoundaryView;
 import shinado.indi.vender.R;
 
-public class HackerLauncher extends BaseLauncherView implements DeviceConsole, Feedable, IText, IBase, IAnimation {
+public class HackerLauncher extends BaseLauncherView implements DeviceConsole, Feedable, IText, IBase, IAnimation, ITutorial {
 
     private static final int REQUEST_COLOR = 1;
     private ScrollView mScrollView;
@@ -321,11 +322,6 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     }
 
     @Override
-    public ConsoleInfo getConsoleInfo() {
-        return new ConsoleInfo(mConsoleWidth, /**TODO**/consoleTextView.getLineCount());
-    }
-
-    @Override
     public void occupyMode() {
         mHackerView.stopTicking();
         mConsoleHelper.occupyMode();
@@ -335,16 +331,6 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     public void quitOccupy() {
         mHackerView.startTicking();
         mConsoleHelper.quitOccupy();
-    }
-
-    @Override
-    public void hideInitText() {
-        mHackerView.hideInitText();
-    }
-
-    @Override
-    public void showInitText() {
-        mHackerView.showInitText();
     }
 
     @Override
@@ -365,16 +351,6 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
         if (mHeadView != null) {
             mHeadView.notifyUI();
         }
-    }
-
-    @Override
-    public BasePipe getPipeById(int id) {
-        for (BasePipe item : mPipeManager.getAllPipes()) {
-            if (item.getId() == id) {
-                return item;
-            }
-        }
-        return null;
     }
 
     @Override

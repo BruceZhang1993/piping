@@ -53,6 +53,10 @@ public abstract class SearchablePipe extends BasePipe {
         return set;
     }
 
+    protected TreeSet<Pipe> search(String input){
+        return search(new Instruction(input));
+    }
+
     protected TreeSet<Pipe> search(Instruction value){
         String body = value.body;
         String key = getKey(body);

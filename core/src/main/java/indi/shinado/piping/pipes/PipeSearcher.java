@@ -69,7 +69,7 @@ public class PipeSearcher {
         searchableAction = only;
     }
 
-    public void searchAll() {
+    public void reenableSearchAll() {
         searchableAction = null;
     }
 
@@ -84,12 +84,27 @@ public class PipeSearcher {
         recallTimes = 0;
     }
 
-    public void clearPrevious() {
+    public void reset() {
+        for (BasePipe pipe : mBasePipes) {
+            pipe.reset();
+        }
+        clearPrevious();
+    }
+
+    private void clearPrevious() {
         mPrevious.clear();
     }
 
     private void doSearch(String input, int length) {
+        if (length < 0 && input.length() > 0){
+            //TODO not perfectly correct
+            if (!input.contains(Keys.PARAMS)) {
+                reenableSearchAll();
+            }
+        }
+
         if (searchableAction != null) {
+            //TODO
             input = input.replace(searchableAction.getKeyword() + Keys.PARAMS, "");
             searchableAction.search(input, length, mCallback);
         } else {
