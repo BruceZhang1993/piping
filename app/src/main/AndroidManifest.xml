@@ -31,7 +31,7 @@
         <activity
             android:launchMode="singleInstance"
             android:theme="@style/LauncherTheme"
-            android:name=".base.WestWorldLauncher"
+            android:name=".base.WWLauncher"
             android:taskAffinity=".HackerLauncher"
             android:excludeFromRecents="true"
             android:label="@string/app_name" >

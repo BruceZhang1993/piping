@@ -16,8 +16,10 @@
     <color name="store_theme">#21ff00</color>
     <color name="black">#000000</color>
 
-    <color name="base_ww">#ef00eaef</color>
-    <color name="background">#000000</color>
+    <color name="base_ww">#00ecdb</color>
+    <color name="text_norm">#5c9aa4</color>
+    <color name="text_highlight">#00ecdb</color>
+    <color name="background">#12323A</color>
     <color name="indicator">#bc000d</color>
 
 </resources>

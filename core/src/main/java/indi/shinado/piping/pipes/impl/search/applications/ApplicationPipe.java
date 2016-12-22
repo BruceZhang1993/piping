@@ -104,7 +104,12 @@ public class ApplicationPipe extends FrequentPipe {
         }
         try {
             appManager.launch(body);
-            getConsole().input("this.launch -> " + rs.getExecutable());
+            getConsole().input("<font color='#AE7832'>this</font>.launch" +
+                    " <font color='#808067'>-></font> "
+                    + "<font color='#8B76AA'>"
+                    + rs.getExecutable()
+                    + "</font>");
+
             addFrequency(rs);
         } catch (Exception e) {
             //if there is any trouble, remove it

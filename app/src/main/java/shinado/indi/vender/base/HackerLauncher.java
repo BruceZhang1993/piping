@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -360,7 +361,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
 
     @Override
     public void input(String string) {
-        mHackerView.type(string);
+        mHackerView.type(Html.fromHtml(string));
     }
 
     @Override

@@ -3,6 +3,11 @@ package indi.shinado.piping.launcher.impl;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.SpannedString;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,13 +47,13 @@ public class HackerView {
     /**
      * display text, not to be modified
      */
-    private StringBuffer mPreviousLines = new StringBuffer();
+    private SpannableStringBuilder mPreviousLines = new SpannableStringBuilder();
 
     /**
      * last line of displaying text, could be modified
      * contains two parts, hint and user input
      */
-    private String mCurrentLine = "";
+    private CharSequence mCurrentLine = "";
 
     private boolean mBlocked = false;
 
@@ -86,14 +91,14 @@ public class HackerView {
     /**
      * type text in thread
      */
-    public void type(final String string) {
+    public void type(Spanned string) {
         mTypeThread = new TypeThread(string);
         mTypeThread.start();
     }
 
     /**
      * started from version 4
-     * force {@link #typeText(String)}  to stop
+     * force {@link #typeText(Spanned)}  to stop
      */
     @TargetVersion(4)
     public void forceTextToShow(){
@@ -103,19 +108,19 @@ public class HackerView {
     }
 
     /**
-     * type text in without thread
+     * type text in UI thread
      */
-    private void typeText(final String str) {
+    private void typeText(final Spanned str) {
         //wait if blocked already
         while (isBlocked()) ;
         blockInput();
         for (int j = 0; j < str.length(); ) {
             int length = CommonUtil.getRandom(2, 2);
-            String token;
+            CharSequence token;
             if (j + length >= str.length()) {
-                token = str.substring(j, str.length());
+                token = str.subSequence(j, str.length());
             } else {
-                token = str.substring(j, j + length);
+                token = str.subSequence(j, j + length);
             }
             appendCurrentLine(token);
             try {
@@ -123,7 +128,7 @@ public class HackerView {
             } catch (InterruptedException e) {
                 //being interrupted by forceTextToShow
                 j += length;
-                appendCurrentLine(str.substring(j, str.length()));
+                appendCurrentLine(str.subSequence(j, str.length()));
                 appendNewLine();
                 releaseInput();
                 return;
@@ -137,7 +142,7 @@ public class HackerView {
     /**
      * put string to the end of current line
      */
-    public void appendCurrentLine(String sth) {
+    public void appendCurrentLine(CharSequence sth) {
         mHandler.obtainMessage(OutputHandler.WHAT_APPEND_CURRENT_LINE, sth).sendToTarget();
     }
 
@@ -222,7 +227,7 @@ public class HackerView {
     }
 
     public void clear() {
-        mPreviousLines = new StringBuffer();
+        mPreviousLines = new SpannableStringBuilder();
         for (String str : initTexts){
             mPreviousLines.append(str);
             mPreviousLines.append("\n");
@@ -262,8 +267,8 @@ public class HackerView {
         /**
          * put string to the end of current line
          */
-        private void appendCurrentLine(String sth) {
-            mCurrentLine += sth;
+        private void appendCurrentLine(CharSequence sth) {
+            mCurrentLine = TextUtils.concat(mCurrentLine, sth);
             validate();
         }
 
@@ -277,7 +282,7 @@ public class HackerView {
             validate();
         }
 
-        private void replaceCurrentLine(String line) {
+        private void replaceCurrentLine(CharSequence line) {
             mCurrentLine = line;
             validate();
         }
@@ -286,15 +291,15 @@ public class HackerView {
          * force message to be shown in the console
          */
         private void validate() {
-            mConsole.setText(mPreviousLines.toString() + mCurrentLine);
+            tok();
         }
 
         private void tik() {
-            mConsole.setText(mPreviousLines.toString() + mCurrentLine + "▊");
+            mConsole.setText(TextUtils.concat(mPreviousLines.toString(), mCurrentLine, "▊"));
         }
 
         private void tok() {
-            mConsole.setText(mPreviousLines.toString() + mCurrentLine);
+            mConsole.setText(TextUtils.concat(mPreviousLines.toString(), mCurrentLine));
         }
 
     }
@@ -346,7 +351,7 @@ public class HackerView {
 
         private void typeInitTexts() {
             for (String str : initTexts) {
-                typeText(str);
+                typeText(new SpannedString(str));
                 try {
                     sleep(150);
                 } catch (InterruptedException e) {
@@ -360,7 +365,7 @@ public class HackerView {
             while (!mSystemReady) {
                 appendCurrentLine(".");
                 //clear ... if exists
-                mCurrentLine = mCurrentLine.replace("...", "");
+//                mCurrentLine = mCurrentLine.replace("...", "");
                 try {
                     sleep(350);
                 } catch (InterruptedException e) {
@@ -373,9 +378,9 @@ public class HackerView {
 
     class TypeThread extends Thread{
 
-        private String text;
+        private Spanned text;
 
-        TypeThread(String text){
+        TypeThread(Spanned text){
             this.text = text;
         }
 
@@ -417,13 +422,13 @@ public class HackerView {
                     helper.tok();
                     break;
                 case WHAT_APPEND_CURRENT_LINE:
-                    helper.appendCurrentLine((String) msg.obj);
+                    helper.appendCurrentLine((CharSequence) msg.obj);
                     break;
                 case WHAT_APPEND_NEW_LINE:
                     helper.appendNewLine();
                     break;
                 case WHAT_REPLACE_CURRENT_LINE:
-                    helper.replaceCurrentLine((String) msg.obj);
+                    helper.replaceCurrentLine((CharSequence) msg.obj);
                     break;
                 default:
                     //do nothing

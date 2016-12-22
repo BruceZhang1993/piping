@@ -16,7 +16,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">13dp</item>
-        <item name="android:textColor">@color/geek</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="status_bar" parent="geek">
