@@ -104,6 +104,7 @@ public class ApplicationPipe extends FrequentPipe {
         }
         try {
             appManager.launch(body);
+            getConsole().input("this.launch -> " + rs.getExecutable());
             addFrequency(rs);
         } catch (Exception e) {
             //if there is any trouble, remove it

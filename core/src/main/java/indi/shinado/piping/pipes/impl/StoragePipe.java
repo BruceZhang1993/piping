@@ -27,7 +27,7 @@ public class StoragePipe extends SearchableActionPipe{
         WifiManager manager = (WifiManager) getLauncher().getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = manager.getConnectionInfo();
         String address = info.getMacAddress();
-        mStorage = StorageFactory.getStorage().child("local").child(address).child("storage");
+        mStorage = StorageFactory.getStorage(context).child("local").child(address).child("storage");
     }
 
     @Override

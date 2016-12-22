@@ -19,6 +19,7 @@ public class SearchItemPipe extends ActionPipe {
         mResult.setDisplayName("$list");
         mResult.setSearchableName(new SearchableName("list"));
         mResult.setBasePipe(this);
+        mResult.setAcceptableParams(new Pipe(getId(), "a"));
     }
 
     private void roll(int count){
@@ -48,6 +49,7 @@ public class SearchItemPipe extends ActionPipe {
                 roll(Integer.MAX_VALUE);
             }
         }
+
         if (previous == null) {
             roll(DEFAULT_COUNT);
         } else {

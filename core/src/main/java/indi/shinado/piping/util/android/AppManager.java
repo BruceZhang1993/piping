@@ -223,7 +223,7 @@ public class AppManager extends SearchableItemManager {
                 AbsTranslator translator = getTranslator();
                 item = new Pipe(PipesLoader.ID_APPLICATION, label, translator.getName(label), value);
             } else {
-                item = new Pipe(PipesLoader.ID_APPLICATION, label, new SearchableName(new String[]{}), value);
+                item = new Pipe(PipesLoader.ID_APPLICATION, label, new SearchableName(""), value);
             }
             return item;
         }

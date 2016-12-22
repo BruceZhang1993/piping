@@ -15,7 +15,7 @@ public class FrequentMap {
 
     public HashMap<String, FrequentItem> getFrequentMap(int limit){
         HashMap<String, FrequentItem> map = new HashMap<>();
-        List<FrequentItem> list = new Select().all().from(FrequentItem.class).execute();
+        List<FrequentItem> list = new Select().all().from(FrequentItem.class).limit(limit).execute();
         for (FrequentItem item : list){
             map.put(item.key, item);
         }

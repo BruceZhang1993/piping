@@ -148,8 +148,7 @@ public class APIPipe extends SearchablePipe {
         WifiInfo info = manager.getConnectionInfo();
         String address = info.getMacAddress();
 
-
-        mDatabase = StorageFactory.getStorage().child("local").child(address).child("Apis");
+        mDatabase = StorageFactory.getStorage(context).child("local").child(address).child("Apis");
         mDatabase.addChildEventListener(new IDataBaseReference.OnChildEventListener() {
             @Override
             public void onChildAdded(IDataSnapshot dataSnapshot, String s) {

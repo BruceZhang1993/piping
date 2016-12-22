@@ -59,7 +59,7 @@ public class InputMethodIOHelper implements IOHelper{
                 if (mBlockInput){
                     return true;
                 }
-                if (actionId == EditorInfo.IME_ACTION_GO) {
+                if (actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_DONE) {
                     helper.onEnter();
                     return true;
                 }

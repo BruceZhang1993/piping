@@ -1,10 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background=""
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="6dp"
+    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/console"
+            android:textColor="@color/white"
+            tools:text="System initiating...\nVerifying account...\nAcount:*********\nPassword:*********\nAccess grated"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </ScrollView>
 
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/indicator"
+            android:textColor="@color/indicator"
+            tools:text="data: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/input"
+            android:paddingBottom="26dp"
+            android:layout_marginBottom="4dp"
+            android:inputType="textNoSuggestions"
+            android:background="@color/transparent"
+            android:textSize="14dp"
+            android:textColor="@color/white"
+            tools:text="cd "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/selections_scroll"
+        android:layout_marginBottom="4dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="2dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/selections"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <include
+                layout="@layout/item_selection"/>
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+</RelativeLayout>

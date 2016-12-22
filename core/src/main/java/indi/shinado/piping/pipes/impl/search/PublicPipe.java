@@ -30,7 +30,7 @@ public class PublicPipe extends SearchableActionPipe {
     @Override
     public void start() {
         super.start();
-        mDatabase = StorageFactory.getStorage().child("public").child("user");
+        mDatabase = StorageFactory.getStorage(context).child("public").child("user");
     }
 
     @Override

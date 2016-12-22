@@ -1,8 +1,5 @@
 package indi.shinado.piping.pipes.impl.search.applications;
 
-/**
- * Created by shinado on 16/5/15.
- */
 public class SimpleAppInfo implements Comparable<SimpleAppInfo>{
 
     public long installTime;
