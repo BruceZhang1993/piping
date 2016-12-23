@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -59,7 +60,7 @@ public class WWLauncher extends BaseLauncherView implements DeviceConsole, Feeda
 
     private static final int REQUEST_COLOR = 1;
     private ScrollView mScrollView;
-    private HackerView mHackerView;
+    private WWView mHackerView;
     private ViewGroup wallpaper;
     private BoundaryView boundaryView;
     private AnimationTextView consoleTextView;
@@ -79,12 +80,13 @@ public class WWLauncher extends BaseLauncherView implements DeviceConsole, Feeda
 
     private IHeadView mHeadView;
     private Tutorial mTutorial;
+    private ViewGroup selections;
 
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_base_launcher);
+        setContentView(R.layout.interface_ww);
         log("onCreate");
 
         mTutorial = new Tutorial(this, this);
@@ -168,6 +170,7 @@ public class WWLauncher extends BaseLauncherView implements DeviceConsole, Feeda
     }
 
     private void initViews() {
+        selections = (ViewGroup) findViewById(R.id.selections);
         wallpaper = (ViewGroup) this.findViewById(R.id.background);
         boundaryView = (BoundaryView) this.findViewById(R.id.boundary);
         initWallpaper();
@@ -187,22 +190,23 @@ public class WWLauncher extends BaseLauncherView implements DeviceConsole, Feeda
                 mConsoleWidth = getConsoleWidth();
             }
         });
-        mHackerView = new HackerView(this, consoleTextView, this);
+        mHackerView = new WWView(this, consoleTextView, this);
         mHackerView.init();
 
         initHeadView();
     }
 
-    private void replaceItem(boolean ignoreMatch, Pipe pipe) {
-        String newLine = constructDisplay(mIOHelper.getCurrentUserInput(), pipe);
-        mHackerView.replaceCurrentLine(newLine);
+    private void replaceItem(Pipe pipe) {
+        replaceItem(pipe == null ? "" : pipe.getDisplayName());
     }
 
-    private String constructDisplay(String input, Pipe pipe) {
-        String line = "";
-        if (pipe != null) {
-            line += pipe.getDisplayName();
-        }
+    private void replaceItem(String value) {
+        String newLine = constructDisplay(mIOHelper.getCurrentUserInput(), value);
+        mHackerView.replaceCurrentLine(Html.fromHtml(newLine));
+    }
+
+    private String constructDisplay(String input, String value) {
+        String line = "<font color='#F00'>" + value + "</font>";
         line += " : " + input;
         return line;
     }
@@ -231,13 +235,31 @@ public class WWLauncher extends BaseLauncherView implements DeviceConsole, Feeda
     @Override
     public void displayResult(Collection<Pipe> results) {
         if (results.size() > 0) {
-            replaceItem(true, (Pipe) results.toArray()[0]);
+            selections.removeAllViews();
+            LayoutInflater inflater = LayoutInflater.from(this);
+            int i = 0;
+            for (Pipe pipe : results){
+                TextView item = (TextView) inflater.inflate(R.layout.item_selection, selections, false);
+                item.setText(pipe.getDisplayName());
+                final int index = i++;
+                item.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mConsoleHelper.select(index);
+                    }
+                });
+                selections.addView(item);
+            }
+        }
+
+        if (results.size() > 0) {
+            mHackerView.replaceCurrentLine(mIOHelper.getCurrentUserInput());
         }
     }
 
     @Override
     public void displayPrevious(Pipe pipe) {
-        replaceItem(true, pipe);
+        replaceItem(pipe);
     }
 
     @Override
@@ -300,12 +322,12 @@ public class WWLauncher extends BaseLauncherView implements DeviceConsole, Feeda
 
     @Override
     public void onSelected(Pipe pipe) {
-        replaceItem(true, pipe);
+        replaceItem(pipe);
     }
 
     @Override
     public void onNothing() {
-        replaceItem(true, null);
+        replaceItem("");
     }
 
     @Override
@@ -321,6 +343,7 @@ public class WWLauncher extends BaseLauncherView implements DeviceConsole, Feeda
     @Override
     public void setIndicator(String indicator) {
         //TODO
+        replaceItem(indicator);
     }
 
     @Override
@@ -362,8 +385,9 @@ public class WWLauncher extends BaseLauncherView implements DeviceConsole, Feeda
 
     @Override
     public void input(String string) {
+        //TODO type loses HTML style
+        mHackerView.appendCurrentLine(Html.fromHtml(string.replace(",", ",\n ")));
         mHackerView.appendNewLine();
-        mHackerView.appendCurrentLine(Html.fromHtml(string));
     }
 
     @Override

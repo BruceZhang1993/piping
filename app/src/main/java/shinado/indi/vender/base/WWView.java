@@ -1,31 +1,23 @@
-package indi.shinado.piping.launcher.impl;
+package shinado.indi.vender.base;
 
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.shinado.annotation.TargetVersion;
-import com.shinado.core.R;
 
 import java.lang.ref.WeakReference;
-import java.util.Collection;
 
 import indi.shinado.piping.launcher.Console;
-import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.settings.Preferences;
 import indi.shinado.piping.util.CommonUtil;
 
-public class HackerView {
+public class WWView {
 
     private String[] initTexts;
     private String[] initTextsCache;
@@ -47,7 +39,7 @@ public class HackerView {
     /**
      * display text, not to be modified
      */
-    private SpannableStringBuilder mPreviousLines = new SpannableStringBuilder();
+    private CharSequence mPreviousLines;
 
     /**
      * last line of displaying text, could be modified
@@ -74,7 +66,7 @@ public class HackerView {
 
     private TypeThread mTypeThread;
 
-    public HackerView(Context context, TextView console, Console device) {
+    public WWView(Context context, TextView console, Console device) {
         this.mConsole = console;
         this.mDevice = device;
         this.mContext = context;
@@ -113,6 +105,7 @@ public class HackerView {
     private void typeText(final Spanned str) {
         //wait if blocked already
         while (isBlocked()) ;
+
         blockInput();
         for (int j = 0; j < str.length(); ) {
             int length = CommonUtil.getRandom(2, 2);
@@ -159,7 +152,7 @@ public class HackerView {
     /**
      * replace current line with new line
      */
-    public void replaceCurrentLine(String line) {
+    public void replaceCurrentLine(CharSequence line) {
         mHandler.obtainMessage(OutputHandler.WHAT_REPLACE_CURRENT_LINE, line).sendToTarget();
     }
 
@@ -230,12 +223,14 @@ public class HackerView {
     }
 
     public void clear() {
-        mPreviousLines = new SpannableStringBuilder();
+        mPreviousLines = new SpannedString("");
         for (String str : initTexts){
-            mPreviousLines.append(str);
-            mPreviousLines.append("\n");
+            mPreviousLines = TextUtils.concat(mPreviousLines, str, "\n");
+//            mPreviousLines.append(str);
+//            mPreviousLines.append("\n");
         }
-        mPreviousLines.append("\n");
+        mPreviousLines = TextUtils.concat(mPreviousLines, "\n");
+//        mPreviousLines.append("\n");
         mCurrentLine = "";
         mConsole.setText(TextUtils.concat(mPreviousLines.toString(), mCurrentLine));
     }
@@ -279,9 +274,11 @@ public class HackerView {
          * add current line to the previous and start a new line
          */
         private void appendNewLine() {
-            mPreviousLines.append(mCurrentLine);
+            mPreviousLines = TextUtils.concat(mPreviousLines, mCurrentLine);
+//            mPreviousLines.append(mCurrentLine);
             mCurrentLine = "";
-            mPreviousLines.append("\n");
+            mPreviousLines = TextUtils.concat(mPreviousLines, "\n");
+//            mPreviousLines.append("\n");
             validate();
         }
 
@@ -298,11 +295,11 @@ public class HackerView {
         }
 
         private void tik() {
-            mConsole.setText(TextUtils.concat(mPreviousLines.toString(), mCurrentLine, "▊"));
+            mConsole.setText(TextUtils.concat(mPreviousLines, mCurrentLine, "▊"));
         }
 
         private void tok() {
-            mConsole.setText(TextUtils.concat(mPreviousLines.toString(), mCurrentLine));
+            mConsole.setText(TextUtils.concat(mPreviousLines, mCurrentLine));
         }
 
     }
@@ -405,16 +402,16 @@ public class HackerView {
         private static final int WHAT_APPEND_CURRENT_LINE = 6;
         private static final int WHAT_REPLACE_CURRENT_LINE = 7;
 
-        private WeakReference<HackerView> mRef;
+        private WeakReference<WWView> mRef;
 
-        public OutputHandler(HackerView view) {
+        public OutputHandler(WWView view) {
             mRef = new WeakReference<>(view);
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            HackerView view = mRef.get();
+            WWView view = mRef.get();
             HandlerHelper helper = view.getHandlerHelper();
 
             switch (msg.what) {

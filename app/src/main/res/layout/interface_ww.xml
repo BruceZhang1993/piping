@@ -1,0 +1,122 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/geek_bcg"
+    android:orientation="vertical">
+
+    <indi.shinado.piping.view.BoundaryView
+        android:id="@+id/boundary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/keyboard"
+        android:orientation="vertical"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp">
+
+        <RelativeLayout
+            android:id="@+id/head"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp">
+
+            <TextView
+                android:id="@+id/status_time_tv"
+                style="@style/geek"
+                android:text="12:12" />
+
+            <LinearLayout
+                android:id="@+id/status_right_ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="center|right"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/geek"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:text="ON" />
+
+                <TextView
+                    style="@style/geek"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:text="36%"
+                    android:textColor="@color/geek" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/head"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/head_fl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="no-format" />
+
+                <indi.shinado.piping.view.AnimationTextView
+                    android:id="@+id/displayText"
+                    style="@style/geek"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="10dp"
+                    android:text="Hello world" />
+
+                <HorizontalScrollView
+                    android:id="@+id/selections_scroll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scrollbarThumbHorizontal="@color/transparent"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="2dp">
+
+                    <LinearLayout
+                        android:id="@+id/selections"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
+
+                <EditText
+                    android:id="@+id/input"
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
+                    android:background="@color/transparent"
+                    android:imeOptions="actionGo"
+                    android:inputType="textNoSuggestions" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/keyboard"
+        layout="@layout/layout_keyboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>
