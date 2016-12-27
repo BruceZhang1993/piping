@@ -97,15 +97,13 @@ public class PipeSearcher {
 
     private void doSearch(String input, int length) {
         if (length < 0 && input.length() > 0){
-            //TODO not perfectly correct
-            if (!input.contains(Keys.PARAMS)) {
-                reenableSearchAll();
-            }
+            //TODO what??
+//            if (!input.contains(Keys.PARAMS)) {
+//                reenableSearchAll();
+//            }
         }
 
         if (searchableAction != null) {
-            //TODO
-            input = input.replace(searchableAction.getKeyword() + Keys.PARAMS, "");
             searchableAction.search(input, length, mCallback);
         } else {
             for (BasePipe pipe : mBasePipes) {

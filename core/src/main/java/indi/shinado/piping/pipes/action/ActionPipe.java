@@ -30,7 +30,7 @@ public abstract class ActionPipe extends BasePipe{
     }
 
     public Pipe search(Instruction input) {
-        if (input.isEmpty()){
+        if (input.input.isEmpty()){
             return null;
         }
 

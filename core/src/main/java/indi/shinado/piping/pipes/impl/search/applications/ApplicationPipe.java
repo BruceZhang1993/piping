@@ -8,6 +8,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +54,12 @@ public class ApplicationPipe extends FrequentPipe {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("*/*");
 
-        ShareIntent shareIntent = new Gson().fromJson(input, ShareIntent.class);
+        ShareIntent shareIntent = null;
+        try {
+            shareIntent = new Gson().fromJson(input, ShareIntent.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (shareIntent != null) {
             sharingIntent.setType(shareIntent.type);
             for (String key : shareIntent.extras.keySet()) {

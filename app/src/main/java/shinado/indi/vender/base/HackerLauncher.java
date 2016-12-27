@@ -45,6 +45,7 @@ import indi.shinado.piping.pipes.BasePipe;
 import indi.shinado.piping.pipes.ConsoleInfo;
 import indi.shinado.piping.pipes.IPipeManager;
 import indi.shinado.piping.pipes.PipeManager;
+import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
@@ -228,7 +229,7 @@ public class HackerLauncher extends BaseLauncherView implements DeviceConsole, F
     }
 
     @Override
-    public void displayResult(Collection<Pipe> results) {
+    public void displayResult(Collection<Pipe> results, Instruction input) {
         if (results.size() > 0) {
             replaceItem(true, (Pipe) results.toArray()[0]);
         }

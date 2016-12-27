@@ -27,6 +27,7 @@ import indi.shinado.piping.launcher.impl.ConsoleHelper;
 import indi.shinado.piping.launcher.impl.DeviceConsole;
 import indi.shinado.piping.pipes.IPipeManager;
 import indi.shinado.piping.pipes.PipeManager;
+import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
@@ -113,7 +114,6 @@ public class WestWorldLauncher extends BaseLauncherView implements DeviceConsole
         indicatorTv = (TextView) findViewById(R.id.indicator);
         mScrollView = (ScrollView) this.findViewById(R.id.scrollView);
         consoleTextView = (TextView) this.findViewById(R.id.console);
-
     }
 
     private void replaceItem(boolean ignoreMatch, Pipe pipe) {
@@ -140,7 +140,7 @@ public class WestWorldLauncher extends BaseLauncherView implements DeviceConsole
     }
 
     @Override
-    public void displayResult(Collection<Pipe> results) {
+    public void displayResult(Collection<Pipe> results, Instruction input) {
         if (results.size() > 0) {
             selections.removeAllViews();
             LayoutInflater inflater = LayoutInflater.from(this);
@@ -231,8 +231,8 @@ public class WestWorldLauncher extends BaseLauncherView implements DeviceConsole
 
     @Override
     public void onSelected(Pipe pipe) {
-
 //        replaceItem(true, pipe);
+        setIndicator(pipe.getDisplayName());
     }
 
     @Override

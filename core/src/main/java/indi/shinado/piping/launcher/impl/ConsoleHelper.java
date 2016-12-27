@@ -60,22 +60,23 @@ public class ConsoleHelper {
                     if (current != null) {
                         List<Pipe> acceptableParams = current.getAcceptableParams();
                         if (acceptableParams != null && acceptableParams.size() > 0) {
-                            console.displayResult(acceptableParams);
+                            console.displayResult(acceptableParams, input);
+                            return;
                         }
                     }
+                }
+
+                if (!mResults.isEmpty()) {
+                    console.displayResult(mResults, input);
                 } else {
-                    if (!mResults.isEmpty()) {
-                        console.displayResult(mResults);
-                    } else {
-                        if (!previous.isEmpty()) {
-                            if (input.isBodyEmpty()) {
-                                console.displayPrevious(previous.get());
-                            } else {
-                                console.onNothing();
-                            }
+                    if (!previous.isEmpty()) {
+                        if (input.isBodyEmpty()) {
+                            console.displayPrevious(previous.get());
                         } else {
                             console.onNothing();
                         }
+                    } else {
+                        console.onNothing();
                     }
                 }
 
@@ -128,7 +129,7 @@ public class ConsoleHelper {
                 //display in the new line
                 TreeSet<Pipe> set = new TreeSet<>();
                 set.add(item);
-                console.displayResult(set);
+                console.displayResult(set, new Instruction(""));
             }
         }, 500);
     }
@@ -174,6 +175,13 @@ public class ConsoleHelper {
     public void select(int index) {
         if (index >= 0 && index < mResults.size()) {
             select((Pipe) mResults.toArray()[index]);
+        }
+    }
+
+    public void execute(int index) {
+        if (index >= 0 && index < mResults.size()) {
+            select((Pipe) mResults.toArray()[index]);
+            onEnter();
         }
     }
 
@@ -281,7 +289,7 @@ public class ConsoleHelper {
 
         int i = 0;
         for (Pipe item : mResults) {
-            if (item.getId() == pipe.getId()) {
+            if (item.getExecutable().equals(pipe.getExecutable())) {
                 item.setPrevious(previous);
                 mCurrentSelection = i;
                 return item;

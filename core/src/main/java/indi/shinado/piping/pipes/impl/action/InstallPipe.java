@@ -80,7 +80,7 @@ public class InstallPipe extends DefaultInputActionPipe{
 
     @Override
     public SearchableName getSearchable() {
-        return new SearchableName(new String[]{"ins", "tall"});
+        return new SearchableName("ins", "tall");
     }
 
     @Override

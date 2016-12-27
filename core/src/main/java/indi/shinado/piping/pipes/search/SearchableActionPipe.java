@@ -1,8 +1,6 @@
 package indi.shinado.piping.pipes.search;
 
-
 import java.util.TreeSet;
-
 import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Keys;
 import indi.shinado.piping.pipes.entity.Pipe;
@@ -46,7 +44,11 @@ public abstract class SearchableActionPipe extends SearchablePipe {
     @Override
     protected TreeSet<Pipe> search(Instruction input) {
         if (hasStarted) {
-            return super.search(input);
+//            if (!input.body.equals(getKeyword())){
+//                quit();
+//            }
+            Instruction instruction = new Instruction(input.input.replace(getKeyword() + Keys.PARAMS, ""));
+            return super.search(instruction);
         } else {
             TreeSet<Pipe> result = new TreeSet<>();
             if (getKeyword().equals(input.body) && input.input.endsWith(Keys.PARAMS)){

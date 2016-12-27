@@ -47,6 +47,8 @@ public class WWView {
      */
     private CharSequence mCurrentLine = "";
 
+    private CharSequence mPreString = "";
+
     private boolean mBlocked = false;
 
     /**
@@ -147,6 +149,10 @@ public class WWView {
      */
     public void appendNewLine() {
         mHandler.obtainMessage(OutputHandler.WHAT_APPEND_NEW_LINE).sendToTarget();
+    }
+
+    public void setPreviousString(CharSequence str){
+        mHandler.obtainMessage(OutputHandler.WHAT_PUSH, str).sendToTarget();
     }
 
     /**
@@ -258,8 +264,6 @@ public class WWView {
         return splits[splits.length-1];
     }
 
-
-
     private class HandlerHelper {
 
         /**
@@ -295,13 +299,18 @@ public class WWView {
         }
 
         private void tik() {
-            mConsole.setText(TextUtils.concat(mPreviousLines, mCurrentLine, "▊"));
+            mConsole.setText(TextUtils.concat(mPreviousLines, mPreString, mCurrentLine, "▊"));
         }
 
         private void tok() {
-            mConsole.setText(TextUtils.concat(mPreviousLines, mCurrentLine));
+            mConsole.setText(TextUtils.concat(mPreviousLines, mPreString, mCurrentLine));
         }
 
+
+        public void pushString(CharSequence obj) {
+            mPreString = obj;
+            validate();
+        }
     }
 
     private class TickThread extends Thread {
@@ -401,6 +410,7 @@ public class WWView {
         private static final int WHAT_APPEND_NEW_LINE = 5;
         private static final int WHAT_APPEND_CURRENT_LINE = 6;
         private static final int WHAT_REPLACE_CURRENT_LINE = 7;
+        private static final int WHAT_PUSH = 8;
 
         private WeakReference<WWView> mRef;
 
@@ -429,6 +439,9 @@ public class WWView {
                     break;
                 case WHAT_REPLACE_CURRENT_LINE:
                     helper.replaceCurrentLine((CharSequence) msg.obj);
+                    break;
+                case WHAT_PUSH:
+                    helper.pushString((CharSequence) msg.obj);
                     break;
                 default:
                     //do nothing

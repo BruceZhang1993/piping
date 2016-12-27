@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
+import android.text.SpannedString;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -44,9 +45,9 @@ import indi.shinado.piping.launcher.functionality.IText;
 import indi.shinado.piping.launcher.functionality.ITutorial;
 import indi.shinado.piping.launcher.impl.ConsoleHelper;
 import indi.shinado.piping.launcher.impl.DeviceConsole;
-import indi.shinado.piping.launcher.impl.HackerView;
 import indi.shinado.piping.pipes.IPipeManager;
 import indi.shinado.piping.pipes.PipeManager;
+import indi.shinado.piping.pipes.entity.Instruction;
 import indi.shinado.piping.pipes.entity.Pipe;
 import indi.shinado.piping.pipes.impl.PipesLoader;
 import indi.shinado.piping.pipes.search.translator.TranslatorFactory;
@@ -184,6 +185,12 @@ public class WWLauncher extends BaseLauncherView implements DeviceConsole, Feeda
                 return true;
             }
         });
+        consoleTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mIOHelper.startInput();
+            }
+        });
         consoleTextView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -194,21 +201,6 @@ public class WWLauncher extends BaseLauncherView implements DeviceConsole, Feeda
         mHackerView.init();
 
         initHeadView();
-    }
-
-    private void replaceItem(Pipe pipe) {
-        replaceItem(pipe == null ? "" : pipe.getDisplayName());
-    }
-
-    private void replaceItem(String value) {
-        String newLine = constructDisplay(mIOHelper.getCurrentUserInput(), value);
-        mHackerView.replaceCurrentLine(Html.fromHtml(newLine));
-    }
-
-    private String constructDisplay(String input, String value) {
-        String line = "<font color='#F00'>" + value + "</font>";
-        line += " : " + input;
-        return line;
     }
 
     private int getConsoleWidth() {
@@ -233,33 +225,44 @@ public class WWLauncher extends BaseLauncherView implements DeviceConsole, Feeda
     }
 
     @Override
-    public void displayResult(Collection<Pipe> results) {
+    public void displayResult(Collection<Pipe> results, Instruction input) {
         if (results.size() > 0) {
             selections.removeAllViews();
             LayoutInflater inflater = LayoutInflater.from(this);
             int i = 0;
-            for (Pipe pipe : results){
+            for (Pipe pipe : results) {
                 TextView item = (TextView) inflater.inflate(R.layout.item_selection, selections, false);
                 item.setText(pipe.getDisplayName());
                 final int index = i++;
                 item.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        mConsoleHelper.execute(index);
+                    }
+                });
+                item.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
                         mConsoleHelper.select(index);
+                        return true;
                     }
                 });
                 selections.addView(item);
             }
         }
 
+        if (input.input.isEmpty()) {
+            setIndicator("");
+        }
+
         if (results.size() > 0) {
-            mHackerView.replaceCurrentLine(mIOHelper.getCurrentUserInput());
+            validateInput();
         }
     }
 
     @Override
     public void displayPrevious(Pipe pipe) {
-        replaceItem(pipe);
+        setIndicator(pipe.getDisplayName());
     }
 
     @Override
@@ -317,17 +320,20 @@ public class WWLauncher extends BaseLauncherView implements DeviceConsole, Feeda
         mHackerView.appendNewLine();
         mIOHelper.clearInput();
         mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+        setIndicator("");
         mTutorial.resume();
     }
 
     @Override
     public void onSelected(Pipe pipe) {
-        replaceItem(pipe);
+
+        setIndicator(pipe.getDisplayName());
     }
 
     @Override
     public void onNothing() {
-        replaceItem("");
+        selections.removeAllViews();
+        validateInput();
     }
 
     @Override
@@ -342,8 +348,9 @@ public class WWLauncher extends BaseLauncherView implements DeviceConsole, Feeda
 
     @Override
     public void setIndicator(String indicator) {
-        //TODO
-        replaceItem(indicator);
+        indicator = "<font color='#7E0009'>" + indicator + " : </font>";
+        mHackerView.setPreviousString(Html.fromHtml(indicator));
+        validateInput();
     }
 
     @Override
@@ -386,8 +393,12 @@ public class WWLauncher extends BaseLauncherView implements DeviceConsole, Feeda
     @Override
     public void input(String string) {
         //TODO type loses HTML style
-        mHackerView.appendCurrentLine(Html.fromHtml(string.replace(",", ",\n ")));
-        mHackerView.appendNewLine();
+        if (string.contains("</font>")) {
+            mHackerView.appendCurrentLine(Html.fromHtml(string.replace(",", ",\n ")));
+            mHackerView.appendNewLine();
+        } else {
+            mHackerView.type(new SpannedString(string));
+        }
     }
 
     @Override
@@ -575,6 +586,10 @@ public class WWLauncher extends BaseLauncherView implements DeviceConsole, Feeda
                 }
                 break;
         }
+    }
+
+    private void validateInput() {
+        mHackerView.replaceCurrentLine(Html.fromHtml(mIOHelper.getCurrentUserInput()));
     }
 
     private BroadcastReceiver mWallpaperSetReceiver = new BroadcastReceiver() {

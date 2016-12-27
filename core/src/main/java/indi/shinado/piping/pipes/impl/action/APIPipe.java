@@ -51,7 +51,7 @@ public class APIPipe extends SearchablePipe {
     @Override
     public void acceptInput(Pipe result, String input, Pipe.PreviousPipes previous, final OutputCallback callback) {
         if (addPipe.equals(result)){
-            addAPI(input);
+            addAPI(input, callback);
         }else {
             callAPI(input, result.getExecutable(), callback);
         }
@@ -66,9 +66,15 @@ public class APIPipe extends SearchablePipe {
         }
     }
 
-    private void addAPI(String input) {
-        API api = new Gson().fromJson(input, API.class);
-        mDatabase.push().setValue(api);
+    private void addAPI(String input, OutputCallback callback) {
+        try {
+            API api = new Gson().fromJson(input, API.class);
+            mDatabase.push().setValue(api);
+            callback.onOutput("API added. ");
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+            callback.onOutput(e.getMessage());
+        }
     }
 
     private void callAPI(String input, String exe, final OutputCallback callback) {

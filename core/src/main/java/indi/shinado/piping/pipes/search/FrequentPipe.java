@@ -45,7 +45,7 @@ public abstract class FrequentPipe extends SearchablePipe {
     @Override
     protected TreeSet<Pipe> search(Instruction value) {
         TreeSet<Pipe> result = super.search(value);
-        if (value.body.isEmpty() ){
+        if (value.input.isEmpty() ){
             for (Pipe frequent : frequentItems){
                 result.add(frequent);
             }
